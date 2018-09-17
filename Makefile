@@ -1,4 +1,4 @@
-VERSION := 1.0.1
+VERSION := 2.0.0
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -24,6 +24,9 @@ src/vendor:
 build: ensure
 	sed -i "s/@##VERSION##@/${VERSION}/" src/index.php
 	mkdir -p build
+	rm -rf src/vendor
+	cd src && composer install --no-dev
+	cd src && composer dump-autoload -a
 	cp -ar $(SRCPATH) $(PLUGINSLUG)
 	zip -r $(PLUGINSLUG).zip $(PLUGINSLUG)
 	rm -rf $(PLUGINSLUG)
