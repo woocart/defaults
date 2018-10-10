@@ -273,6 +273,8 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @param string $file_path
 		 */
 		public function add_products( $file_path ) {
+			$faker = \Mockery::mock();
+
 			$this->file_path = $file_path;
 
 			$contents = file_get_contents( $this->file_path );
@@ -285,6 +287,25 @@ namespace Niteo\WooCart\Defaults\Importers {
 					$data['image_id'] = array_shift($images);
 					$data['gallery'] = $images;
 				}
+
+				// Start with an empty array for `category_ids`
+				$data['category_ids'] = [];
+
+				// Ensure that `category` is set
+				if ( isset( $data['category'] ) ) {
+					// Check for terms and create one if it doesn't exist.
+					if ( has_term( $data['category'], 'product_cat' ) ) {
+						$term = get_term_by( 'name', $data['category'], 'product_cat', ARRAY_A );
+					} else {
+						$term = wp_insert_term( $data['category'], 'product_cat' );
+					}
+
+					// Add `category_id` to $data if we get a value, else pass an empty array.
+					if ( $term && is_array( $term ) ) {
+						$data['category_ids'] = [ (int)$term['term_id'] ];
+					}
+				}
+
 				$product = $this->create_simple_product( $data );
 				if ( $product ) {
 					$product->save();
@@ -407,6 +428,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$sale_price        = $is_on_sale ? $faker->randomFloat( 2, 0, $price ) : '';
 			$image_id          = $data['image_id'];
 			$gallery           = $data['gallery'];
+			$category_ids 	   = $data['category_ids'];
 			$product           = $this->create_product();
 
 			$props = array(
@@ -438,7 +460,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 				'menu_order'         => $faker->numberBetween( 0, 10000 ),
 				'virtual'            => false,
 				'downloadable'       => false,
-				'category_ids'       => null,
+				'category_ids'       => $category_ids,
 				'tag_ids'            => null,
 				'shipping_class_id'  => 0,
 				'image_id'           => $image_id,

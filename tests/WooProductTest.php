@@ -33,6 +33,96 @@ class WooProductTest extends TestCase
      */
     function testadd_products() {
         $faker = \Mockery::mock();
+
+        \WP_Mock::userFunction(
+            'has_term', array(
+                'return' => true
+            )
+        );
+        \WP_Mock::userFunction(
+            'get_term_by', array(
+                'return' => [ 'term_id' => 10 ]
+            )
+        );
+
+        $faker->shouldReceive('boolean')->times(18)->andReturn(true);
+        $faker->shouldReceive('randomFloat')->times(3)->andReturn(150);
+        $faker->shouldReceive('numberBetween')->times(18)->andReturn(175);
+        $faker->shouldReceive('iso8601')->times(3)->andReturn('2018-10-08');
+        $faker->shouldReceive('randomElement')->times(3)->andReturn('yes');
+        $faker->shouldReceive('text')->times(3)->andReturn('product note');
+        $faker->ean8 = 45321150;
+        $mock_FakerFactory = \Mockery::mock('overload:Faker\Factory');
+        $mock_FakerFactory->shouldReceive('create')->andReturn($faker);
+        \WP_Mock::userFunction(
+            'sanitize_title', array(
+                'return'    => 'title'
+                )
+            );
+        $mock_WC_Product = \Mockery::mock();
+        $mock_WC_Product->shouldReceive('set_props')->times(3);
+        $mock_WC_Product->shouldReceive('save')->times(3);
+        $mock = \Mockery::mock('\Niteo\WooCart\Defaults\Importers\WooProducts',
+            array('/provision/localizations/Countries/.common/')
+        );
+        $mock->makePartial();
+        $mock->shouldReceive('create_product')
+            ->times(3)
+            ->andReturn($mock_WC_Product);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-1/image1.jpg')
+            ->andReturn(234);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-1/image2.jpg')
+            ->andReturn(235);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-1/image3.jpg')
+            ->andReturn(236);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-2/image1.jpg')
+            ->andReturn(237);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-2/image2.jpg')
+            ->andReturn(238);
+        $mock->shouldReceive('upload_image')
+            ->once()
+            ->with('/provision/localizations/Countries/.common/product-3/image.jpg')
+            ->andReturn(239);
+        $mock->add_products(dirname(__FILE__) . '/fixtures/products.html');
+        $this->assertEquals(3, $mock->get_product_count());
+    }
+
+    /**
+     * @covers Niteo\WooCart\Defaults\Importers\WooProducts::__construct
+     * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
+     * @covers \Niteo\WooCart\Defaults\Importers\ProductMeta::getInsertParams
+     * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::get_image_path
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::add_products
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::create_simple_product
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::get_product_count
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::parse_product
+     * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::upload_images
+     */
+    function testAddProductsMissingCategory() {
+        $faker = \Mockery::mock();
+
+        \WP_Mock::userFunction(
+            'has_term', array(
+                'return' => false
+            )
+        );
+        \WP_Mock::userFunction(
+            'wp_insert_term', array(
+                'return' => [ 'term_id' => 10 ]
+            )
+        );
+
         $faker->shouldReceive('boolean')->times(18)->andReturn(true);
         $faker->shouldReceive('randomFloat')->times(3)->andReturn(150);
         $faker->shouldReceive('numberBetween')->times(18)->andReturn(175);
@@ -118,6 +208,7 @@ class WooProductTest extends TestCase
             'gallery' => array(3534, 3535, 3536),
             'description' => 'Product description',
             'details' => 'charger included',
+            'category_ids' => [ 10 ]
         );
 
         $props = array(
@@ -142,6 +233,7 @@ class WooProductTest extends TestCase
             'reviews_allowed'    => true,
             'purchase_note'      => 'product note',
             'menu_order'         => 175,
+            'category_ids'       => $data['category_ids'],
             'image_id'           => $data['image_id'],
             'gallery_image_ids'  => $data['gallery'],
         );
