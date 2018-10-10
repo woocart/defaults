@@ -47,8 +47,8 @@ namespace Niteo\WooCart\Defaults {
 					padding: 0 10px;
 				}
 				.welcome-panel-content li {
-				    display: inline-block;
-				    margin-right: 13px;
+					display: inline-block;
+					margin-right: 13px;
 				}
 			</style>
 
@@ -92,19 +92,23 @@ namespace Niteo\WooCart\Defaults {
 						<div class="welcome-panel-inner">
 							<!-- Add your products -->
 							<h3><?php esc_html_e( 'Add Your Products', 'woocart-defaults' ); ?></h3>
-							<p><?php printf( 
+							<p>
+							<?php
+							printf(
 								wp_kses(
 									__( 'Add your products manually or import a CSV with the <a href="%s">WooCommerce import</a>.', 'woocart-defaults' ),
 									array(
 										'a' => array(
-											'href' => array()
-										)
+											'href' => array(),
+										),
 									)
 								),
 								esc_url(
 									get_admin_url( null, 'edit.php?post_type=product&page=product_importer' )
 								)
-							); ?></p>
+							);
+							?>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -114,16 +118,20 @@ namespace Niteo\WooCart\Defaults {
 						<div class="welcome-panel-inner">
 							<!-- Logo & slider banners -->
 							<h3><?php esc_html_e( 'Add Your Own Logo and Slider Banners', 'woocart-defaults' ); ?></h3>
-							<p><?php echo wp_kses(
+							<p>
+							<?php
+							echo wp_kses(
 								__( 'You\'ll want to add your own logo and banners to the store. You can use something like %sthe free tool <a href="https://www.canva.com/create/banners/" target="_blank" rel="noopener noreferrer">Canva</a> to create these graphics.', 'woocart-defaults' ),
 								array(
 									'a' => array(
-										'href' 		=> array(),
-										'target' 	=> array(),
-										'rel' 		=> array()
-									)
+										'href'   => array(),
+										'target' => array(),
+										'rel'    => array(),
+									),
 								)
-							); ?></p>
+							);
+							?>
+							</p>
 							<ul>
 								<li><a href="<?php echo esc_url( get_admin_url( null, 'customize.php' ) ); ?>"><?php esc_html_e( 'Start Customizing', 'woocart-defaults' ); ?></a></li>
 							</ul>

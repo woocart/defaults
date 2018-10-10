@@ -47,12 +47,12 @@ namespace Niteo\WooCart\Defaults {
 						echo '<p>';
 						echo sprintf(
 							wp_kses(
-								__( 'We use cookies to improve your experience on our site. To find out more, read our <a href="%s" class="wcil">Privacy Policy</a> and <a href="%s" class="wcil">Cookie Policy</a>.', 'woocart-defaults' ),
+								__( 'We use cookies to improve your experience on our site. To find out more, read our <a href="%1$s" class="wcil">Privacy Policy</a> and <a href="%2$s" class="wcil">Cookie Policy</a>.', 'woocart-defaults' ),
 								array(
 									'a' => array(
-										'href' 	=> array(),
-										'class' => array()
-									)
+										'href'  => array(),
+										'class' => array(),
+									),
 								)
 							),
 							$privacy_page,

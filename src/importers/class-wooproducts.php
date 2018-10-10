@@ -160,6 +160,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		/**
 		 *
 		 * WC_Product props
+		 *
 		 * @var array
 		 */
 		const wp_product_props = [
@@ -250,10 +251,10 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 *
 		 */
 		public function __construct(
-			$common_path='/provision/localizations/Countries/.common/'
+			$common_path = '/provision/localizations/Countries/.common/'
 		) {
 			$this->product_count = 0;
-			$this->common_path = $common_path;
+			$this->common_path   = $common_path;
 		}
 
 
@@ -273,19 +274,18 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @param string $file_path
 		 */
 		public function add_products( $file_path ) {
-			$faker = \Mockery::mock();
 
 			$this->file_path = $file_path;
 
 			$contents = file_get_contents( $this->file_path );
-			$products = preg_split('/^---$/m', $contents);
+			$products = preg_split( '/^---$/m', $contents );
 
-			foreach( $products as $product ) {
-				$data = $this->parse_product( trim( $product ) );
+			foreach ( $products as $product ) {
+				$data   = $this->parse_product( trim( $product ) );
 				$images = $this->upload_images( $data );
 				if ( $images ) {
-					$data['image_id'] = array_shift($images);
-					$data['gallery'] = $images;
+					$data['image_id'] = array_shift( $images );
+					$data['gallery']  = $images;
 				}
 
 				// Start with an empty array for `category_ids`
@@ -302,7 +302,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 
 					// Add `category_id` to $data if we get a value, else pass an empty array.
 					if ( $term && is_array( $term ) ) {
-						$data['category_ids'] = [ (int)$term['term_id'] ];
+						$data['category_ids'] = [ (int) $term['term_id'] ];
 					}
 				}
 
@@ -317,30 +317,32 @@ namespace Niteo\WooCart\Defaults\Importers {
 
 		/**
 		 * Read file and parse products.
+		 *
 		 * @param array $product
 		 * @return array
 		 */
 		private function parse_product( $product ): array {
 			list($attributes, $details) = explode( '-->', $product );
-			$attributes = trim( $attributes, '<!--' );
-			$details = trim( $details, '---' );
-			$attributes = Yaml::parse( $attributes );
-			$attributes['details'] = $details;
-			$attributes['image_id'] = null;
-			$attributes['gallery'] = null;
+			$attributes                 = trim( $attributes, '<!--' );
+			$details                    = trim( $details, '---' );
+			$attributes                 = Yaml::parse( $attributes );
+			$attributes['details']      = $details;
+			$attributes['image_id']     = null;
+			$attributes['gallery']      = null;
 			return $attributes;
 		}
 
 
 		/**
 		 * Upload images.
+		 *
 		 * @param array $product
 		 * @return array
 		 */
 		public function upload_images( $data ): array {
 			$images = [];
-			foreach( $data['images'] as $image ) {
-				$path = $this->get_image_path( $image );
+			foreach ( $data['images'] as $image ) {
+				$path     = $this->get_image_path( $image );
 				$image_id = $this->upload_image( $path );
 				if ( $image_id ) {
 					$images[] = $image_id;
@@ -357,7 +359,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @param string $alias Alias to be replace with common_path
 		 * @return string
 		 */
-		private function get_image_path($image_path, $alias='common:'): string {
+		private function get_image_path( $image_path, $alias = 'common:' ): string {
 			$out = str_replace( $alias, $this->common_path, $image_path );
 			return $out;
 		}
@@ -375,7 +377,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 				return 0;
 			}
 			// Read the image.
-			$image 		   = file_get_contents( $image_path );
+			$image         = file_get_contents( $image_path );
 			$name          = basename( $image_path );
 			$attachment_id = 0;
 			// Upload the image.
@@ -407,6 +409,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 
 		/**
 		 * Create a new WC_Product instance and return it.
+		 *
 		 * @return \WC_Product
 		 */
 		public function create_product() {
@@ -416,6 +419,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 
 		/**
 		 * Generate a simple product with provided data and faker and return it.
+		 *
 		 * @param array $data
 		 * @return \WC_Product
 		 */
@@ -428,7 +432,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$sale_price        = $is_on_sale ? $faker->randomFloat( 2, 0, $price ) : '';
 			$image_id          = $data['image_id'];
 			$gallery           = $data['gallery'];
-			$category_ids 	   = $data['category_ids'];
+			$category_ids      = $data['category_ids'];
 			$product           = $this->create_product();
 
 			$props = array(
@@ -466,8 +470,8 @@ namespace Niteo\WooCart\Defaults\Importers {
 				'image_id'           => $image_id,
 				'gallery_image_ids'  => $gallery,
 			);
-			$meta = ProductMeta::fromArray( $props );
-			$product->set_props($meta->getInsertParams());
+			$meta  = ProductMeta::fromArray( $props );
+			$product->set_props( $meta->getInsertParams() );
 			return $product;
 		}
 	}
