@@ -37,6 +37,8 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Our customised welcome panel for the store.
+		 *
+		 * @codeCoverageIgnore
 		 */
 		public function welcome_panel() {
 			?>

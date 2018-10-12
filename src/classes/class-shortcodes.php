@@ -17,6 +17,9 @@ namespace Niteo\WooCart\Defaults {
 		public function __construct() {
 			add_shortcode( 'woo-include', [ &$this, 'page' ] );
 			add_shortcode( 'company-name', [ &$this, 'company_name' ] );
+			add_shortcode( 'company-address', [ &$this, 'company_address' ] );
+			add_shortcode( 'company-city', [ &$this, 'company_city' ] );
+			add_shortcode( 'company-postcode', [ &$this, 'company_postcode' ] );
 			add_shortcode( 'tax-id', [ &$this, 'tax_id' ] );
 			add_shortcode( 'policy-page', [ &$this, 'policy_page' ] );
 			add_shortcode( 'store-url', [ &$this, 'store_url' ] );
@@ -60,6 +63,36 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function company_name( $props, $content = null ) {
 			$content = get_option( 'woocommerce_company_name' );
+			return $content;
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function company_address( $props, $content = null ) {
+			$content = get_option( 'woocommerce_store_address' );
+			return $content;
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function company_city( $props, $content = null ) {
+			$content = get_option( 'woocommerce_store_city' );
+			return $content;
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function company_postcode( $props, $content = null ) {
+			$content = get_option( 'woocommerce_store_postcode' );
 			return $content;
 		}
 

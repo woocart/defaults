@@ -137,34 +137,6 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Generate products.
-		 *
-		 * ## OPTIONS
-		 *
-		 * <amount>
-		 * : The amount of products to generate
-		 * ---
-		 * default: 100
-		 * ---
-		 *
-		 * ## EXAMPLES
-		 * wp wcd products 100
-		 *
-		 * @param array $args Argumens specified.
-		 * @param array $assoc_args Associative arguments specified.
-		 */
-		public function products( $args, $assoc_args ) {
-			list($amount) = $args;
-			$progress     = \WP_CLI\Utils\make_progress_bar( 'Generating products', $amount );
-			for ( $i = 1; $i <= $amount; $i++ ) {
-				Product::generate();
-				$progress->tick();
-			}
-			$progress->finish();
-			WP_CLI::success( $amount . ' products generated.' );
-		}
-
-		/**
 		 * Import demo products.
 		 *
 		 * ## OPTIONS
@@ -183,6 +155,8 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @param array $args Arguments specified.
 		 * @param array $assoc_args Associative arguments specified.
+		 * @codeCoverageIgnore
+		 * @throws WP_CLI\ExitException
 		 */
 		public function demo_products( $args, $assoc_args ) {
 			list($path) = $args;
@@ -191,8 +165,8 @@ namespace Niteo\WooCart\Defaults {
 				WP_CLI::error( "$path cannot be found." );
 			}
 
-			$products = new WooProducts( $assoc_args['common'] );
-			$products->add_products( $path );
+			$products = new WooProducts( $path, $assoc_args['common'] );
+			$products->import();
 
 			WP_CLI::success( $products->get_product_count() . ' products added.' );
 		}

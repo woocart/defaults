@@ -70,9 +70,11 @@ namespace Niteo\WooCart\Defaults {
 		 * @return null
 		 */
 		public function scripts() {
-			wp_enqueue_style( 'woocart-cookie', plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css/front.css', [], Release::Version );
+			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 
-			wp_enqueue_script( 'woocart-front', plugin_dir_url( dirname( __FILE__ ) ) . 'assets/js/front.js', [], Release::Version, true );
+			wp_enqueue_style( 'woocart-gdpr', "$plugin_dir/assets/css/front-gdpr.css", [], Release::Version );
+
+			wp_enqueue_script( 'woocart-gdpr', "$plugin_dir/assets/js/front-gdpr.js", [], Release::Version, true );
 		}
 
 	}

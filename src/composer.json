@@ -10,14 +10,13 @@
     "php": ">=7.2.0",
     "symfony/yaml": "^3.3",
     "ext-json": "*",
-    "fzaninotto/faker": "^1.8",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "krakjoe/pthreads-polyfill": "^1.1"
   },
   "autoload": {
     "psr-4": {
       "Niteo\\WooCart\\Defaults\\": "classes",
-      "Niteo\\WooCart\\Defaults\\Importers\\": "importers",
-      "Niteo\\WooCart\\Defaults\\Generators\\": "generators"
+      "Niteo\\WooCart\\Defaults\\Importers\\": "importers"
     }
   },
   "require-dev": {

@@ -1,4 +1,4 @@
-VERSION := 3.2.0
+VERSION := 3.3.0
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -16,6 +16,7 @@ vendor: src/vendor
 test: vendor
 	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	bin/phpunit --coverage-html=./reports
+	bin/coverage-check clover.xml 100
 
 src/vendor:
 	cd src && composer install
