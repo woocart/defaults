@@ -29,6 +29,7 @@ build: ensure
 	cd src && composer install --no-dev
 	cd src && composer dump-autoload -a
 	rm -rf src/vendor/symfony/yaml/Tests/
+	rm -rf src/vendor/lcobucci/jwt/test/
 	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	cp -ar $(SRCPATH) $(PLUGINSLUG)
 	zip -r $(PLUGINSLUG).zip $(PLUGINSLUG)
