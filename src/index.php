@@ -19,6 +19,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\Shortcodes;
 	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\AdminDashboard;
+	use Niteo\WooCart\Defaults\AutoLogin;
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
@@ -35,9 +36,11 @@ namespace Niteo\WooCart {
 	/**
 	 * 1. Consent notification to comply with GDPR.
 	 * 2. Panel for the store in the WP admin dashboard.
+	 * 3. Support auto login from url with jwt token.
 	 */
 	if ( function_exists( 'add_action' ) ) {
 		new GDPR();
 		new AdminDashboard();
+		new AutoLogin();
 	}
 }

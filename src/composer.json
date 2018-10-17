@@ -11,7 +11,8 @@
     "symfony/yaml": "^3.3",
     "ext-json": "*",
     "ext-gd": "*",
-    "krakjoe/pthreads-polyfill": "^1.1"
+    "krakjoe/pthreads-polyfill": "^1.1",
+    "lcobucci/jwt": "^3.2"
   },
   "autoload": {
     "psr-4": {
