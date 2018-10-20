@@ -8,11 +8,13 @@ cache:
   - $HOME/.composer/cache/files
 php:
 - 7.2
+- 7.3
 before_script:
 - composer install
 - mkdir -p build/logs
 - touch /tmp/.htaccess
 script:
+- make fmt
 - make test
 - bin/coverage-check clover.xml 78
 deploy:

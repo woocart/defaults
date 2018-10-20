@@ -1,4 +1,4 @@
-VERSION := 3.4.0
+VERSION := 3.4.1
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -55,11 +55,9 @@ release:
 	git pull -r
 
 fmt: ensure
-	bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs
 	bin/phpcbf --standard=WordPress src --ignore=src/vendor
 
 lint: ensure
-	bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs
 	bin/phpcs --standard=WordPress src --ignore=src/vendor
 
 psr: src/vendor
