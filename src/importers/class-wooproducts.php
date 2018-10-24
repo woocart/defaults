@@ -58,13 +58,19 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$contents = file_get_contents( $this->file_path );
 			$products = preg_split( '/^---$/m', $contents );
 			foreach ( $products as $product ) {
-				$product = ProductMeta::fromArray( $this->parse_product( $product ) );
+				$time_start = microtime( true );
+				$product    = ProductMeta::fromArray( $this->parse_product( $product ) );
 				$product->set_alias( 'common:', $this->common_path );
 				$product->set_category_ids();
 				$product->upload_images();
 				if ( $product->save() ) {
 					$this->product_count += 1;
 				};
+
+				$time_end = microtime( true );
+				$time     = $time_end - $time_start;
+
+				fwrite( STDOUT, "import_product($product->title): $time seconds\n\n" );
 			}
 
 		}

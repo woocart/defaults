@@ -11,6 +11,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 	class ProductMeta {
 
 
+
 		use FromArray;
 
 		/**
@@ -41,7 +42,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		/**
 		 * @var array
 		 */
-		public $images;
+		public $images = [];
 
 		/**
 		 * @var array
@@ -83,11 +84,14 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 */
 		public function upload_images() {
 			$image_ids = [];
-			foreach ( $this->images as $image ) {
-				$path     = $this->get_image_path( $image );
-				$image_id = $this->upload_image( $path );
-				if ( $image_id ) {
-					$image_ids[] = $image_id;
+			if ( count( $this->images ) > 0 ) {
+
+				foreach ( $this->images as $image ) {
+					$path     = $this->get_image_path( $image );
+					$image_id = $this->upload_image( $path );
+					if ( $image_id ) {
+						$image_ids[] = $image_id;
+					}
 				}
 			}
 			$this->image_ids = $image_ids;
@@ -114,6 +118,8 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @return int The attachment id of the image (0 on failure).
 		 */
 		private function upload_image( string $image_path ): int {
+			$time_start = microtime( true );
+
 			if ( ! file_exists( $image_path ) ) {
 				return 0;
 			}
@@ -141,6 +147,11 @@ namespace Niteo\WooCart\Defaults\Importers {
 				$metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 				wp_update_attachment_metadata( $attachment_id, $metadata );
 			}
+
+			$time_end = microtime( true );
+			$time     = $time_end - $time_start;
+			fwrite( STDOUT, "upload_image($image_path): $time seconds\n" );
+
 			return $attachment_id;
 		}
 
