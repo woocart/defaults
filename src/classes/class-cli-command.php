@@ -171,5 +171,51 @@ namespace Niteo\WooCart\Defaults {
 			WP_CLI::success( $products->get_product_count() . ' products added.' );
 		}
 
+		/**
+		 * Dump sales stats.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <field>
+		 * : Name of field to output.
+		 * ---
+		 * options:
+		 *   - total_refunds
+		 *   - total_tax
+		 *   - total_shipping
+		 *   - total_shipping_tax
+		 *   - total_sales
+		 *   - net_sales
+		 *   - average_sales
+		 *   - average_total_sales
+		 *   - total_coupons
+		 *   - total_refunded_orders
+		 *   - total_orders
+		 *   - total_items
+		 * ---
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd sales total_sales
+		 *
+		 * @param array $args Arguments specified.
+		 * @param array $assoc_args Associative arguments specified.
+		 * @codeCoverageIgnore
+		 */
+		public function sales( $args, $assoc_args ) {
+			list($field) = $args;
+
+			include_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/reports/class-wc-admin-report.php';
+			include_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/reports/class-wc-report-sales-by-date.php';
+			$sales_by_date                 = new \WC_Report_Sales_By_Date();
+			$sales_by_date->start_date     = strtotime( date( 'Y-m-01', current_time( 'timestamp' ) ) );
+			$sales_by_date->end_date       = current_time( 'timestamp' );
+			$sales_by_date->chart_groupby  = 'hour';
+			$sales_by_date->group_by_query = 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date)';
+
+			$data = (array) $sales_by_date->get_report_data();
+			echo $data[ $field ];
+		}
+
 	}
 }

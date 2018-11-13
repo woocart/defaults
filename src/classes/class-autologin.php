@@ -45,6 +45,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @param string $auth jwt token.
 		 * @param string $secret shared secret to verify jwt token.
+		 * @return bool
 		 */
 		public function validate_jwt_token( $auth, $secret ): bool {
 			$data   = new ValidationData();
