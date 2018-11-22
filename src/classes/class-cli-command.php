@@ -172,7 +172,7 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Dump sales stats.
+		 * Dump sales stats for previous day from 00:00:00 to 23:59:59.
 		 *
 		 * ## OPTIONS
 		 *
@@ -208,9 +208,9 @@ namespace Niteo\WooCart\Defaults {
 			include_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/reports/class-wc-admin-report.php';
 			include_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/reports/class-wc-report-sales-by-date.php';
 			$sales_by_date                 = new \WC_Report_Sales_By_Date();
-			$sales_by_date->start_date     = strtotime( date( 'Y-m-01', current_time( 'timestamp' ) ) );
-			$sales_by_date->end_date       = current_time( 'timestamp' );
-			$sales_by_date->chart_groupby  = 'hour';
+			$sales_by_date->start_date     = strtotime( date( 'Y-m-d 00:00:00', strtotime( '-1 day' ) ) );
+			$sales_by_date->end_date       = strtotime( date( 'Y-m-d 23:59:59', strtotime( '-1 day' ) ) );
+			$sales_by_date->chart_groupby  = 'day';
 			$sales_by_date->group_by_query = 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date)';
 
 			$data = (array) $sales_by_date->get_report_data();
