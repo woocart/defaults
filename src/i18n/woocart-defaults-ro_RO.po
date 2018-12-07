@@ -1,0 +1,144 @@
+# Copyright (C) 2018 WooCart
+# This file is distributed under the same license as the WooCart Defaults plugin.
+# Translators:
+# dz0ny <janez.troha@gmail.com>, 2018
+# Matei Gavris <mg@niteo.co>, 2018
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCart Defaults @##VERSION##@\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/src\n"
+"POT-Creation-Date: 2018-12-07T10:43:00+01:00\n"
+"PO-Revision-Date: 2018-12-07 09:48+0000\n"
+"Last-Translator: Matei Gavris <mg@niteo.co>, 2018\n"
+"Language-Team: Romanian (Romania) (https://www.transifex.com/woocart/teams/94303/ro_RO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ro_RO\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"X-Domain: woocart-defaults\n"
+"X-Generator: WP-CLI 2.0.1\n"
+
+#. Plugin Name of the plugin
+msgid "WooCart Defaults"
+msgstr "Setări Implicite WooCart"
+
+#. Description of the plugin
+msgid "Manage and deploy WordPress + WooCommerce configuration changes."
+msgstr ""
+"Efectuează și manageriază schimbări de configurare pentru WordPress + "
+"WooCommerce."
+
+#. Author of the plugin
+msgid "WooCart"
+msgstr "WooCart"
+
+#. Author URI of the plugin
+msgid "www.woocart.com"
+msgstr "www.woocart.com"
+
+#: classes/class-gdpr.php:50
+msgid ""
+"We use cookies to improve your experience on our site. To find out more, "
+"read our <a href=\"%1$s\" class=\"wcil\">Privacy Policy</a> and <a "
+"href=\"%2$s\" class=\"wcil\">Cookie Policy</a>."
+msgstr ""
+"Folosim cookie-uri pentru a-ți îmbunătăți experiența pe site-ul nostru. "
+"Pentru a afla mai multe, citește <a href=\"%1$s\" class=\"wcil\">Prelucrarea"
+" datelor cu caracter personal</a> și <a href=\"%2$s\" "
+"class=\"wcil\">Politica de utilizare Cookie-uri</a>."
+
+#: classes/class-gdpr.php:61
+msgid "OK"
+msgstr "OK"
+
+#: classes/class-admindashboard.php:58
+msgid "Welcome to your new store!"
+msgstr "Bun venit la noul tău magazin!"
+
+#: classes/class-admindashboard.php:59
+msgid "You are only a few steps away from selling."
+msgstr "Ești doar la câțiva pași de a vinde."
+
+#: classes/class-admindashboard.php:65
+msgid "Connect a Payment Gateway"
+msgstr "Conectează un Procesatot de Plăți"
+
+#: classes/class-admindashboard.php:66
+msgid "To start receiving payments, you'll need to set up a payment gateway."
+msgstr ""
+"Că să începi să primești plăti trebuie să setezi un procesator de plăți."
+
+#: classes/class-admindashboard.php:67
+msgid ""
+"Here are the instructions and the recommended plugins for the popular "
+"gateways:"
+msgstr ""
+"Acestea sunt instrucțiunile și plugin-urile recomandate pentru cei mai "
+"utilizați procesatori:"
+
+#: classes/class-admindashboard.php:82
+msgid "Connect a Shipping Courier"
+msgstr "Conectează un Curier"
+
+#: classes/class-admindashboard.php:83
+msgid ""
+"If you prepare shipping slips automatically, you'll need to use a shipping "
+"courier plugin."
+msgstr ""
+"Livrarea produselor poate fi automatizată, trebuie să folosești un plugin "
+"pentru curier."
+
+#: classes/class-admindashboard.php:84
+msgid "Here are the recommended plugins for the most popular couriers:"
+msgstr ""
+"Acestea sunt plugin-urile recomandate pentru cei mai populari curieri:"
+
+#: classes/class-admindashboard.php:96
+msgid "Add Your Products"
+msgstr "Adaugă Produsele Tale"
+
+#: classes/class-admindashboard.php:101
+msgid ""
+"Add your products manually or import a CSV with the <a "
+"href=\"%s\">WooCommerce import</a>."
+msgstr ""
+"Adaugă produsele manual sau importă-le printr-un CSV cu <a "
+"href=\"%s\">WooCommerce Import</a>."
+
+#: classes/class-admindashboard.php:122
+msgid "Add Your Own Logo and Slider Banners"
+msgstr "Adaugă Propriul Logo și Bannerele Pentru Slider"
+
+#: classes/class-admindashboard.php:126
+msgid ""
+"You'll want to add your own logo and banners to the store. You can use "
+"something like %sthe free tool <a "
+"href=\"https://www.canva.com/create/banners/\" target=\"_blank\" "
+"rel=\"noopener noreferrer\">Canva</a> to create these graphics."
+msgstr ""
+"Vei dori să adaugi propriul logo și bannere personalizate pentru magazinul "
+"tău . Poți folosi ceva ca %s tool-ul gratis <a "
+"href=\"https://www.canva.com/create/banners/\" target=\"_blank\" "
+"rel=\"noopener noreferrer\">Canva</a> pentru a crea aceste grafice."
+
+#: classes/class-admindashboard.php:138
+msgid "Start Customizing"
+msgstr "Începe Customizarea"
+
+#: classes/class-admindashboard.php:146
+msgid "Test The Checkout"
+msgstr "Testează Checkout-ul"
+
+#: classes/class-admindashboard.php:147
+msgid ""
+"Go through the buying process and review that everything is working as it "
+"should."
+msgstr ""
+"Parcurge procesul de cumpărare și verifică ca totul să funcționeze exact cum"
+" ar trebui."
+
+#: classes/class-admindashboard.php:149
+msgid "Visit Your Store"
+msgstr "Vizitează-ți Magazinul"

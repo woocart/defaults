@@ -1,4 +1,4 @@
-VERSION := 3.4.4
+VERSION := 3.4.5
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -66,3 +66,4 @@ psr: src/vendor
 
 i18n:
 	wp i18n make-pot src src/i18n/woocart-defaults.pot
+	msgfmt -o src/i18n/woocart-defaults-ro_RO.mo src/i18n/woocart-defaults-ro_RO.po
