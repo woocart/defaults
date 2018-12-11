@@ -127,9 +127,10 @@ namespace Niteo\WooCart\Defaults {
 
 			try {
 				$countries = $limit->countries( $limit->zoneID() );
-				update_option( 'woocommerce_all_except_countries', $countries );
+				update_option( 'woocommerce_allowed_countries', 'specific' );
+				update_option( 'woocommerce_specific_allowed_countries', $countries );
 				$list = implode( ',', $countries );
-				WP_CLI::success( "The region $zone with ($list) has been inserted to woocommerce_all_except_countries." );
+				WP_CLI::success( "The region $zone with ($list) has been inserted to woocommerce_specific_allowed_countries." );
 			} catch ( \Exception $e ) {
 				WP_CLI::error( "There was an error in pushing $zone to the database." );
 			}
