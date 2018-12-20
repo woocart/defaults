@@ -1,4 +1,4 @@
-VERSION := 3.5.0
+VERSION := 3.5.1
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -24,6 +24,7 @@ src/vendor:
 
 build: ensure
 	sed -i "s/@##VERSION##@/${VERSION}/" src/index.php
+	sed -i "s/@##VERSION##@/${VERSION}/" src/classes/class-release.php
 	mkdir -p build
 	rm -rf src/vendor
 	cd src && composer install --no-dev
@@ -36,6 +37,7 @@ build: ensure
 	rm -rf $(PLUGINSLUG)
 	mv $(PLUGINSLUG).zip build/
 	sed -i "s/${VERSION}/@##VERSION##@/" src/index.php
+	sed -i "s/${VERSION}/@##VERSION##@/" src/classes/class-release.php
 
 publish: build bin/linux/amd64/github-release
 	bin/linux/amd64/github-release upload \
