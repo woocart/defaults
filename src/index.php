@@ -20,6 +20,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\AdminDashboard;
 	use Niteo\WooCart\Defaults\AutoLogin;
+	use Niteo\WooCart\Defaults\DenyList;
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
@@ -42,5 +43,6 @@ namespace Niteo\WooCart {
 		new GDPR();
 		new AdminDashboard();
 		new AutoLogin();
+		new DenyList();
 	}
 }
