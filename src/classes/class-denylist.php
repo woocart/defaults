@@ -176,13 +176,6 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
 			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
 			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
-
-			/**
-			 * This one is also nice to have from security point of view.
-			 * Maybe, we will enable this in future.
-			 *
-			 * add_action( 'xmlrpc_methods', [ &$this, 'RemoveXmlrpcMethods' ] );
-			 */
 		}
 
 		/**
@@ -191,7 +184,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @param string $plugin Plugin name to check and disable.
 		 */
 		public function disable_activation( $plugin ) {
-			if ( $this->is_plugin_blacklisted( $plugin ) ) {
+			if ( $this->is_plugin_denied( $plugin ) ) {
 				$this->_plugins_to_deactivate[] = $plugin;
 
 				if ( false == has_action( 'shutdown', [ &$this, 'deactivate_plugins' ] ) ) {
@@ -208,7 +201,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @access private
 		 * @codeCoverageIgnore
 		 */
-		private function is_plugin_blacklisted( $plugin ) {
+		private function is_plugin_denied( $plugin ) {
 			if ( is_array( $plugin ) ) {
 				$info    = $plugin;
 				$_plugin = $info['slug'];
@@ -251,7 +244,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @return string|array
 		 */
 		public function disable_install_link( $links, $plugin ) {
-			if ( $this->is_plugin_blacklisted( $plugin ) ) {
+			if ( $this->is_plugin_denied( $plugin ) ) {
 				return [
 					sprintf(
 						'<a href="javascript:;" title="%2$s">%1$s</a>',
@@ -275,7 +268,7 @@ namespace Niteo\WooCart\Defaults {
 		public function disable_activate_link( $links, $plugin ) {
 			if (
 			isset( $links['activate'] )
-			&& $this->is_plugin_blacklisted( $plugin )
+			&& $this->is_plugin_denied( $plugin )
 			) {
 				$links['activate'] = sprintf(
 					'<a href="javascript:;" data-plugin="%3$s" title="%2$s">%1$s</a>',
@@ -313,19 +306,6 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $actions;
-		}
-
-		/**
-		 * Disable XML-RPC methods.
-		 *
-		 * @return array
-		 */
-		public function RemoveXmlrpcMethods( $methods ) {
-			unset( $methods['system.multicall'] );
-			unset( $methods['system.listMethods'] );
-			unset( $methods['system.getCapabilities'] );
-
-			return $methods;
 		}
 
 	}

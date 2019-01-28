@@ -41,7 +41,7 @@ class DenyListTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_activation
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    */
   public function testDisableActivationWithString()
   {
@@ -67,7 +67,7 @@ class DenyListTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_activation
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    */
   public function testDisableActivationWithArray()
   {
@@ -118,7 +118,7 @@ class DenyListTest extends TestCase
 
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_install_link
    */
   public function testDisableInstallLinkBlacklisted()
@@ -133,7 +133,7 @@ class DenyListTest extends TestCase
 
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_install_link
    */
   public function testDisableInstallLinkWhitelisted()
@@ -148,7 +148,7 @@ class DenyListTest extends TestCase
 
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_activate_link
    */
   public function testDisableActivateLinkBlacklisted()
@@ -163,7 +163,7 @@ class DenyListTest extends TestCase
 
   /**
    * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_blacklisted
+   * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
    * @covers \Niteo\WooCart\Defaults\DenyList::disable_activate_link
    */
   public function testDisableActivateLinkWhitelisted()
@@ -173,34 +173,6 @@ class DenyListTest extends TestCase
     $this->assertEquals(
       $denylist->disable_activate_link( [], 'whitelisted-plugin' ),
       []
-    );
-  }
-
-  /**
-   * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::RemoveXmlrpcMethods
-   */
-  public function testRemoveXmlrpcMethodsNone()
-  {
-    $denylist = new DenyList();
-
-    $this->assertEquals(
-      $denylist->RemoveXmlrpcMethods( [ 'none removed' ] ),
-      [ 'none removed' ]
-    );
-  }
-
-  /**
-   * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-   * @covers \Niteo\WooCart\Defaults\DenyList::RemoveXmlrpcMethods
-   */
-  public function testRemoveXmlrpcMethodsAll()
-  {
-    $denylist = new DenyList();
-
-    $this->assertEquals(
-      $denylist->RemoveXmlrpcMethods( [ 'system.multicall' => '', 'system.listMethods' => '', 'system.getCapabilities' => '', 'total' => 'three removed' ] ),
-      [ 'total' => 'three removed' ]
     );
   }
 
