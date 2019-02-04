@@ -42,13 +42,35 @@ class GDPRTest extends TestCase
                 'args'      => ['woocart-gdpr', '/assets/js/front-gdpr.js', [], '@##VERSION##@', true]
             )
         );
+        \WP_Mock::userFunction(
+            'is_admin', array(
+                'times'     => 2,
+                'return'    => true
+            )
+        );
         $gdpr = new GDPR();
         \WP_Mock::expectActionAdded( 'wp_footer', [ $gdpr, 'show_consent' ] );
         \WP_Mock::expectActionAdded( 'wp_enqueue_scripts', [ $gdpr, 'scripts' ] );
+        \WP_Mock::expectActionAdded( 'admin_menu', [ $gdpr, 'add_menu_item' ], 1 );
 
         $gdpr->__construct();
         $gdpr->scripts();
         \WP_Mock::assertHooksAdded();
+    }
+
+    /**
+     * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+     * @covers \Niteo\WooCart\Defaults\GDPR::add_menu_item
+     */
+    public function testAddMenuItem() {
+        $gdpr = new GDPR();
+        \WP_Mock::userFunction(
+            'add_options_page', array(
+                'times' => 1
+            )
+        );
+
+        $gdpr->add_menu_item();
     }
 
     /**
@@ -58,6 +80,11 @@ class GDPRTest extends TestCase
     public function testConsent()
     {
         $gdpr = new GDPR();
+        \WP_Mock::userFunction(
+            'is_admin', array(
+                'return'    => true
+            )
+        );
         \WP_Mock::userFunction(
             'get_option', array(
                 'args'      => 'woocommerce_allow_tracking',
@@ -75,7 +102,20 @@ class GDPRTest extends TestCase
             )
         );
         \WP_Mock::userFunction(
+            'sanitize_text_field', array(
+                'times'     => 2,
+                'return'    => ''
+            )
+        );
+        \WP_Mock::userFunction(
+            'get_the_title', array(
+                'times'     => 2,
+                'return'    => ''
+            )
+        );
+        \WP_Mock::userFunction(
             'get_permalink', array(
+                'times'     => 2,
                 'args'      => 10,
                 'return'    => 'https://woocart.com'
             )
@@ -101,4 +141,46 @@ class GDPRTest extends TestCase
         $this->expectOutputString( '<div class="wc-defaults-gdpr"><p>Standard output. <a href="javascript:;" id="wc-defaults-ok">OK</a></p></div><!-- .wc-defaults-gdpr -->'
         );
     }
+
+    /**
+     * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+     * @covers \Niteo\WooCart\Defaults\GDPR::options_page
+     *
+    public function testOptionsPage() {
+        $gdpr = new GDPR();
+        \WP_Mock::userFunction(
+            'current_user_can', array(
+                'args'   => 'manage_privacy_options',
+                'times'  => 1,
+                'return' => false
+            )
+        );
+        \WP_Mock::userFunction(
+            'wp_die', array(
+                'times'  => 1
+            )
+        );
+        \WP_Mock::userFunction(
+            'settings_errors', array(
+                'times'  => 1
+            )
+        );
+        \WP_Mock::userFunction(
+            'get_posts', array(
+                'times'  => 1
+            )
+        );
+        \WP_Mock::userFunction(
+            'wp_nonce_field', array(
+                'times'  => 1
+            )
+        );
+        \WP_Mock::userFunction(
+            'submit_button', array(
+                'times'  => 1
+            )
+        );
+
+        $gdpr->options_page();
+    } */
 }
