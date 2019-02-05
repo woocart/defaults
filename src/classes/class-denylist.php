@@ -272,7 +272,7 @@ namespace Niteo\WooCart\Defaults {
 			&& $this->is_plugin_denied( $plugin )
 			) {
 				$links['activate'] = sprintf(
-					'<a href="javascript:;" data-plugin="%3$s" title="%2$s">%1$s</a>',
+					'<a href="https://woocart.com/plugins-denylist" data-plugin="%3$s" title="%2$s" target="_blank">%1$s</a>',
 					'Not available',
 					'This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions.',
 					$plugin

@@ -127,7 +127,7 @@ class DenyListTest extends TestCase
 
     $this->assertEquals(
       $denylist->disable_install_link( [], 'adminer' ),
-      [ '<a href="javascript:;" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions.">Not available</a>' ]
+      [ '<a href="https://woocart.com/plugins-denylist" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' ]
     );
   }
 
@@ -157,7 +157,7 @@ class DenyListTest extends TestCase
 
     $this->assertEquals(
       $denylist->disable_activate_link( [ 'activate' => '' ], 'adminer' ),
-      [ 'activate' => '<a href="javascript:;" data-plugin="adminer" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions.">Not available</a>' ]
+      [ 'activate' => '<a href="https://woocart.com/plugins-denylist" data-plugin="adminer" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' ]
     );
   }
 
