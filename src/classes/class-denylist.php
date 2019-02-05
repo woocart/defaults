@@ -159,6 +159,7 @@ namespace Niteo\WooCart\Defaults {
 			'wp-db-manager',
 			'file-manager-advanced',
 			'force-https-littlebizzy',
+			'wp-encrypt',
 		];
 
 		/**
