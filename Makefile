@@ -13,10 +13,10 @@ vendor: src/vendor
 	composer install --dev
 	composer dump-autoload -a
 
+clover.xml: vendor test
 test: vendor
 	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	bin/phpunit --coverage-html=./reports
-	bin/coverage-check clover.xml 100
 
 src/vendor:
 	cd src && composer install
@@ -69,3 +69,6 @@ psr: src/vendor
 i18n:
 	wp i18n make-pot src src/i18n/woocart-defaults.pot
 	msgfmt -o src/i18n/woocart-defaults-ro_RO.mo src/i18n/woocart-defaults-ro_RO.po
+
+cover: clover.xml
+	bin/coverage-check clover.xml 100
