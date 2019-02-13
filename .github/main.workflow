@@ -10,7 +10,7 @@ action "Build package" {
 
 action "Upload to release" {
   uses = "JasonEtco/upload-to-release@master"
-  args = "build/woocart-defaults.zip"
+  args = "build/woocart-defaults.zip application/zip"
   secrets = ["GITHUB_TOKEN"]
   needs = ["Build package"]
 }
