@@ -21,7 +21,7 @@ workflow "Test Project" {
   resolves = ["Lint", "Test", "Cover"]
 }
 
-action "Prepare" {
+action "Install Dependencies" {
   uses = "./.github/php"
   args = "composer install"
 }
@@ -29,17 +29,17 @@ action "Prepare" {
 action "Lint" {
   uses = "./.github/php"
   args = "make fmt"
-  needs = ["Prepare"]
+  needs = ["Install Dependencies"]
 }
 
 action "Test" {
   uses = "./.github/php"
   args = "make test"
-  needs = ["Prepare"]
+  needs = ["Install Dependencies"]
 }
 
 action "Cover" {
   uses = "./.github/php"
-  args = "make cover"
+  args = "make test cover"
   needs = ["Test"]
 }
