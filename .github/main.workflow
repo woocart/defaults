@@ -28,7 +28,10 @@ action "Upload to release" {
 action "Create PR" {
   uses = "dz0ny/create-pr@master"
   args = ".github/create_pr.py"
-  secrets = ["GITHUB_TOKEN"]
+  secrets = [
+    "GITHUB_TOKEN",
+    "PTA_TOKEN",
+  ]
   needs = ["Upload to release"]
 }
 
@@ -37,7 +40,7 @@ workflow "Test Project" {
   resolves = [
     "Lint",
     "Test",
-    "Cover"
+    "Cover",
   ]
 }
 
@@ -69,4 +72,3 @@ action "Cover" {
   args = "make test cover"
   needs = ["Test"]
 }
-

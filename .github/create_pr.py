@@ -5,7 +5,7 @@ if __name__ == "__main__":
     if not event.is_release:
         raise Exception("This event is not from release")
 
-    with commit(event, f"update_wd_{event.release.tag_name}") as gh:
+    with commit(event, f"update/wd_{event.release.tag_name}", env["PTA_TOKEN"]) as gh:
         versions = gh.get("niteoweb/woocart-docker-web", "bin/runtime/versions")
         regex = r"\/v(.+)\/"
         versions.text = re.sub(regex, f"/{event.release.tag_name}/", versions.text)
