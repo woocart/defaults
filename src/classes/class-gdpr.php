@@ -41,28 +41,47 @@ namespace Niteo\WooCart\Defaults {
 			$consent = get_option( 'woocommerce_allow_tracking' );
 
 			if ( 'no' === $consent ) {
-				// Grab page ID's with the help of page slug.
-				$privacy = absint( get_option( 'wp_page_for_privacy_policy' ) );
-				$cookies = absint( get_option( 'wp_page_for_cookie_policy' ) );
+				// Get the notification message from `wp_options`
+				$notification_message = esc_html( get_option( 'wc_gdpr_notification_message', 'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].' ) );
 
-				if ( $privacy && $cookies ) {
+				// Proceed only if the notification message is not blank
+				if ( ! empty( $notification_message ) ) {
+					// Now check for placeholders in the message
+					// Privacy policy
+					if ( false !== strpos( $notification_message, '[privacy_policy]' ) ) {
+						$privacy = absint( get_option( 'wp_page_for_privacy_policy' ) );
+
+						if ( $privacy ) {
+							$privacy_link  = esc_url( get_permalink( $privacy ) );
+							$privacy_title = sanitize_text_field( get_the_title( $privacy ) );
+
+							$privacy_replace = '<a href="' . $privacy_link . '">' . $privacy_title . '</a>';
+
+							// Replace the placeholder
+							$notification_message = str_replace( '[privacy_policy]', $privacy_replace, $notification_message );
+						}
+					}
+
+					// Cookies policy
+					if ( false !== strpos( $notification_message, '[cookies_policy]' ) ) {
+						$cookies = absint( get_option( 'wp_page_for_cookies_policy' ) );
+
+						if ( $cookies ) {
+							$cookies_link  = esc_url( get_permalink( $cookies ) );
+							$cookies_title = sanitize_text_field( get_the_title( $cookies ) );
+
+							$cookies_replace = '<a href="' . $cookies_link . '">' . $cookies_title . '</a>';
+
+							// Replace the placeholder
+							$notification_message = str_replace( '[cookies_policy]', $cookies_replace, $notification_message );
+						}
+					}
+
+					// We have replaced the placeholders with the actual links.
+					// Let's show the notification now.
 					echo '<div class="wc-defaults-gdpr">';
 					echo '<p>';
-					echo sprintf(
-						wp_kses(
-							__( 'We use cookies to improve your experience on our site. To find out more, read our <a href="%1$s" class="wcil">%2$s</a> and <a href="%3$s" class="wcil">%4$s</a>.', 'woocart-defaults' ),
-							array(
-								'a' => array(
-									'href'  => array(),
-									'class' => array(),
-								),
-							)
-						),
-						esc_url( get_permalink( $privacy ) ),
-						sanitize_text_field( get_the_title( $privacy ) ),
-						esc_url( get_permalink( $cookies ) ),
-						sanitize_text_field( get_the_title( $cookies ) )
-					);
+					echo $notification_message;
 					echo ' <a href="javascript:;" id="wc-defaults-ok">' . esc_html__( 'OK', 'woocart-defaults' ) . '</a>';
 					echo '</p>';
 					echo '</div><!-- .wc-defaults-gdpr -->';
@@ -75,10 +94,10 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function add_menu_item() {
 			add_options_page(
-				esc_html__( 'Cookies Policy Settings', 'woocart-defaults' ),
-				esc_html__( 'Cookies Policy', 'woocart-defaults' ),
+				esc_html__( 'Cookies Policy & Notification Settings', 'woocart-defaults' ),
+				esc_html__( 'Cookies Policy & Notification', 'woocart-defaults' ),
 				'manage_options',
-				'cookie_policy_settings',
+				'cookies_policy_settings',
 				[
 					&$this,
 					'options_page',
@@ -102,10 +121,13 @@ namespace Niteo\WooCart\Defaults {
 				check_admin_referer( $action );
 
 				if ( 'set-cookies-page' === $action ) {
+					$notification_message   = isset( $_POST['notification_message'] ) ? (string) $_POST['notification_message'] : '';
 					$cookies_policy_page_id = isset( $_POST['page_for_cookies_policy'] ) ? (int) $_POST['page_for_cookies_policy'] : 0;
-					update_option( 'wp_page_for_cookie_policy', $cookies_policy_page_id );
 
-					$cookies_page_updated_message = esc_html__( 'Cookies Policy page updated successfully.', 'woocart-defaults' );
+					update_option( 'wc_gdpr_notification_message', sanitize_text_field( $notification_message ) );
+					update_option( 'wp_page_for_cookies_policy', $cookies_policy_page_id );
+
+					$cookies_page_updated_message = esc_html__( 'Cookies Policy page and notification message has been updated successfully.', 'woocart-defaults' );
 
 					if ( $cookies_policy_page_id ) {
 						/**
@@ -152,7 +174,7 @@ namespace Niteo\WooCart\Defaults {
 							'error'
 						);
 					} else {
-						update_option( 'wp_page_for_cookie_policy', $cookies_policy_page_id );
+						update_option( 'wp_page_for_cookies_policy', $cookies_policy_page_id );
 
 						wp_redirect( admin_url( 'post.php?post=' . $cookies_policy_page_id . '&action=edit' ) );
 						exit;
@@ -162,7 +184,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// If a Cookies Policy page ID is available, make sure the page actually exists. If not, display an error.
 			$cookies_policy_page_exists = false;
-			$cookies_policy_page_id     = (int) get_option( 'wp_page_for_cookie_policy' );
+			$cookies_policy_page_id     = (int) get_option( 'wp_page_for_cookies_policy' );
 
 			if ( ! empty( $cookies_policy_page_id ) ) {
 				$cookies_policy_page_status = get_post_status( $cookies_policy_page_id );
@@ -193,7 +215,7 @@ namespace Niteo\WooCart\Defaults {
 
 			?>
 			<div class="wrap">
-				<h1><?php esc_html_e( 'Cookies Policy Settings' ); ?></h1>
+				<h1><?php esc_html_e( 'Cookies Policy & Notification Settings' ); ?></h1>
 				<h2><?php esc_html_e( 'Manage your Cookies Policy page and notification.' ); ?></h2>
 				<p>
 					<?php esc_html_e( 'As a website owner, you may need to follow national or international laws. For example, you may need to create and display a Cookies Policy.' ); ?>
@@ -233,82 +255,119 @@ namespace Niteo\WooCart\Defaults {
 
 				?>
 				<hr>
-				<table class="form-table tools-privacy-policy-page">
-					<tr>
-						<th scope="row">
-							<?php
+				<form method="post" action="">
+		  <table class="form-table tools-privacy-policy-page">
+						<tr>
+			  <th scope="row">
+								<?php esc_html_e( 'GDPR notification message' ); ?>
+							</th>
+							<td>
+								<textarea name="notification_message" class="widefat" rows="4"><?php echo esc_html( get_option( 'wc_gdpr_notification_message', 'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].' ) ); ?></textarea>
 
-							if ( $cookies_policy_page_exists ) {
-								esc_html_e( 'Change your Cookies Policy page' );
-							} else {
-								esc_html_e( 'Select a Cookies Policy page' );
-							}
+								<p>
+									<?php
 
-							?>
-						</th>
-						<td>
-							<?php
-
-								$has_pages = (bool) get_posts(
-									array(
-										'post_type'      => 'page',
-										'posts_per_page' => 1,
-										'post_status'    => array(
-											'publish',
-											'draft',
-										),
-									)
-								);
-
-							if ( $has_pages ) :
-								?>
-									<form method="post" action="">
-										<label for="page_for_cookies_policy">
-											<?php esc_html_e( 'Select an existing page:' ); ?>
-										</label>
-										<input type="hidden" name="action" value="set-cookies-page">
-										<?php
-
-										wp_dropdown_pages(
+										echo wp_kses(
+											__( 'To insert links for privacy policy and cookie policy pages, make use of the placeholders - <strong>[privacy_policy]</strong> and <strong>[cookies_policy]</strong>. If you do not wish to show the GDPR notice on your store, you can do so by deleting notification text from the above field.', 'woocart-defaults' ),
 											array(
-												'name'     => 'page_for_cookies_policy',
-												'show_option_none' => esc_html__( '&mdash; Select &mdash;', 'woocart-defaults' ),
-												'option_none_value' => '0',
-												'selected' => $cookies_policy_page_id,
-												'post_status' => array( 'draft', 'publish' ),
+												'strong' => array(),
 											)
 										);
 
-										wp_nonce_field( 'set-cookies-page' );
-										submit_button( esc_html__( 'Use This Page', 'woocart-defaults' ), 'primary', 'submit', false, array( 'id' => 'set-page' ) );
-
-										?>
-									</form>
-							<?php endif; ?>
-
-							<form class="wp-create-privacy-page" method="post" action="">
-								<input type="hidden" name="action" value="create-cookies-page" />
-								<span>
-									<?php
-
-									if ( $has_pages ) {
-										esc_html_e( 'Or:' );
-									} else {
-										esc_html_e( 'There are no pages.' );
-									}
-
 									?>
-								</span>
+								</p>
+							</td>
+			<tr>
+			  <th scope="row">
+				<?php
+
+				if ( $cookies_policy_page_exists ) {
+					esc_html_e( 'Change your Cookies Policy page' );
+				} else {
+					esc_html_e( 'Select a Cookies Policy page' );
+				}
+
+				?>
+			  </th>
+			  <td>
+				<?php
+
+				$has_pages = (bool) get_posts(
+					array(
+						'post_type'      => 'page',
+						'posts_per_page' => 1,
+						'post_status'    => array(
+							'publish',
+							'draft',
+						),
+					)
+				);
+
+				if ( $has_pages ) :
+					?>
+					<label for="page_for_cookies_policy">
+					  <?php esc_html_e( 'Select an existing page:' ); ?>
+					</label>
+
+					<?php
+
+					wp_dropdown_pages(
+						array(
+							'name'              => 'page_for_cookies_policy',
+							'show_option_none'  => esc_html__( '&mdash; Select &mdash;', 'woocart-defaults' ),
+							'option_none_value' => '0',
+							'selected'          => $cookies_policy_page_id,
+							'post_status'       => array( 'draft', 'publish' ),
+						)
+					);
+
+					?>
+				<?php endif; ?>
+			  </td>
+			</tr>
+						<tr>
+							<th scope="row"></th>
+							<td>
+								<input type="hidden" name="action" value="set-cookies-page">
+
 								<?php
 
-									wp_nonce_field( 'create-cookies-page' );
-									submit_button( esc_html__( 'Create New Page', 'woocart-defaults' ), 'primary', 'submit', false, array( 'id' => 'create-page' ) );
+									wp_nonce_field( 'set-cookies-page' );
+									submit_button( esc_html__( 'Save Settings', 'woocart-defaults' ), 'primary', 'submit', false, array( 'id' => 'set-page' ) );
 
 								?>
-							</form>
-						</td>
-					</tr>
-				</table>
+							</td>
+						</tr>
+		  </table>
+		</form>
+
+				<form class="wp-create-privacy-page" method="post" action="">
+		  <table class="form-table tools-privacy-policy-page">
+						<tr>
+			  <th scope="row"></th>
+							<td>
+									<input type="hidden" name="action" value="create-cookies-page">
+									<span>
+										<?php
+
+										if ( $has_pages ) {
+											echo '<p>' . esc_html__( 'You can also create a new page for the Cookies policy using the button below. Please note that you will be redirected to the page editor to edit content for your newly created Cookies policy page.' ) . '</p><br>';
+										} else {
+											esc_html_e( 'There are no pages.' );
+										}
+
+										?>
+									</span>
+									<?php
+
+										wp_nonce_field( 'create-cookies-page' );
+										submit_button( esc_html__( 'Create New Page', 'woocart-defaults' ), 'primary', 'submit', false, array( 'id' => 'create-page' ) );
+
+									?>
+							</td>
+						</tr>
+					</table>
+				</form>
 			</div>
 			<?php
 		}

@@ -92,53 +92,50 @@ class GDPRTest extends TestCase
             )
         );
         \WP_Mock::userFunction(
-            'absint', array(
-                'return'    => true
-            )
-        );
-        \WP_Mock::userFunction(
-            'esc_url', array(
-                'return'    => true
-            )
-        );
-        \WP_Mock::userFunction(
-            'sanitize_text_field', array(
-                'times'     => 2,
-                'return'    => ''
-            )
-        );
-        \WP_Mock::userFunction(
-            'get_the_title', array(
-                'times'     => 2,
-                'return'    => ''
-            )
-        );
-        \WP_Mock::userFunction(
-            'get_permalink', array(
-                'times'     => 2,
-                'args'      => 10,
-                'return'    => 'https://woocart.com'
+            'get_option', array(
+                'args'      => [
+                    'wc_gdpr_notification_message',
+                    'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].'
+                ],
+                'return'    => 'Test message with [privacy_policy] and [cookies_policy]'
             )
         );
         \WP_Mock::userFunction(
             'get_option', array(
                 'args'      => 'wp_page_for_privacy_policy',
-                'return'    => 10
+                'return'    => true
             )
         );
         \WP_Mock::userFunction(
             'get_option', array(
-                'args'      => 'wp_page_for_cookie_policy',
-                'return'    => 20
+                'args'      => 'wp_page_for_cookies_policy',
+                'return'    => true
             )
         );
         \WP_Mock::userFunction(
-            'wp_kses', array(
-                'return'    => 'Standard output.'
+            'absint', array(
+                'return'    => true
             )
         );
+        \WP_Mock::userFunction(
+            'get_permalink', array(
+                'return'    => 'https://woocart.com'
+            )
+        );
+        \WP_Mock::userFunction(
+            'sanitize_text_field', array(
+                'times'     => 2,
+                'return'    => 'Replace Link'
+            )
+        );
+        \WP_Mock::userFunction(
+            'get_the_title', array(
+                'times'     => 2
+            )
+        );
+
         $gdpr->show_consent();
-        $this->expectOutputString( '<div class="wc-defaults-gdpr"><p>Standard output. <a href="javascript:;" id="wc-defaults-ok">OK</a></p></div><!-- .wc-defaults-gdpr -->'
+        $this->expectOutputString( '<div class="wc-defaults-gdpr"><p>Test message with <a href="https://woocart.com">Replace Link</a> and <a href="https://woocart.com">Replace Link</a> <a href="javascript:;" id="wc-defaults-ok">OK</a></p></div><!-- .wc-defaults-gdpr -->'
         );
     }
 
