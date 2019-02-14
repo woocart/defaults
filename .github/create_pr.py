@@ -9,7 +9,7 @@ if __name__ == "__main__":
         versions = gh.get("niteoweb/woocart-docker-web", "bin/runtime/versions")
         regex = r"\/v(.+)\/"
         versions.text = re.sub(regex, f"/{event.release.tag_name}/", versions.text)
-        gh.add(versions, f"Update woocart-defaults to {event.release.tag_name}")
+        gh.add("niteoweb/woocart-docker-web", versions, f"Update woocart-defaults to {event.release.tag_name}")
         gh.create_pr(
             f"Update woocart-defaults to {event.release.tag_name}",
             f"This updates woocart-defaults to version {event.release.tag_name}",
