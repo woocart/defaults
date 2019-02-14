@@ -46,7 +46,7 @@ workflow "Test Project" {
 
 action "On master or PR" {
   uses = "actions/bin/filter@master"
-  args = "branch master|ref refs/pulls/*"
+  args = "branch master|ref refs/pulls/*|ref refs/heads/*"
 }
 
 action "Install Dependencies" {
