@@ -55,7 +55,7 @@ release:
 	git tag v$(VERSION)
 	git push origin v$(VERSION)
 	git pull -r
-	echo "Go to the https://github.com/woocart/defaults/releases/tag/v$(VERSION) and publish the release in order to build the package for distribution!"
+	@echo "Go to the https://github.com/woocart/defaults/releases/new?tag=v$(VERSION) and publish the release in order to build the package for distribution!"
 
 fmt: ensure
 	bin/phpcbf --standard=WordPress src --ignore=src/vendor
