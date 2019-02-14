@@ -13,8 +13,8 @@ function setCookie(name, value, days) {
 
 var consent = getCookie( 'woocart-gdpr' );
 
-if (consent !== null) {
-	document.querySelector( '.wc-defaults-gdpr' ).style.display = 'none';
+if (consent === null) {
+	document.querySelector( '.wc-defaults-gdpr' ).style.display = 'block';
 }
 
 document.addEventListener(
