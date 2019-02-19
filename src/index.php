@@ -23,6 +23,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\DenyList;
 	use Niteo\WooCart\Defaults\PluginManager;
 	use Niteo\WooCart\Defaults\PluginLogger;
+	use Niteo\WooCart\Defaults\CacheManager;
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
@@ -47,6 +48,8 @@ namespace Niteo\WooCart {
 			new DenyList();
 			new PluginManager();
 			new PluginLogger();
+			new CacheManager();
 		}
 	}
+
 }
