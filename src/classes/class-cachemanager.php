@@ -10,6 +10,8 @@
 
 namespace Niteo\WooCart\Defaults {
 
+	use Predis\Client;
+	use Predis\Collection\Iterator;
 
 	/**
 	 * Class CacheManager
@@ -17,6 +19,20 @@ namespace Niteo\WooCart\Defaults {
 	 * @package Niteo\WooCart\Defaults
 	 */
 	class CacheManager {
+
+		/**
+     * The Redis client.
+     *
+     * @var mixed
+     */
+		private $redis;
+
+		/**
+     * Track if Redis is available.
+     *
+     * @var bool
+     */
+    private $connected = false;
 
 		/**
 		 * CacheManager constructor.
@@ -163,22 +179,6 @@ namespace Niteo\WooCart\Defaults {
 		 * @access protected
 		 */
 		protected function flush_opcache() {
-			// Check & delete if file cache is enabled.
-			if ( ini_get( 'opcache.file_cache' ) && is_writable( ini_get( 'opcache.file_cache' ) ) ) {
-				$files = new RecursiveIteratorIterator(
-					new RecursiveDirectoryIterator(
-						ini_get( 'opcache.file_cache' ),
-						RecursiveDirectoryIterator::SKIP_DOTS
-					),
-					RecursiveIteratorIterator::CHILD_FIRST
-				);
-
-				foreach ( $files as $fileinfo ) {
-						$todo = ( $fileinfo->isDir() ? 'rmdir' : 'unlink' );
-						$todo( $fileinfo->getRealPath() );
-				}
-			}
-
 			// Flush OPcache.
 			opcache_reset();
 		}
@@ -193,11 +193,16 @@ namespace Niteo\WooCart\Defaults {
 			wp_cache_flush();
 
 			// Purge redis keys.
-			if ( function_exists( 'wp_cache_delete' ) ) {
-				$key = defined( 'WP_CACHE_KEY_SALT' ) ? trim( WP_CACHE_KEY_SALT ) : null;
+			// Connect to Redis instance.
+			$this->redis_connect();
 
-				if ( $key ) {
-					wp_cache_delete( $key );
+			// Continue if the connection was successful.
+			if ( $this->connected ) {
+				// Find keys matching `cache:*`.
+				$pattern = 'cache:*';
+
+				foreach ( new Iterator\Keyspace( $this->redis, $pattern ) as $key ) {
+					$this->redis->del( $key );
 				}
 			}
 		}
@@ -209,19 +214,46 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		protected function flush_fcgi_cache() {
 			// Cache location.
-			$directory = '/var/www/cache/fcgi';
+			$directory 	= new RecursiveDirectoryIterator( '/var/www/cache/fcgi', RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
-			$files = scandir( $directory );
+			$files 			= new RecursiveIteratorIterator( $directory, RecursiveIteratorIterator::CHILD_FIRST );
 
 			// Ensure that there is no failure.
-			if ( $files ) {
-				if ( is_array( $files ) ) {
-					foreach ( $files as $file ) {
-						// Remove file from the directory.
-						unlink( $directory . '/' . $file );
+			if ( is_array( $files ) ) {
+				foreach ( $files as $file ) {
+					// Remove file from the directory.
+					if ( ! $fileinfo->isDir() ) {
+						unlink( $fileinfo->getRealPath() );
 					}
 				}
+			}
+		}
+
+		/**
+		 * Attempting connection with Redis.
+		 *
+		 * @access protected
+		 */
+		protected function redis_connect() {
+			try {
+				$args = [
+					'scheme' 	=> WP_REDIS_SCHEME,
+					'path' 		=> WP_REDIS_PATH
+				];
+
+				// Make connection.
+				$this->redis = new Client( $args );
+				$this->redis->connect();
+
+				// Throws exception if Redis is unavailable.
+				$this->redis->ping();
+
+				// Connection set to true.
+				$this->connected = true;
+			} catch( Exception $exception ) {
+				// Unable to make an connection.
+				$this->connected = false;
 			}
 		}
 

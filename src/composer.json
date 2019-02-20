@@ -12,7 +12,8 @@
     "ext-json": "*",
     "ext-gd": "*",
     "krakjoe/pthreads-polyfill": "^1.1",
-    "lcobucci/jwt": "^3.2"
+    "lcobucci/jwt": "^3.2",
+    "predis/predis": "^1.1"
   },
   "autoload": {
     "psr-4": {
