@@ -21,18 +21,18 @@ namespace Niteo\WooCart\Defaults {
 	class CacheManager {
 
 		/**
-     * The Redis client.
-     *
-     * @var mixed
-     */
+		 * The Redis client.
+		 *
+		 * @var mixed
+		 */
 		private $redis;
 
 		/**
-     * Track if Redis is available.
-     *
-     * @var bool
-     */
-    private $connected = false;
+		 * Track if Redis is available.
+		 *
+		 * @var bool
+		 */
+		private $connected = false;
 
 		/**
 		 * CacheManager constructor.
@@ -214,10 +214,10 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		protected function flush_fcgi_cache() {
 			// Cache location.
-			$directory 	= new RecursiveDirectoryIterator( '/var/www/cache/fcgi', RecursiveDirectoryIterator::SKIP_DOTS );
+			$directory = new RecursiveDirectoryIterator( '/var/www/cache/fcgi', RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
-			$files 			= new RecursiveIteratorIterator( $directory, RecursiveIteratorIterator::CHILD_FIRST );
+			$files = new RecursiveIteratorIterator( $directory, RecursiveIteratorIterator::CHILD_FIRST );
 
 			// Ensure that there is no failure.
 			if ( is_array( $files ) ) {
@@ -238,8 +238,8 @@ namespace Niteo\WooCart\Defaults {
 		protected function redis_connect() {
 			try {
 				$args = [
-					'scheme' 	=> WP_REDIS_SCHEME,
-					'path' 		=> WP_REDIS_PATH
+					'scheme' => WP_REDIS_SCHEME,
+					'path'   => WP_REDIS_PATH,
 				];
 
 				// Make connection.
@@ -251,7 +251,7 @@ namespace Niteo\WooCart\Defaults {
 
 				// Connection set to true.
 				$this->connected = true;
-			} catch( Exception $exception ) {
+			} catch ( Exception $exception ) {
 				// Unable to make an connection.
 				$this->connected = false;
 			}
