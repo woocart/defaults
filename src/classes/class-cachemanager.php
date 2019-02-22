@@ -217,7 +217,7 @@ namespace Niteo\WooCart\Defaults {
 			$directory = new \RecursiveDirectoryIterator( '/var/www/cache/fcgi', \RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
-			$files 		 = new \RecursiveIteratorIterator( $directory, \RecursiveIteratorIterator::CHILD_FIRST );
+			$files = new \RecursiveIteratorIterator( $directory, \RecursiveIteratorIterator::CHILD_FIRST );
 
 			// Ensure that there is no failure.
 			if ( is_array( $files ) ) {
@@ -251,7 +251,7 @@ namespace Niteo\WooCart\Defaults {
 
 				// Connection set to true.
 				$this->connected = true;
-			} catch( Exception $exception ) {
+			} catch ( Exception $exception ) {
 				// Unable to make an connection.
 				$this->connected = false;
 			}
