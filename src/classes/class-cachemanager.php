@@ -105,46 +105,46 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flushes cache if the request is valid.
+		 *
+		 * @codeCoverageIgnore
 		 */
 		public function check_cache_request() {
-			if ( ! isset( $_REQUEST['wc_cache'] ) ) {
-				return;
-			}
+			if ( isset( $_REQUEST['wc_cache'] ) ) {
+				// Admin verification.
+				if ( ! is_admin() ) {
+					wp_die(
+						esc_html__( 'Your request does not seem to be a valid one.', 'woocart-defaults' )
+					);
+				}
 
-			// Admin verification.
-			if ( ! is_admin() ) {
-				wp_die(
-					esc_html__( 'Your request does not seem to be a valid one.', 'woocart-defaults' )
-				);
-			}
+				// Show notice after cache is flushed.
+				$action = sanitize_key( $_REQUEST['wc_cache'] );
 
-			// Show notice after cache is flushed.
-			$action = sanitize_key( $_REQUEST['wc_cache'] );
+				if ( 'done' === $action ) {
+					add_action( 'admin_notices', [ &$this, 'show_notices' ] );
+				} elseif ( 'flush' === $action ) {
+					// Check for nonce.
+					check_admin_referer( 'wc_cache_nonce' );
 
-			if ( 'done' === $action ) {
-				add_action( 'admin_notices', [ &$this, 'show_notices' ] );
-			} elseif ( 'flush' === $action ) {
-				// Check for nonce.
-				check_admin_referer( 'wc_cache_nonce' );
+					// Flush cache.
+					$this->flush_cache();
 
-				// Flush cache.
-				$this->flush_cache();
-
-				// Redirect after the cache is flushed.
-				wp_redirect(
-					esc_url_raw(
-						add_query_arg(
-							[ 'wc_cache' => 'done' ]
+					// Redirect after the cache is flushed.
+					wp_redirect(
+						esc_url_raw(
+							add_query_arg(
+								[ 'wc_cache' => 'done' ]
+							)
 						)
-					)
-				);
+					);
+				}
 			}
 		}
 
 		/**
 		 * Flush cache (OPcache, Redis object cache, and FCGI cache)
 		 *
-		 * @access protected
+		 * @codeCoverageIgnore
 		 */
 		protected function flush_cache() {
 			// OPcache.
@@ -186,7 +186,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush Redis cache.
 		 *
-		 * @access protected
+		 * @codeCoverageIgnore
 		 */
 		protected function flush_redis_cache() {
 			// Flush WordPress cache object.
@@ -210,21 +210,21 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush FCGI cache.
 		 *
-		 * @access protected
+		 * @codeCoverageIgnore
 		 */
 		protected function flush_fcgi_cache() {
 			// Cache location.
-			$directory = new RecursiveDirectoryIterator( '/var/www/cache/fcgi', RecursiveDirectoryIterator::SKIP_DOTS );
+			$directory = new \RecursiveDirectoryIterator( '/var/www/cache/fcgi', \RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
-			$files = new RecursiveIteratorIterator( $directory, RecursiveIteratorIterator::CHILD_FIRST );
+			$files 		 = new \RecursiveIteratorIterator( $directory, \RecursiveIteratorIterator::CHILD_FIRST );
 
 			// Ensure that there is no failure.
 			if ( is_array( $files ) ) {
 				foreach ( $files as $file ) {
 					// Remove file from the directory.
 					if ( ! $fileinfo->isDir() ) {
-						unlink( $fileinfo->getRealPath() );
+						// unlink( $fileinfo->getRealPath() );
 					}
 				}
 			}
@@ -233,7 +233,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Attempting connection with Redis.
 		 *
-		 * @access protected
+		 * @codeCoverageIgnore
 		 */
 		protected function redis_connect() {
 			try {
@@ -247,11 +247,11 @@ namespace Niteo\WooCart\Defaults {
 				$this->redis->connect();
 
 				// Throws exception if Redis is unavailable.
-				$this->redis->ping();
+				$this->redis->isConnected();
 
 				// Connection set to true.
 				$this->connected = true;
-			} catch ( Exception $exception ) {
+			} catch( Exception $exception ) {
 				// Unable to make an connection.
 				$this->connected = false;
 			}

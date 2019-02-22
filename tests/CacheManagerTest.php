@@ -3,6 +3,7 @@
 
 use Niteo\WooCart\Defaults\CacheManager;
 use PHPUnit\Framework\TestCase;
+use Predis\Client;
 
 class CacheManagerTest extends TestCase
 {
@@ -52,6 +53,7 @@ class CacheManagerTest extends TestCase
    */
   public function testAdminButton() {
     $cache      = new CacheManager();
+
     \WP_Mock::userFunction(
       'is_admin', [
         'return' => true
@@ -77,6 +79,131 @@ class CacheManagerTest extends TestCase
                           ->setMethods( [ 'add_menu' ] )
                           ->getMock();
     $cache->admin_button( $admin_bar );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::admin_button
+   */
+  public function testAdminButtonFalse() {
+    $cache      = new CacheManager();
+
+    \WP_Mock::userFunction(
+      'is_admin', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'is_admin_bar_showing', [
+        'return' => false
+      ]
+    );
+
+    $admin_bar  = $this->getMockBuilder( FakeMenuClass::class )
+                          ->setMethods( [ 'add_menu' ] )
+                          ->getMock();
+    $cache->admin_button( $admin_bar );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+   */
+  public function testCheckCacheRequestNoAdmin() {
+    $cache = new CacheManager();
+
+    $_REQUEST['wc_cache'] = true;
+    \WP_Mock::userFunction(
+      'is_admin', [
+        'return' => false
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_die', [
+        'return' => 'true'
+      ]
+    );
+    \WP_Mock::userFunction(
+      'sanitize_key', [
+        'return' => 'fake'
+      ]
+    );
+
+    $cache->check_cache_request();
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+   */
+  public function testCheckCacheRequestDone() {
+    $cache = new CacheManager();
+
+    $_REQUEST['wc_cache'] = true;
+    \WP_Mock::userFunction(
+      'is_admin', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'sanitize_key', [
+        'return' => 'done'
+      ]
+    );
+    \WP_Mock::expectActionAdded( 'admin_notices', [ $cache, 'show_notices' ] );
+
+    $cache->check_cache_request();
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+   */
+  public function testCheckCacheRequestFlushException() {
+    $cache = new CacheManager();
+
+    $_REQUEST['wc_cache'] = true;
+    \WP_Mock::userFunction(
+      'is_admin', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'sanitize_key', [
+        'return' => 'flush'
+      ]
+    );
+    \WP_Mock::userFunction(
+      'check_admin_referer', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_redirect', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'opcache_reset', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_cache_flush', [
+        'return' => true
+      ]
+    );
+
+    define( 'WP_REDIS_SCHEME', 'unix' );
+    define( 'WP_REDIS_PATH', '/path/to/fake/redis.sock' );
+
+    $this->expectException(Predis\Connection\ConnectionException::class);
+    $cache->check_cache_request();
   }
 
 }
