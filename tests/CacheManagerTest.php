@@ -189,20 +189,26 @@ class CacheManagerTest extends TestCase
       ]
     );
     \WP_Mock::userFunction(
-      'opcache_reset', [
-        'return' => true
-      ]
-    );
-    \WP_Mock::userFunction(
       'wp_cache_flush', [
         'return' => true
       ]
     );
 
+    // One cannot mock protected core functions, so we only patch
+    // when opcache is not enabled
+    if (!function_exists("opcache_reset")) {
+        \WP_Mock::userFunction(
+            'opcache_reset', [
+              'return' => true
+            ]
+          );
+    }
+
+
     define( 'WP_REDIS_SCHEME', 'unix' );
     define( 'WP_REDIS_PATH', '/path/to/fake/redis.sock' );
 
-    $this->expectException(Predis\Connection\ConnectionException::class);
+    $this->expectException(\Predis\Connection\ConnectionException::class);
     $cache->check_cache_request();
   }
 

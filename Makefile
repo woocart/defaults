@@ -15,7 +15,6 @@ vendor: src/vendor
 
 clover.xml: vendor test
 test: vendor
-	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	bin/phpunit --coverage-html=./reports
 
 src/vendor:
@@ -31,7 +30,6 @@ build: ensure
 	cd src && composer dump-autoload -a
 	rm -rf src/vendor/symfony/yaml/Tests/
 	rm -rf src/vendor/lcobucci/jwt/test/
-	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	cp -ar $(SRCPATH) $(PLUGINSLUG)
 	zip -r $(PLUGINSLUG).zip $(PLUGINSLUG)
 	rm -rf $(PLUGINSLUG)
@@ -75,3 +73,6 @@ i18n:
 
 cover: clover.xml
 	bin/coverage-check clover.xml 100
+
+clean:
+	rm -rf vendor/ bin src/vendor/
