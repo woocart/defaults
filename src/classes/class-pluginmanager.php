@@ -23,51 +23,84 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var array
 		 */
-		private $list = [
-			[
-				'name'     => 'Autoptimize',
-				'slug'     => 'autoptimize',
-				'required' => true,
-			],
-		];
+		public $list = [];
 
 		/**
 		 * Holds arrays of plugin details.
 		 *
 		 * @var array
 		 */
-		private $plugins = [];
+		public $plugins = [];
 
 		/**
 		 * @var bool
 		 */
-		private $forced_activation = false;
+		public $forced_activation = false;
 
 		/**
-		 * Flag to determine if the user can dismiss the notice nag.
+		 * Holds configurable array of strings.
+		 * Default values are added in the constructor.
 		 *
-		 * @var boolean
+		 * @var array
 		 */
-		public $dismissable = true;
-
-		/**
-		 * Message to be output above nag notice if dismissable is false.
-		 *
-		 * @var string
-		 */
-		public $dismiss_msg = '';
+		public $strings = [];
 
 		/**
 		 * PluginManager constructor.
 		 */
 		public function __construct() {
 			add_action( 'init', [ &$this, 'init' ] );
+
+			// Check for the plugins list.
+			if ( defined( 'WOOCART_REQUIRED' ) ) {
+				$this->list = WOOCART_REQUIRED;
+			}
 		}
 
 		/**
 		 * Initialise the magic.
 		 */
 		public function init() {
+			// Load class strings.
+			$this->strings = [
+				/* translators: 1: plugin name(s). */
+				'notice_can_install_required'     => _n_noop(
+					'WooCart requires the following plugin: %1$s.',
+					'WooCart requires the following plugins: %1$s.',
+					'woocart-defaults'
+				),
+				/* translators: 1: plugin name(s). */
+				'notice_can_install_recommended'  => _n_noop(
+					'WooCart recommends the following plugin: %1$s.',
+					'WooCart recommends the following plugins: %1$s.',
+					'woocart-defaults'
+				),
+				/* translators: 1: plugin name(s). */
+				'notice_ask_to_update'            => _n_noop(
+					'The following plugin needs to be updated to its latest version to ensure maximum compatibility with WooCart: %1$s.',
+					'The following plugins need to be updated to their latest version to ensure maximum compatibility with WooCart: %1$s.',
+					'woocart-defaults'
+				),
+				/* translators: 1: plugin name(s). */
+				'notice_ask_to_update_maybe'      => _n_noop(
+					'There is an update available for: %1$s.',
+					'There are updates available for the following plugins: %1$s.',
+					'woocart-defaults'
+				),
+				/* translators: 1: plugin name(s). */
+				'notice_can_activate_required'    => _n_noop(
+					'The following required plugin is currently inactive: %1$s.',
+					'The following required plugins are currently inactive: %1$s.',
+					'woocart-defaults'
+				),
+				/* translators: 1: plugin name(s). */
+				'notice_can_activate_recommended' => _n_noop(
+					'The following recommended plugin is currently inactive: %1$s.',
+					'The following recommended plugins are currently inactive: %1$s.',
+					'woocart-defaults'
+				)
+			];
+
 			// Check for the admin panel.
 			if ( true !== ( is_admin() && ! defined( 'DOING_AJAX' ) ) ) {
 				return;
@@ -75,7 +108,9 @@ namespace Niteo\WooCart\Defaults {
 
 			// Register plugins.
 			foreach ( $this->list as $plugin ) {
+				// @codeCoverageIgnoreStart
 				$this->register( $plugin );
+				// @codeCoverageIgnoreEnd
 			}
 
 			// Proceed only if we have plugins to handle.
@@ -83,15 +118,15 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			// Set up the menu and notices if we still have outstanding actions.
-			add_action( 'admin_notices', array( $this, 'notices' ) );
-			add_action( 'admin_enqueue_scripts', array( $this, 'thickbox' ) );
 			if ( true !== $this->is_complete() ) {
+				// Set up the menu and notices if we still have outstanding actions.
+				add_action( 'admin_notices', [ $this, 'notices' ] );
+				add_action( 'admin_enqueue_scripts', [ $this, 'thickbox' ] );
 			}
 
 			// Setup the force activation hook.
 			if ( true === $this->forced_activation ) {
-				add_action( 'admin_init', array( $this, 'force_activation' ) );
+				add_action( 'admin_init', [ $this, 'force_activation' ] );
 			}
 		}
 
@@ -100,6 +135,8 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @param string $plugin_folder Optional. Relative path to single plugin folder.
 		 * @return array Array of installed plugins with plugin information.
+		 *
+		 * @codeCoverageIgnore
 		 */
 		public function get_plugins( $plugin_folder = '' ) {
 			if ( ! function_exists( 'get_plugins' ) ) {
@@ -159,8 +196,10 @@ namespace Niteo\WooCart\Defaults {
 		public function does_plugin_have_update( $slug ) {
 			$updates = get_site_transient( 'update_plugins' );
 
-			if ( isset( $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version ) ) {
-				return $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version;
+			if ( isset( $this->plugins[ $slug ] ) ) {
+				if ( isset( $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version ) ) {
+					return $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version;
+				}
 			}
 
 			return false;
@@ -171,15 +210,17 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @global object $current_screen
 		 * @return null Returns early if we're on the Install page.
+		 *
+		 * @codeCoverageIgnore
 		 */
 		public function notices() {
-			// Remove nag on the install page / Return early if the nag message has been dismissed or user < author.
-			if ( ( $this->is_core_update_page() ) || get_user_meta( get_current_user_id(), 'wc_dismissed_notice_plugins', true ) || ! current_user_can( 'publish_posts' ) ) {
+			// Remove nag on the install page.
+			if ( ( $this->is_core_update_page() ) || ! current_user_can( 'publish_posts' ) ) {
 				return;
 			}
 
 			// Store for the plugin slugs by message type.
-			$message = array();
+			$message = [];
 
 			// Initialize counters used to determine plurality of action link texts.
 			$install_link_count          = 0;
@@ -254,144 +295,34 @@ namespace Niteo\WooCart\Defaults {
 				$line_template = '<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">%s</span>' . "\n";
 
 				if ( ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
-					$rendered  = esc_html__( 'There are one or more required or recommended plugins to install, update or activate. Please contact the administrator of this site for help.', 'woocart-defaults' );
-					$rendered .= $this->create_user_action_links_for_notice( 0, 0, 0, $line_template );
+					$rendered = esc_html__( 'There are one or more required or recommended plugins to install, update or activate. Please contact the administrator of this site for help.', 'woocart-defaults' );
 				} else {
-
-					// If dismissable is false and a message is set, output it now.
-					if ( ! $this->dismissable && ! empty( $this->dismiss_msg ) ) {
-						$rendered .= sprintf( $line_template, wp_kses_post( $this->dismiss_msg ) );
-					}
-
 					// Render the individual message lines for the notice.
 					foreach ( $message as $type => $plugin_group ) {
-						$linked_plugins = array();
+						$linked_plugins = [];
 
 						// Get the external info link for a plugin if one is available.
 						foreach ( $plugin_group as $plugin_slug ) {
 							$linked_plugins[] = $this->get_info_link( $plugin_slug );
 						}
+
 						unset( $plugin_slug );
 
-						$count = count( $plugin_group );
+						$count 				= count( $plugin_group );
+						$last_plugin  = array_pop( $linked_plugins ); // Pop off last name to prep for readability.
+						$imploded    	= empty( $linked_plugins ) ? $last_plugin : ( implode( ', ', $linked_plugins ) . ' ' . esc_html_x( 'and', 'plugin A *and* plugin B', 'woocart-defaults' ) . ' ' . $last_plugin );
 
-						$last_plugin = array_pop( $linked_plugins ); // Pop off last name to prep for readability.
-						$imploded    = empty( $linked_plugins ) ? $last_plugin : ( implode( ', ', $linked_plugins ) . ' ' . esc_html_x( 'and', 'plugin A *and* plugin B', 'woocart-defaults' ) . ' ' . $last_plugin );
-
-						switch ( $type ) {
-							case 'notice_can_install_required':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'WooCart requires the following plugin: %1$s.',
-												'WooCart requires the following plugins: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-							case 'notice_can_install_recommended':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'WooCart recommends the following plugin: %1$s.',
-												'WooCart recommends the following plugins: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-							case 'notice_can_activate_required':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'The following required plugin is currently inactive: %1$s.',
-												'The following required plugins are currently inactive: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-							case 'notice_can_activate_recommended':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'The following recommended plugin is currently inactive: %1$s.',
-												'The following recommended plugins are currently inactive: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-							case 'notice_ask_to_update':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'The following plugin needs to be updated to its latest version to ensure maximum compatibility with WooCart: %1$s.',
-												'The following plugins need to be updated to their latest version to ensure maximum compatibility with WooCart: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-							case 'notice_ask_to_update_maybe':
-								$rendered .= sprintf(
-									$line_template,
-									sprintf(
-										translate_nooped_plural(
-											_n_noop(
-												'There is an update available for: %1$s.',
-												'There are updates available for the following plugins: %1$s.',
-												'woocart-defaults'
-											),
-											$count,
-											'woocart-defaults'
-										),
-										$imploded,
-										$count
-									)
-								);
-								break;
-						}
+						$rendered .= sprintf(
+							$line_template,
+							sprintf(
+								translate_nooped_plural( $this->strings[ $type ], $count, 'woocart-defaults' ),
+								$imploded,
+								$count
+							)
+						);
 					}
 
 					unset( $type, $plugin_group, $linked_plugins, $count, $last_plugin, $imploded );
-					$rendered .= $this->create_user_action_links_for_notice( $install_link_count, $update_link_count, $activate_link_count, $line_template );
 				}
 
 				// Register the nag messages and prepare them to be processed.
@@ -481,134 +412,13 @@ namespace Niteo\WooCart\Defaults {
 		public function get_installed_version( $slug ) {
 			$installed_plugins = $this->get_plugins(); // Retrieve a list of all installed plugins (WP cached).
 
-			if ( ! empty( $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'] ) ) {
-				return $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'];
+			if ( isset( $this->plugins[ $slug ] ) ) {
+				if ( ! empty( $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'] ) ) {
+					return $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'];
+				}
 			}
 
 			return '';
-		}
-
-		/**
-		 * Generate the user action links for the admin notice.
-		 *
-		 * @param int $install_count  Number of plugins to install.
-		 * @param int $update_count   Number of plugins to update.
-		 * @param int $activate_count Number of plugins to activate.
-		 * @param int $line_template  Template for the HTML tag to output a line.
-		 * @return string Action links.
-		 */
-		protected function create_user_action_links_for_notice( $install_count, $update_count, $activate_count, $line_template ) {
-			// Setup action links.
-			$action_links = array(
-				'install'  => '',
-				'update'   => '',
-				'activate' => '',
-				'dismiss'  => $this->dismissable ? '<a href="' . esc_url( wp_nonce_url( add_query_arg( 'wc-plugins-dismiss', 'dismiss_admin_notices' ), 'wc-plugins-dismiss-' . get_current_user_id() ) ) . '" class="dismiss-notice" target="_parent">' . esc_html__( 'Dismiss this notice', 'woocart-defaults' ) . '</a>' : '',
-			);
-
-			$link_template = '<a href="%2$s">%1$s</a>';
-
-			if ( current_user_can( 'install_plugins' ) ) {
-				if ( $install_count > 0 ) {
-					$action_links['install'] = sprintf(
-						$link_template,
-						translate_nooped_plural(
-							_n_noop(
-								'Begin installing plugin',
-								'Begin installing plugins',
-								'woocart-defaults'
-							),
-							$install_count,
-							'woocart-defaults'
-						),
-						esc_url( $this->get_install_status_url( 'install' ) )
-					);
-				}
-
-				if ( $update_count > 0 ) {
-					$action_links['update'] = sprintf(
-						$link_template,
-						translate_nooped_plural(
-							_n_noop(
-								'Begin updating plugin',
-								'Begin updating plugins',
-								'woocart-defaults'
-							),
-							$update_count,
-							'woocart-defaults'
-						),
-						esc_url( $this->get_install_status_url( 'update' ) )
-					);
-				}
-			}
-
-			if ( current_user_can( 'activate_plugins' ) && $activate_count > 0 ) {
-				$action_links['activate'] = sprintf(
-					$link_template,
-					translate_nooped_plural(
-						_n_noop(
-							'Begin activating plugin',
-							'Begin activating plugins',
-							'woocart-defaults'
-						),
-						$activate_count,
-						'woocart-defaults'
-					),
-					esc_url( $this->get_install_status_url( 'activate' ) )
-				);
-			}
-
-			$action_links = apply_filters( 'wc_plugins_notice_action_links', $action_links );
-
-			// Remove any empty array items.
-			$action_links = array_filter( (array) $action_links );
-
-			if ( ! empty( $action_links ) ) {
-				$action_links = sprintf( $line_template, implode( ' | ', $action_links ) );
-				return $action_links;
-			}
-
-			return '';
-		}
-
-		/**
-		 * Retrieve the URL to the Install page for a specific plugin status (view).
-		 *
-		 * @param string $status Plugin status - either 'install', 'update' or 'activate'.
-		 * @return string Properly encoded URL (not escaped).
-		 */
-		public function get_install_status_url( $status ) {
-			return add_query_arg(
-				array(
-					'plugin_status' => urlencode( $status ),
-				),
-				$this->get_install_url()
-			);
-		}
-
-		/**
-		 * Retrieve the URL to the Install page.
-		 *
-		 * @return string Properly encoded URL (not escaped).
-		 */
-		public function get_install_url() {
-			static $url;
-
-			if ( ! isset( $url ) ) {
-				$parent = 'themes.php';
-
-				if ( false === strpos( $parent, '.php' ) ) {
-					$parent = 'admin.php';
-				}
-				$url = add_query_arg(
-					array(
-						'page' => urlencode( 'woocart-install-plugins' ),
-					),
-					self_admin_url( $parent )
-				);
-			}
-
-			return $url;
 		}
 
 		/**
@@ -620,13 +430,13 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function get_info_link( $slug ) {
 			$url = add_query_arg(
-				array(
+				[
 					'tab'       => 'plugin-information',
 					'plugin'    => urlencode( $slug ),
 					'TB_iframe' => 'true',
 					'width'     => '640',
 					'height'    => '500',
-				),
+				],
 				self_admin_url( 'plugin-install.php' )
 			);
 
@@ -640,27 +450,14 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Register dismissal of admin notices.
-		 */
-		public function dismiss() {
-			if ( isset( $_GET['wc-plugins-dismiss'] ) && check_admin_referer( 'wc-plugins-dismiss-' . get_current_user_id() ) ) {
-				update_user_meta( get_current_user_id(), 'wc_dismissed_notice_plugins', 1 );
-			}
-		}
-
-		/**
 		 * Enqueue thickbox scripts/styles for plugin info.
 		 *
 		 * Thickbox is not automatically included on all admin pages, so we must
-		 * manually enqueue it for those pages.
-		 *
-		 * Thickbox is only loaded if the user has not dismissed the admin
-		 * notice or if there are any plugins left to install and activate.
+		 * manually enqueue it for those pages. Thickbox is only loaded if there are
+		 * any plugins left to install and activate.
 		 */
 		public function thickbox() {
-			if ( ! get_user_meta( get_current_user_id(), 'wc_dismissed_notice_plugins', true ) ) {
-				add_thickbox();
-			}
+			add_thickbox();
 		}
 
 		/**
@@ -695,13 +492,13 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			$defaults = array(
+			$defaults = [
 				'name'             => '',      // String.
 				'slug'             => '',      // String.
 				'required'         => false,   // Boolean.
 				'version'          => '',      // String.
-				'force_activation' => false,    // Boolean.
-			);
+				'force_activation' => false    // Boolean.
+			];
 
 			// Prepare the received data.
 			$plugin = wp_parse_args( $plugin, $defaults );
@@ -720,7 +517,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// Should we add the force activation hook ?
 			if ( true === $plugin['force_activation'] ) {
-				$this->has_forced_activation = true;
+				$this->forced_activation = true;
 			}
 		}
 
