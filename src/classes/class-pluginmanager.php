@@ -120,10 +120,10 @@ namespace Niteo\WooCart\Defaults {
 
 			// Log messages on plugin activation and de-activation.
 			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'logger' ], 10, 2 );
+			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
 
 			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'logger' ], 10, 2 );
+			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
 		}
 
 		/**

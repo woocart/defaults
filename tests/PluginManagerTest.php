@@ -659,6 +659,52 @@ class PluginManagerTest extends TestCase
     ];
   }
 
+  /**
+   * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+   * @covers \Niteo\WooCart\Defaults\PluginManager::activation
+   */
+  public function testActivation()
+  {
+    $plugins = new PluginManager();
+
+    \WP_Mock::userFunction(
+      'get_plugin_data', [
+        'return' => [
+          'Name'    => 'Plugin',
+          'Version' => '1.0'
+        ]
+      ]
+    );
+    \Mockery::mock( 'alias:\WooCart\Log\Socket' )
+              ->shouldReceive( 'log' )
+              ->andReturn( true );
+
+    $plugins->activation( 'folder/plugin.php', false );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+   * @covers \Niteo\WooCart\Defaults\PluginManager::deactivation
+   */
+  public function testDeactivation()
+  {
+    $plugins = new PluginManager();
+
+    \WP_Mock::userFunction(
+      'get_plugin_data', [
+        'return' => [
+          'Name'    => 'Plugin',
+          'Version' => '1.0'
+        ]
+      ]
+    );
+    \Mockery::mock( 'alias:\WooCart\Log\Socket' )
+              ->shouldReceive( 'log' )
+              ->andReturn( true );
+
+    $plugins->deactivation( 'folder/plugin.php', false );
+  }
+
   protected static function getMethod( $name )
   {
     $class  = new ReflectionClass( 'Niteo\WooCart\Defaults\PluginManager' );
