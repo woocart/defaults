@@ -98,7 +98,7 @@ namespace Niteo\WooCart\Defaults {
 					'The following recommended plugin is currently inactive: %1$s.',
 					'The following recommended plugins are currently inactive: %1$s.',
 					'woocart-defaults'
-				)
+				),
 			];
 
 			// Check for the admin panel.
@@ -308,9 +308,9 @@ namespace Niteo\WooCart\Defaults {
 
 						unset( $plugin_slug );
 
-						$count 				= count( $plugin_group );
-						$last_plugin  = array_pop( $linked_plugins ); // Pop off last name to prep for readability.
-						$imploded    	= empty( $linked_plugins ) ? $last_plugin : ( implode( ', ', $linked_plugins ) . ' ' . esc_html_x( 'and', 'plugin A *and* plugin B', 'woocart-defaults' ) . ' ' . $last_plugin );
+						$count       = count( $plugin_group );
+						$last_plugin = array_pop( $linked_plugins ); // Pop off last name to prep for readability.
+						$imploded    = empty( $linked_plugins ) ? $last_plugin : ( implode( ', ', $linked_plugins ) . ' ' . esc_html_x( 'and', 'plugin A *and* plugin B', 'woocart-defaults' ) . ' ' . $last_plugin );
 
 						$rendered .= sprintf(
 							$line_template,
@@ -497,7 +497,7 @@ namespace Niteo\WooCart\Defaults {
 				'slug'             => '',      // String.
 				'required'         => false,   // Boolean.
 				'version'          => '',      // String.
-				'force_activation' => false    // Boolean.
+				'force_activation' => false,    // Boolean.
 			];
 
 			// Prepare the received data.
