@@ -64,39 +64,27 @@ namespace Niteo\WooCart\Defaults {
 			// Load class strings.
 			$this->strings = [
 				/* translators: 1: plugin name(s). */
-				'notice_can_install_required'     => _n_noop(
+				'notice_can_install_required'  => _n_noop(
 					'WooCart requires the following plugin: %1$s.',
 					'WooCart requires the following plugins: %1$s.',
 					'woocart-defaults'
 				),
 				/* translators: 1: plugin name(s). */
-				'notice_can_install_recommended'  => _n_noop(
-					'WooCart recommends the following plugin: %1$s.',
-					'WooCart recommends the following plugins: %1$s.',
-					'woocart-defaults'
-				),
-				/* translators: 1: plugin name(s). */
-				'notice_ask_to_update'            => _n_noop(
+				'notice_ask_to_update'         => _n_noop(
 					'The following plugin needs to be updated to its latest version to ensure maximum compatibility with WooCart: %1$s.',
 					'The following plugins need to be updated to their latest version to ensure maximum compatibility with WooCart: %1$s.',
 					'woocart-defaults'
 				),
 				/* translators: 1: plugin name(s). */
-				'notice_ask_to_update_maybe'      => _n_noop(
+				'notice_ask_to_update_maybe'   => _n_noop(
 					'There is an update available for: %1$s.',
 					'There are updates available for the following plugins: %1$s.',
 					'woocart-defaults'
 				),
 				/* translators: 1: plugin name(s). */
-				'notice_can_activate_required'    => _n_noop(
+				'notice_can_activate_required' => _n_noop(
 					'The following required plugin is currently inactive: %1$s.',
 					'The following required plugins are currently inactive: %1$s.',
-					'woocart-defaults'
-				),
-				/* translators: 1: plugin name(s). */
-				'notice_can_activate_recommended' => _n_noop(
-					'The following recommended plugin is currently inactive: %1$s.',
-					'The following recommended plugins are currently inactive: %1$s.',
 					'woocart-defaults'
 				),
 			];
@@ -236,32 +224,18 @@ namespace Niteo\WooCart\Defaults {
 				if ( ! $this->is_plugin_installed( $slug ) ) {
 					if ( current_user_can( 'install_plugins' ) ) {
 						$install_link_count++;
-
-						if ( true === $plugin['required'] ) {
-							$message['notice_can_install_required'][] = $slug;
-						} else {
-							$message['notice_can_install_recommended'][] = $slug;
-						}
+						$message['notice_can_install_required'][] = $slug;
 					}
 
-					if ( true === $plugin['required'] ) {
-						$total_required_action_count++;
-					}
+					$total_required_action_count++;
 				} else {
 					if ( ! $this->is_plugin_active( $slug ) && $this->can_plugin_activate( $slug ) ) {
 						if ( current_user_can( 'activate_plugins' ) ) {
 							$activate_link_count++;
-
-							if ( true === $plugin['required'] ) {
-								$message['notice_can_activate_required'][] = $slug;
-							} else {
-								$message['notice_can_activate_recommended'][] = $slug;
-							}
+							$message['notice_can_activate_required'][] = $slug;
 						}
 
-						if ( true === $plugin['required'] ) {
-							$total_required_action_count++;
-						}
+						$total_required_action_count++;
 					}
 
 					if ( $this->does_plugin_require_update( $slug ) || false !== $this->does_plugin_have_update( $slug ) ) {
@@ -295,7 +269,7 @@ namespace Niteo\WooCart\Defaults {
 				$line_template = '<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">%s</span>' . "\n";
 
 				if ( ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
-					$rendered = esc_html__( 'There are one or more required or recommended plugins to install, update or activate. Please contact the administrator of this site for help.', 'woocart-defaults' );
+					$rendered = esc_html__( 'There are one or more required plugins to install, update or activate. Please contact the administrator of this site for help.', 'woocart-defaults' );
 				} else {
 					// Render the individual message lines for the notice.
 					foreach ( $message as $type => $plugin_group ) {
@@ -495,7 +469,7 @@ namespace Niteo\WooCart\Defaults {
 			$defaults = [
 				'name'             => '',      // String.
 				'slug'             => '',      // String.
-				'required'         => false,   // Boolean.
+				'required'         => true,    // Boolean.
 				'version'          => '',      // String.
 				'force_activation' => false,    // Boolean.
 			];
