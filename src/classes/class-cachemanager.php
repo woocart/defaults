@@ -25,14 +25,14 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var mixed
 		 */
-		private $redis;
+		public $redis;
 
 		/**
 		 * Track if Redis is available.
 		 *
 		 * @var bool
 		 */
-		private $connected = false;
+		public $connected = false;
 
 		/**
 		 * CacheManager constructor.
@@ -70,6 +70,10 @@ namespace Niteo\WooCart\Defaults {
 			// On product shipping (inventory decreases).
 			add_action( 'woocommerce_reduce_order_stock', [ &$this, 'flush_redis_cache' ] );
 			add_action( 'woocommerce_reduce_order_stock', [ &$this, 'flush_fcgi_cache' ] );
+
+			// Hook to the theme & plugin editor AJAX function.
+			// Priority set to -1 so that it runs before anything else.
+			add_action( 'wp_ajax_edit_theme_plugin_file', [ &$this, 'inject_cache' ], -1 );
 		}
 
 		/**
@@ -105,8 +109,6 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flushes cache if the request is valid.
-		 *
-		 * @codeCoverageIgnore
 		 */
 		public function check_cache_request() {
 			if ( isset( $_REQUEST['wc_cache'] ) ) {
@@ -142,9 +144,26 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Flush cache (OPcache, Redis object cache, and FCGI cache)
-		 *
+		 * Hack into the ajax hook for theme and plugin editor.
 		 * @codeCoverageIgnore
+		 */
+		public function inject_cache() {
+			ob_start( 'after_inject_cache' );
+		}
+
+		/**
+		 * This hook runs after we the action has been initiated.
+		 * @codeCoverageIgnore
+		 */
+		public function after_inject_cache( $buffer ) {
+			// We empty cache over here.
+			$this->flush_cache();
+
+			return $buffer;
+		}
+
+		/**
+		 * Flush cache (OPcache, Redis object cache, and FCGI cache).
 		 */
 		protected function flush_cache() {
 			// OPcache.
@@ -185,8 +204,6 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flush Redis cache.
-		 *
-		 * @codeCoverageIgnore
 		 */
 		protected function flush_redis_cache() {
 			// Flush WordPress cache object.
@@ -202,7 +219,9 @@ namespace Niteo\WooCart\Defaults {
 				$pattern = 'cache:*';
 
 				foreach ( new Iterator\Keyspace( $this->redis, $pattern ) as $key ) {
+					// @codeCoverageIgnoreStart
 					$this->redis->del( $key );
+					// @codeCoverageIgnoreEnd
 				}
 			}
 		}
@@ -224,7 +243,7 @@ namespace Niteo\WooCart\Defaults {
 				foreach ( $files as $file ) {
 					// Remove file from the directory.
 					if ( ! $fileinfo->isDir() ) {
-						// unlink( $fileinfo->getRealPath() );
+						unlink( $fileinfo->getRealPath() );
 					}
 				}
 			}

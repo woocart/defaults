@@ -3,7 +3,6 @@
 
 use Niteo\WooCart\Defaults\CacheManager;
 use PHPUnit\Framework\TestCase;
-use Predis\Client;
 
 class CacheManagerTest extends TestCase
 {
@@ -85,8 +84,9 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::admin_button
    */
-  public function testAdminButtonFalse() {
-    $cache      = new CacheManager();
+  public function testAdminButtonFalse()
+  {
+    $cache = new CacheManager();
 
     \WP_Mock::userFunction(
       'is_admin', [
@@ -109,7 +109,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
    */
-  public function testCheckCacheRequestNoAdmin() {
+  public function testCheckCacheRequestNoAdmin()
+  {
     $cache = new CacheManager();
 
     $_REQUEST['wc_cache'] = true;
@@ -136,7 +137,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
    */
-  public function testCheckCacheRequestDone() {
+  public function testCheckCacheRequestDone()
+  {
     $cache = new CacheManager();
 
     $_REQUEST['wc_cache'] = true;
@@ -164,7 +166,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
    */
-  public function testCheckCacheRequestFlushException() {
+  public function testCheckCacheRequestFlushException()
+  {
     $cache = new CacheManager();
 
     $_REQUEST['wc_cache'] = true;
@@ -210,6 +213,149 @@ class CacheManagerTest extends TestCase
 
     $this->expectException(\Predis\Connection\ConnectionException::class);
     $cache->check_cache_request();
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+   */
+  public function testCheckCacheRequestFlushComplete()
+  {
+    $mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+                      ->shouldAllowMockingProtectedMethods()
+                      ->makePartial();
+    $mock->shouldReceive( 'flush_cache' )
+         ->andReturn( true );
+
+    $_REQUEST['wc_cache'] = true;
+    \WP_Mock::userFunction(
+      'is_admin', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'sanitize_key', [
+        'return' => 'flush'
+      ]
+    );
+    \WP_Mock::userFunction(
+      'check_admin_referer', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_redirect', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'opcache_reset', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_cache_flush', [
+        'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'wp_redirect', [
+        'return' => true
+      ]
+    );
+
+    $mock->check_cache_request();
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
+   */
+  public function testRedisConnect() {
+    $mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+                      ->shouldAllowMockingProtectedMethods()
+                      ->makePartial();
+    $mock->shouldReceive( 'redis_connect' )
+         ->andReturn( true );
+
+    $this->assertTrue( $mock->redis_connect() );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+   */
+  public function testFlushCache() {
+    $method = self::getMethod( 'flush_cache' );
+    $mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+                      ->shouldAllowMockingProtectedMethods()
+                      ->makePartial();
+
+    $mock->shouldReceive( 'flush_opcache' )
+         ->andReturn( true );
+    $mock->shouldReceive( 'flush_redis_cache' )
+         ->andReturn( true );
+    $mock->shouldReceive( 'flush_fcgi_cache' )
+         ->andReturn( true );
+
+    $method->invokeArgs( $mock, [] );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+   */
+  // public function testFlushFcgiCache() {
+  //   $method = self::getMethod( 'flush_fcgi_cache' );
+  //   $plugins = new CacheManager();
+
+  //   $method->invokeArgs( $plugins, [] );
+  // }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+   */
+  public function testFlushRedisCache() {
+    $method = self::getMethod( 'flush_redis_cache' );
+    $mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+                      ->shouldAllowMockingProtectedMethods()
+                      ->makePartial();
+
+    \WP_Mock::userFunction(
+      'wp_cache_flush', [
+        'return' => true
+      ]
+    );
+
+    $mock->shouldReceive( 'redis_connect' )
+         ->andReturn( true );
+    $mock->connected = true;
+
+    $mock->redis = new stdClass();
+    $mock->redis->del = function( $key ) {
+      // Do nothing
+    };
+
+    \Mockery::mock( 'alias:\Predis\Collection\Iterator\Keyspace' );
+
+    $method->invokeArgs( $mock, [] );
+  }
+
+  protected static function getMethod( $name )
+  {
+    $class  = new ReflectionClass( 'Niteo\WooCart\Defaults\CacheManager' );
+    $method = $class->getMethod( $name );
+    $method->setAccessible( true );
+    return $method;
   }
 
 }
