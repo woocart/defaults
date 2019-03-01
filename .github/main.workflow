@@ -51,7 +51,7 @@ action "On master or PR" {
 
 action "Install Dependencies" {
   uses = "./.github/php"
-  args = "composer install"
+  args = "make ensure"
   needs = ["On master or PR"]
 }
 
@@ -69,6 +69,6 @@ action "Test" {
 
 action "Cover" {
   uses = "./.github/php"
-  args = "make test cover"
+  args = "make cover"
   needs = ["Test"]
 }
