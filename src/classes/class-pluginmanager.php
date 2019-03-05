@@ -70,6 +70,13 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WOOCART_REQUIRED' ) ) {
 				$this->list = WOOCART_REQUIRED;
 			}
+
+			// Log messages on plugin activation and de-activation.
+			// Plugin activation.
+			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
+
+			// Plugin de-activation.
+			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
 		}
 
 		/**
@@ -131,13 +138,6 @@ namespace Niteo\WooCart\Defaults {
 			if ( true === $this->forced_activation ) {
 				add_action( 'admin_init', [ $this, 'force_activation' ] );
 			}
-
-			// Log messages on plugin activation and de-activation.
-			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
-
-			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
 		}
 
 		/**
