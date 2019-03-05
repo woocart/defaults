@@ -230,6 +230,12 @@ class PluginManagerTest extends TestCase
   {
     $plugins = new PluginManager();
 
+    \WP_Mock::userFunction(
+      'is_plugin_active', [
+        'return' => false
+      ]
+    );
+
     $this->assertFalse( $plugins->is_plugin_active( 'autoptimize' ) );
   }
 
@@ -296,6 +302,11 @@ class PluginManagerTest extends TestCase
     \WP_Mock::userFunction(
       'activate_plugin', [
         'return' => true
+      ]
+    );
+    \WP_Mock::userFunction(
+      'is_plugin_active', [
+        'return' => false
       ]
     );
 
