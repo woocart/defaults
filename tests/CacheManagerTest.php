@@ -52,7 +52,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::admin_button
    */
-  public function testAdminButton() {
+  public function testAdminButton()
+  {
     $cache      = new CacheManager();
 
     \WP_Mock::userFunction(
@@ -201,12 +202,12 @@ class CacheManagerTest extends TestCase
 
     // One cannot mock protected core functions, so we only patch
     // when opcache is not enabled
-    if (!function_exists("opcache_reset")) {
-        \WP_Mock::userFunction(
-            'opcache_reset', [
-              'return' => true
-            ]
-          );
+    if ( ! function_exists( 'opcache_reset' ) ) {
+      \WP_Mock::userFunction(
+        'opcache_reset', [
+          'return' => true
+        ]
+      );
     }
 
 
@@ -278,7 +279,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
    */
-  public function testRedisConnect() {
+  public function testRedisConnect()
+  {
     $mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
                       ->shouldAllowMockingProtectedMethods()
                       ->makePartial();
@@ -295,7 +297,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
    */
-  public function testFlushCache() {
+  public function testFlushCache()
+  {
     $method = self::getMethod( 'flush_cache' );
     $mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
                       ->shouldAllowMockingProtectedMethods()
@@ -315,7 +318,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
    */
-  public function testFlushFcgiCacheTrue() {
+  public function testFlushFcgiCacheTrue()
+  {
     $method = self::getMethod( 'flush_fcgi_cache' );
     $plugins = new CacheManager();
 
@@ -326,7 +330,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
    */
-  public function testFlushFcgiCacheFalse() {
+  public function testFlushFcgiCacheFalse()
+  {
     $method = self::getMethod( 'flush_fcgi_cache' );
     $plugins = new CacheManager();
 
@@ -337,7 +342,8 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
    */
-  public function testFlushRedisCache() {
+  public function testFlushRedisCache()
+  {
     $method = self::getMethod( 'flush_redis_cache' );
     $mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
                       ->shouldAllowMockingProtectedMethods()
@@ -353,13 +359,22 @@ class CacheManagerTest extends TestCase
          ->andReturn( true );
     $mock->connected = true;
 
-    $mock->redis = new stdClass();
-    $mock->redis->del = function( $key ) {
-      // Do nothing
+    // Fake class with the required method for mocking.
+    $fake = new class {
+      public function supportsCommand( $arg ) {
+        return true;
+      }
     };
 
-    \Mockery::mock( 'alias:\Predis\Collection\Iterator\Keyspace' );
+    $mock->redis = \Mockery::mock( '\Predis\ClientInterface' );
+    $mock->redis->shouldReceive( 'getProfile' )
+                ->andReturn( $fake );
+    $mock->redis->shouldReceive( 'scan' )
+                ->andReturn( [ 0 => 'param0', 1 => [ 'cache:param1' ] ] );
+    $mock->redis->shouldReceive( 'del' )
+                ->andReturn( true );
 
+    $omck2 = \Mockery::mock( '\Predis\Collection\Iterator\Keyspace', [ $mock->redis, 'cache*' ] );
     $method->invokeArgs( $mock, [] );
   }
 

@@ -11,7 +11,7 @@
 namespace Niteo\WooCart\Defaults {
 
 	use Predis\Client;
-	use Predis\Collection\Iterator;
+	use Predis\Collection\Iterator\Keyspace;
 
 	/**
 	 * Class CacheManager
@@ -225,6 +225,9 @@ namespace Niteo\WooCart\Defaults {
 			// Flush WordPress cache object.
 			wp_cache_flush();
 
+			// To access whether cache was flushed or not.
+			$deleted = false;
+
 			// Purge redis keys.
 			// Connect to Redis instance.
 			$this->redis_connect();
@@ -234,7 +237,7 @@ namespace Niteo\WooCart\Defaults {
 				// Find keys matching `cache:*`.
 				$pattern = 'cache:*';
 
-				foreach ( new Iterator\Keyspace( $this->redis, $pattern ) as $key ) {
+				foreach ( new Keyspace( $this->redis, $pattern ) as $key ) {
 					$this->redis->del( $key );
 				}
 			}
