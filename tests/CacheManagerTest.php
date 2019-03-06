@@ -28,6 +28,8 @@ class CacheManagerTest extends TestCase
   {
     $cache = new CacheManager();
 
+    define( 'FCGI_CACHE_PATH', 'tests/cache' );
+
     \WP_Mock::expectActionAdded( 'admin_bar_menu', [ $cache, 'admin_button' ], 100 );
     \WP_Mock::expectActionAdded( 'admin_init', [ $cache, 'check_cache_request' ] );
     \WP_Mock::expectActionAdded( 'activated_plugin', [ $cache, 'flush_opcache' ] );
@@ -313,12 +315,28 @@ class CacheManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
    * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
    */
-  // public function testFlushFcgiCache() {
-  //   $method = self::getMethod( 'flush_fcgi_cache' );
-  //   $plugins = new CacheManager();
+  public function testFlushFcgiCacheTrue() {
+    $method = self::getMethod( 'flush_fcgi_cache' );
+    $plugins = new CacheManager();
 
-  //   $method->invokeArgs( $plugins, [] );
-  // }
+    // Add files to cache folder.
+    $fp = fopen( 'tests/cache/cache1.txt', 'wb' );
+    fwrite($fp, 'faketest');
+    fclose($fp);
+
+    $this->assertTrue( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
+  }
+
+  /**
+   * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+   * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+   */
+  public function testFlushFcgiCacheFalse() {
+    $method = self::getMethod( 'flush_fcgi_cache' );
+    $plugins = new CacheManager();
+
+    $this->assertFalse( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
+  }
 
   /**
    * @covers \Niteo\WooCart\Defaults\CacheManager::__construct

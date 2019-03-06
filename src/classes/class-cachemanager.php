@@ -35,6 +35,13 @@ namespace Niteo\WooCart\Defaults {
 		public $connected = false;
 
 		/**
+		 * FCGI Cache path.
+		 *
+		 * @var string
+		 */
+		public $fcgi_path = '/var/www/cache/fcgi';
+
+		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
@@ -74,6 +81,13 @@ namespace Niteo\WooCart\Defaults {
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', [ &$this, 'inject_cache' ], -1 );
+
+			/**
+			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
+			 */
+			if ( defined( 'FCGI_CACHE_PATH' ) ) {
+				$this->fcgi_path = FCGI_CACHE_PATH;
+			}
 		}
 
 		/**
@@ -145,6 +159,7 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Hack into the ajax hook for theme and plugin editor.
+		 *
 		 * @codeCoverageIgnore
 		 */
 		public function inject_cache() {
@@ -153,6 +168,7 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * This hook runs after we the action has been initiated.
+		 *
 		 * @codeCoverageIgnore
 		 */
 		public function after_inject_cache( $buffer ) {
@@ -173,7 +189,7 @@ namespace Niteo\WooCart\Defaults {
 			$this->flush_redis_cache();
 
 			// Flush FCGI cache.
-			$this->flush_fcgi_cache();
+			$this->flush_fcgi_cache( $this->fcgi_path );
 		}
 
 		/**
@@ -204,6 +220,8 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flush Redis cache.
+		 *
+		 * @codeCoverageIgnore
 		 */
 		protected function flush_redis_cache() {
 			// Flush WordPress cache object.
@@ -219,34 +237,41 @@ namespace Niteo\WooCart\Defaults {
 				$pattern = 'cache:*';
 
 				foreach ( new Iterator\Keyspace( $this->redis, $pattern ) as $key ) {
-					// @codeCoverageIgnoreStart
 					$this->redis->del( $key );
-					// @codeCoverageIgnoreEnd
 				}
 			}
 		}
 
 		/**
 		 * Flush FCGI cache.
-		 *
-		 * @codeCoverageIgnore
 		 */
-		protected function flush_fcgi_cache() {
+		protected function flush_fcgi_cache( $directory ) {
 			// Cache location.
-			$directory = new \RecursiveDirectoryIterator( '/var/www/cache/fcgi', \RecursiveDirectoryIterator::SKIP_DOTS );
+			$scan = new \RecursiveDirectoryIterator( $directory, \RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
-			$files = new \RecursiveIteratorIterator( $directory, \RecursiveIteratorIterator::CHILD_FIRST );
+			$files = new \RecursiveIteratorIterator( $scan, \RecursiveIteratorIterator::CHILD_FIRST );
 
-			// Ensure that there is no failure.
-			if ( is_array( $files ) ) {
-				foreach ( $files as $file ) {
-					// Remove file from the directory.
-					if ( ! $fileinfo->isDir() ) {
-						unlink( $fileinfo->getRealPath() );
-					}
+			// Files counter.
+			$counter = 0;
+
+			// Loop over the object.
+			foreach ( $files as $file ) {
+				// Remove file from the directory.
+				if ( ! $file->isDir() ) {
+					unlink( $file->getRealPath() );
+
+					// Add to counter.
+					++$counter;
 				}
 			}
+
+			// Return true if the counter has values.
+			if ( $counter > 0 ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
