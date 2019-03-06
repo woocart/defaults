@@ -319,11 +319,6 @@ class CacheManagerTest extends TestCase
     $method = self::getMethod( 'flush_fcgi_cache' );
     $plugins = new CacheManager();
 
-    // Add files to cache folder.
-    $fp = fopen( 'tests/cache/cache1.txt', 'wb' );
-    fwrite($fp, 'faketest');
-    fclose($fp);
-
     $this->assertTrue( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
   }
 

@@ -220,8 +220,6 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flush Redis cache.
-		 *
-		 * @codeCoverageIgnore
 		 */
 		protected function flush_redis_cache() {
 			// Flush WordPress cache object.
@@ -252,8 +250,8 @@ namespace Niteo\WooCart\Defaults {
 			// Scan directory for files.
 			$files = new \RecursiveIteratorIterator( $scan, \RecursiveIteratorIterator::CHILD_FIRST );
 
-			// Files counter.
-			$counter = 0;
+			// Check if any files deleted.
+			$deleted = false;
 
 			// Loop over the object.
 			foreach ( $files as $file ) {
@@ -261,17 +259,12 @@ namespace Niteo\WooCart\Defaults {
 				if ( ! $file->isDir() ) {
 					unlink( $file->getRealPath() );
 
-					// Add to counter.
-					++$counter;
+					// Set it to true since we deleted a file.
+					$deleted = true;
 				}
 			}
 
-			// Return true if the counter has values.
-			if ( $counter > 0 ) {
-				return true;
-			}
-
-			return false;
+			return $deleted;
 		}
 
 		/**
