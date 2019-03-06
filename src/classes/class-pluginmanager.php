@@ -10,7 +10,6 @@
 
 namespace Niteo\WooCart\Defaults {
 
-	use \WooCart\Log\Socket;
 
 	/**
 	 * Class PluginManager.
@@ -72,11 +71,7 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			// Log messages on plugin activation and de-activation.
-			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
-
-			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
+			new Logger();
 		}
 
 		/**
@@ -518,48 +513,6 @@ namespace Niteo\WooCart\Defaults {
 			// Should we add the force activation hook ?
 			if ( true === $plugin['force_activation'] ) {
 				$this->forced_activation = true;
-			}
-		}
-
-		/**
-		 * Log messages on plugin activation.
-		 */
-		public function activation( $plugin_file, $network_wide ) {
-			// Get plugin data using the plugin file path.
-			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_file, false );
-
-			if ( $plugin_data ) {
-				if ( is_array( $plugin_data ) ) {
-					$emit_data = [
-						'kind'    => 'plugin_change',
-						'name'    => $plugin_data['Name'],
-						'version' => $plugin_data['Version'],
-						'action'  => 'activate',
-					];
-
-					Socket::log( $emit_data );
-				}
-			}
-		}
-
-		/**
-		 * Log messages on plugin de-activation.
-		 */
-		public function deactivation( $plugin_file, $network_wide ) {
-			// Get plugin data using the plugin file path.
-			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_file, false );
-
-			if ( $plugin_data ) {
-				if ( is_array( $plugin_data ) ) {
-					$emit_data = [
-						'kind'    => 'plugin_change',
-						'name'    => $plugin_data['Name'],
-						'version' => $plugin_data['Version'],
-						'action'  => 'deactivate',
-					];
-
-					Socket::log( $emit_data );
-				}
 			}
 		}
 
