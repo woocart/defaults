@@ -22,29 +22,31 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\AutoLogin;
 	use Niteo\WooCart\Defaults\DenyList;
 	use Niteo\WooCart\Defaults\PluginManager;
+	use Niteo\WooCart\Defaults\PluginLogger;
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
-	}
+	} else {
+		if ( function_exists( 'add_shortcode' ) ) {
+			new Shortcodes();
+		}
 
-	if ( function_exists( 'add_shortcode' ) ) {
-		new Shortcodes();
-	}
+		if ( function_exists( 'do_shortcode' ) ) {
+			new Filters();
+		}
 
-	if ( function_exists( 'do_shortcode' ) ) {
-		new Filters();
-	}
-
-	/**
-	 * 1. Consent notification to comply with GDPR.
-	 * 2. Panel for the store in the WP admin dashboard.
-	 * 3. Support auto login from url with jwt token.
-	 */
-	if ( function_exists( 'add_action' ) ) {
-		new GDPR();
-		new AdminDashboard();
-		new AutoLogin();
-		new DenyList();
-		new PluginManager();
+		/**
+		 * 1. Consent notification to comply with GDPR.
+		 * 2. Panel for the store in the WP admin dashboard.
+		 * 3. Support auto login from url with jwt token.
+		 */
+		if ( function_exists( 'add_action' ) ) {
+			new GDPR();
+			new AdminDashboard();
+			new AutoLogin();
+			new DenyList();
+			new PluginManager();
+			new PluginLogger();
+		}
 	}
 }

@@ -1,4 +1,4 @@
-VERSION := 3.7.5
+VERSION := 3.7.6
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -59,9 +59,11 @@ release:
 
 fmt: ensure
 	bin/phpcbf --standard=WordPress src --ignore=src/vendor
+	bin/phpcbf --standard=WordPress tests --ignore=vendor
 
 lint: ensure
 	bin/phpcs --standard=WordPress src --ignore=src/vendor
+	bin/phpcs --standard=WordPress tests --ignore=vendor
 
 psr: src/vendor
 	composer dump-autoload -a

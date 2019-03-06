@@ -69,9 +69,6 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WOOCART_REQUIRED' ) ) {
 				$this->list = WOOCART_REQUIRED;
 			}
-
-			// Log messages on plugin activation and de-activation.
-			new Logger();
 		}
 
 		/**

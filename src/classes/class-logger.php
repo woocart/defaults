@@ -13,11 +13,11 @@ namespace Niteo\WooCart\Defaults {
 	use \WooCart\Log\Socket;
 
 	/**
-	 * Class Logger.
+	 * Class PluginLogger.
 	 *
 	 * @package Niteo\WooCart\Defaults
 	 */
-	class Logger {
+	class PluginLogger {
 
 		public function __construct() {
 			// Plugin activation.
