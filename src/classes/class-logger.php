@@ -10,29 +10,29 @@
 
 namespace Niteo\WooCart\Defaults {
 
-  use \WooCart\Log\Socket;
+	use \WooCart\Log\Socket;
 
-  /**
+	/**
 	 * Class Logger.
 	 *
 	 * @package Niteo\WooCart\Defaults
 	 */
-  class Logger {
+	class Logger {
 
-    public function __construct() {
-      // Plugin activation.
-      add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
+		public function __construct() {
+			// Plugin activation.
+			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
 
-      // Plugin de-activation.
-      add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
-    }
+			// Plugin de-activation.
+			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
+		}
 
-    /**
+		/**
 		 * Log messages on plugin activation.
 		 */
 		public function activation( $plugin_file, $network_wide ) {
-      // Pass params to the log function.
-      return $this->plugin_status_change( $plugin_file, 'activate' );
+			// Pass params to the log function.
+			return $this->plugin_status_change( $plugin_file, 'activate' );
 		}
 
 		/**
@@ -40,17 +40,17 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function deactivation( $plugin_file, $network_wide ) {
 			// Pass params to the log function.
-      return $this->plugin_status_change( $plugin_file, 'deactivate' );
-    }
+			return $this->plugin_status_change( $plugin_file, 'deactivate' );
+		}
 
-    /**
-     * Send message to the logger on plugin status change.
-     *
-     * @param string $plugin_file String containing relative path to the main plugin file.
-     * @param string $status Define whether plugin is activated or de-activated.
-     */
-    public function plugin_status_change( $plugin_file, $status ) {
-      // Get plugin data using the plugin file path.
+		/**
+		 * Send message to the logger on plugin status change.
+		 *
+		 * @param string $plugin_file String containing relative path to the main plugin file.
+		 * @param string $status Define whether plugin is activated or de-activated.
+		 */
+		public function plugin_status_change( $plugin_file, $status ) {
+			// Get plugin data using the plugin file path.
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_file, false );
 
 			if ( $plugin_data ) {
@@ -62,15 +62,15 @@ namespace Niteo\WooCart\Defaults {
 						'action'  => $status,
 					];
 
-          Socket::log( $emit_data );
+					Socket::log( $emit_data );
 
-          return true;
+					return true;
 				}
-      }
+			}
 
-      return false;
-    }
+			return false;
+		}
 
-  }
+	}
 
 }
