@@ -10,7 +10,6 @@
 
 namespace Niteo\WooCart\Defaults {
 
-	use \WooCart\Log\Socket;
 
 	/**
 	 * Class PluginManager.
@@ -52,10 +51,27 @@ namespace Niteo\WooCart\Defaults {
 		public function __construct() {
 			add_action( 'init', [ &$this, 'init' ] );
 
-			// Check for the plugins list.
+			/**
+			 * Check for the plugins list.
+			 * WOOCART_REQUIRED is defined in the wp-config.php file.
+			 * Multi-dimensional array with each array having name & slug of the plugin.
+			 *
+			 * Example:
+			 * [
+			 *      [
+			 *          "name" => "Plugin Name",
+			 *          "slug" => "plugin-slug"
+			 *      ]
+			 * ]
+			 *
+			 * @see https://github.com/niteoweb/woocart-docker-web/blob/master/bin/runtime/phases/phase_21-wp-config
+			 */
 			if ( defined( 'WOOCART_REQUIRED' ) ) {
 				$this->list = WOOCART_REQUIRED;
 			}
+
+			// Log messages on plugin activation and de-activation.
+			new Logger();
 		}
 
 		/**
@@ -117,13 +133,6 @@ namespace Niteo\WooCart\Defaults {
 			if ( true === $this->forced_activation ) {
 				add_action( 'admin_init', [ $this, 'force_activation' ] );
 			}
-
-			// Log messages on plugin activation and de-activation.
-			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
-
-			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
 		}
 
 		/**
@@ -167,7 +176,11 @@ namespace Niteo\WooCart\Defaults {
 		 * @return bool True if active, false otherwise.
 		 */
 		public function is_plugin_active( $slug ) {
-			return ( ( ! empty( $this->plugins[ $slug ]['is_callable'] ) && is_callable( $this->plugins[ $slug ]['is_callable'] ) ) );
+			if ( isset( $this->plugins[ $slug ] ) ) {
+				return is_plugin_active( $this->plugins[ $slug ]['file_path'] );
+			}
+
+			return false;
 		}
 
 		/**
@@ -479,7 +492,7 @@ namespace Niteo\WooCart\Defaults {
 				'slug'             => '',      // String.
 				'required'         => true,    // Boolean.
 				'version'          => '',      // String.
-				'force_activation' => false,    // Boolean.
+				'force_activation' => false,   // Boolean.
 			];
 
 			// Prepare the received data.
@@ -500,48 +513,6 @@ namespace Niteo\WooCart\Defaults {
 			// Should we add the force activation hook ?
 			if ( true === $plugin['force_activation'] ) {
 				$this->forced_activation = true;
-			}
-		}
-
-		/**
-		 * Log messages on plugin activation.
-		 */
-		public function activation( $plugin_file, $network_wide ) {
-			// Get plugin data using the plugin file path.
-			$plugin_data = get_plugin_data( $plugin_file, false );
-
-			if ( $plugin_data ) {
-				if ( is_array( $plugin_data ) ) {
-					$emit_data = [
-						'kind'    => 'plugin_change',
-						'name'    => $plugin_data['Name'],
-						'version' => $plugin_data['Version'],
-						'action'  => 'activate',
-					];
-
-					Socket::log( $emit_data );
-				}
-			}
-		}
-
-		/**
-		 * Log messages on plugin de-activation.
-		 */
-		public function deactivation( $plugin_file, $network_wide ) {
-			// Get plugin data using the plugin file path.
-			$plugin_data = get_plugin_data( $plugin_file, false );
-
-			if ( $plugin_data ) {
-				if ( is_array( $plugin_data ) ) {
-					$emit_data = [
-						'kind'    => 'plugin_change',
-						'name'    => $plugin_data['Name'],
-						'version' => $plugin_data['Version'],
-						'action'  => 'deactivate',
-					];
-
-					Socket::log( $emit_data );
-				}
 			}
 		}
 

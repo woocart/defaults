@@ -23,6 +23,7 @@ class PluginManagerTest extends TestCase
 
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testConstructor()
   {
@@ -43,6 +44,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::init
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testInitEmpty()
   {
@@ -66,6 +68,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::init
    * @covers \Niteo\WooCart\Defaults\PluginManager::register
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testInitEmptyTwo()
   {
@@ -88,6 +91,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::register
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testInit()
   {
@@ -139,6 +143,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::register
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testRegister()
   {
@@ -181,6 +186,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::register
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testRegisterEmpty()
   {
@@ -191,6 +197,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsComplete()
   {
@@ -202,6 +209,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCompleteFalse()
   {
@@ -225,10 +233,17 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsPluginActive()
   {
     $plugins = new PluginManager();
+
+    \WP_Mock::userFunction(
+      'is_plugin_active', [
+        'return' => false
+      ]
+    );
 
     $this->assertFalse( $plugins->is_plugin_active( 'autoptimize' ) );
   }
@@ -236,6 +251,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::_get_plugin_basename_from_slug
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testGetPluginBasenameFromSlug()
   {
@@ -252,6 +268,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::_get_plugin_basename_from_slug
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testGetPluginBasenameFromSlugTwo()
   {
@@ -273,6 +290,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_require_update
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
    * @covers \Niteo\WooCart\Defaults\PluginManager::can_plugin_activate
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testForceActivation()
   {
@@ -298,6 +316,11 @@ class PluginManagerTest extends TestCase
         'return' => true
       ]
     );
+    \WP_Mock::userFunction(
+      'is_plugin_active', [
+        'return' => false
+      ]
+    );
 
     $mock->force_activation();
   }
@@ -306,6 +329,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testForceActivationEmpty()
   {
@@ -329,6 +353,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::thickbox
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testThickbox()
   {
@@ -356,6 +381,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::get_info_link
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testGetInfoLink()
   {
@@ -393,6 +419,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::get_installed_version
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testGetInstalledVersion()
   {
@@ -408,6 +435,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCoreUpdatePageOne()
   {
@@ -419,6 +447,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCoreUpdatePageTwo()
   {
@@ -439,6 +468,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCoreUpdatePageThree()
   {
@@ -460,6 +490,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCoreUpdatePageFour()
   {
@@ -481,6 +512,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testIsCoreUpdatePageFive()
   {
@@ -501,6 +533,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::settings_errors
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testSettingsErrors()
   {
@@ -527,6 +560,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_have_update
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testDoesPluginHaveUpdateFalse()
   {
@@ -544,6 +578,7 @@ class PluginManagerTest extends TestCase
   /**
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_have_update
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testDoesPluginHaveUpdateVersion()
   {
@@ -573,6 +608,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
    * @covers \Niteo\WooCart\Defaults\PluginManager::notices
    * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testNoticesEmpty()
   {
@@ -595,6 +631,7 @@ class PluginManagerTest extends TestCase
    * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_require_update
    * @covers \Niteo\WooCart\Defaults\PluginManager::get_installed_version
    * @covers \Niteo\WooCart\Defaults\PluginManager::get_info_link
+   * @covers \Niteo\WooCart\Defaults\Logger::__construct
    */
   public function testNotices()
   {
@@ -657,52 +694,6 @@ class PluginManagerTest extends TestCase
     $GLOBALS['current_screen'] = (object) [
       'parent_base' => 'options-none'
     ];
-  }
-
-  /**
-   * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-   * @covers \Niteo\WooCart\Defaults\PluginManager::activation
-   */
-  public function testActivation()
-  {
-    $plugins = new PluginManager();
-
-    \WP_Mock::userFunction(
-      'get_plugin_data', [
-        'return' => [
-          'Name'    => 'Plugin',
-          'Version' => '1.0'
-        ]
-      ]
-    );
-    \Mockery::mock( 'alias:\WooCart\Log\Socket' )
-              ->shouldReceive( 'log' )
-              ->andReturn( true );
-
-    $plugins->activation( 'folder/plugin.php', false );
-  }
-
-  /**
-   * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-   * @covers \Niteo\WooCart\Defaults\PluginManager::deactivation
-   */
-  public function testDeactivation()
-  {
-    $plugins = new PluginManager();
-
-    \WP_Mock::userFunction(
-      'get_plugin_data', [
-        'return' => [
-          'Name'    => 'Plugin',
-          'Version' => '1.0'
-        ]
-      ]
-    );
-    \Mockery::mock( 'alias:\WooCart\Log\Socket' )
-              ->shouldReceive( 'log' )
-              ->andReturn( true );
-
-    $plugins->deactivation( 'folder/plugin.php', false );
   }
 
   protected static function getMethod( $name )
