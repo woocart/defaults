@@ -51,5 +51,4 @@ namespace Niteo\WooCart {
 			new CacheManager();
 		}
 	}
-
 }
