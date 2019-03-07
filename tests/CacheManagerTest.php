@@ -341,6 +341,7 @@ class CacheManagerTest extends TestCase {
 		fclose( $fp );
 
 		$this->assertTrue( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
+		$this->assertFalse( file_exists( 'tests/cache/tmp.txt' ) );
 	}
 
 	/**
@@ -387,9 +388,10 @@ class CacheManagerTest extends TestCase {
 				->andReturn( $fake );
 		$mock->redis->shouldReceive( 'scan' )
 				->andReturn( true );
-		// $mock->redis->shouldReceive( 'del' )
-		// ->andReturn( true );
-		$omck2 = \Mockery::mock( '\Predis\Collection\Iterator\Keyspace', [ $mock->redis, 'cache*' ] );
+		$mock->redis->shouldReceive( 'del' )
+		->andReturn( true );
+
+		\Mockery::mock( '\Predis\Collection\Iterator\Keyspace', [ $mock->redis, 'cache*' ] );
 		$method->invokeArgs( $mock, [] );
 	}
 
