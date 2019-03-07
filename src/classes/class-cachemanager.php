@@ -230,8 +230,9 @@ namespace Niteo\WooCart\Defaults {
 
 			// Continue if the connection was successful.
 			if ( $this->connected ) {
-				// Find keys matching `cache:*`.
-				$pattern = 'cache:*';
+				// Find keys matching - cache:*
+				// It has been URI encoded to cache%3A*
+				$pattern = 'cache%3A*';
 
 				foreach ( new Keyspace( $this->redis, $pattern ) as $key ) {
 					// @codeCoverageIgnoreStart
@@ -245,6 +246,11 @@ namespace Niteo\WooCart\Defaults {
 		 * Flush FCGI cache.
 		 */
 		protected function flush_fcgi_cache( $directory ) {
+			// Check for cache folder.
+			if ( ! is_dir( $directory ) || ! file_exists( $directory ) ) {
+				return;
+			}
+
 			// Cache location.
 			$scan = new \RecursiveDirectoryIterator( $directory, \RecursiveDirectoryIterator::SKIP_DOTS );
 

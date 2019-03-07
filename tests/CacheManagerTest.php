@@ -357,6 +357,17 @@ class CacheManagerTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 */
+	public function testFlushFcgiCacheNoDirectory() {
+		$method  = self::getMethod( 'flush_fcgi_cache' );
+		$plugins = new CacheManager();
+
+		$this->assertEmpty( $method->invokeArgs( $plugins, [ 'non/existent/directory' ] ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
 	 */
 	public function testFlushRedisCache() {
