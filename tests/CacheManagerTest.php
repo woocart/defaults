@@ -335,6 +335,11 @@ class CacheManagerTest extends TestCase {
 		$method  = self::getMethod( 'flush_fcgi_cache' );
 		$plugins = new CacheManager();
 
+		// FIX: for failing test
+		$fp = fopen( 'tests/cache/tmp.txt', 'wb' );
+		fwrite( $fp, 'Some text..' );
+		fclose( $fp );
+
 		$this->assertTrue( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
 	}
 
