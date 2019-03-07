@@ -268,12 +268,14 @@ class CacheManagerTest extends TestCase {
 				'return' => true,
 			]
 		);
-		\WP_Mock::userFunction(
-			'opcache_reset',
-			[
-				'return' => true,
-			]
-		);
+		if ( ! function_exists( 'opcache_reset' ) ) {
+			\WP_Mock::userFunction(
+				'opcache_reset',
+				[
+					'return' => true,
+				]
+			);
+		}
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
 			[
