@@ -42,6 +42,13 @@ namespace Niteo\WooCart\Defaults {
 		public $fcgi_path = '/var/www/cache/fcgi';
 
 		/**
+		 * Redis credentials
+		 *
+		 * @var array
+		 */
+		public $redis_credentials = [];
+
+		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
@@ -80,13 +87,23 @@ namespace Niteo\WooCart\Defaults {
 
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
-			add_action( 'wp_ajax_edit_theme_plugin_file', [ &$this, 'inject_cache' ], -1 );
+			add_action( 'wp_ajax_edit_theme_plugin_file', [ &$this, 'flush_cache' ], PHP_INT_MAX );
 
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
 			 */
 			if ( defined( 'FCGI_CACHE_PATH' ) ) {
 				$this->fcgi_path = FCGI_CACHE_PATH;
+			}
+
+			/**
+			 * If the connection constants are defined, we use them.
+			 */
+			if ( defined( 'WP_REDIS_SCHEME' ) && defined( 'WP_REDIS_PATH' ) ) {
+				$this->redis_credentials = [
+					'scheme' => WP_REDIS_SCHEME,
+					'path'   => WP_REDIS_PATH,
+				];
 			}
 		}
 
@@ -158,27 +175,6 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Hack into the ajax hook for theme and plugin editor.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		public function inject_cache() {
-			ob_start( 'after_inject_cache' );
-		}
-
-		/**
-		 * This hook runs after we the action has been initiated.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		public function after_inject_cache( $buffer ) {
-			// We empty cache over here.
-			$this->flush_cache();
-
-			return $buffer;
-		}
-
-		/**
 		 * Flush cache (OPcache, Redis object cache, and FCGI cache).
 		 */
 		protected function flush_cache() {
@@ -238,7 +234,9 @@ namespace Niteo\WooCart\Defaults {
 				$pattern = 'cache:*';
 
 				foreach ( new Keyspace( $this->redis, $pattern ) as $key ) {
+					// @codeCoverageIgnoreStart
 					$this->redis->del( $key );
+					// @codeCoverageIgnoreEnd
 				}
 			}
 		}
@@ -276,25 +274,17 @@ namespace Niteo\WooCart\Defaults {
 		 * @codeCoverageIgnore
 		 */
 		protected function redis_connect() {
-			try {
-				$args = [
-					'scheme' => WP_REDIS_SCHEME,
-					'path'   => WP_REDIS_PATH,
-				];
+			// Make connection.
+			$this->redis = new Client( $this->redis_credentials );
+			$this->redis->connect();
 
-				// Make connection.
-				$this->redis = new Client( $args );
-				$this->redis->connect();
-
-				// Throws exception if Redis is unavailable.
-				$this->redis->isConnected();
-
+			// Throws exception if Redis is unavailable.
+			if ( $this->redis->isConnected() ) {
 				// Connection set to true.
 				$this->connected = true;
-			} catch ( Exception $exception ) {
-				// Unable to make an connection.
-				$this->connected = false;
 			}
+
+			return $this->connected;
 		}
 
 	}

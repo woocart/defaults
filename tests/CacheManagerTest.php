@@ -44,6 +44,7 @@ class CacheManagerTest extends TestCase
     \WP_Mock::expectActionAdded( 'customize_save_after', [ $cache, 'flush_fcgi_cache' ] );
     \WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', [ $cache, 'flush_redis_cache' ] );
     \WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', [ $cache, 'flush_fcgi_cache' ] );
+    \WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', [ $cache, 'flush_cache' ], PHP_INT_MAX );
 
     $cache->__construct();
   }
@@ -370,9 +371,9 @@ class CacheManagerTest extends TestCase
     $mock->redis->shouldReceive( 'getProfile' )
                 ->andReturn( $fake );
     $mock->redis->shouldReceive( 'scan' )
-                ->andReturn( [ 0 => 'param0', 1 => [ 'cache:param1' ] ] );
-    $mock->redis->shouldReceive( 'del' )
                 ->andReturn( true );
+    // $mock->redis->shouldReceive( 'del' )
+    //             ->andReturn( true );
 
     $omck2 = \Mockery::mock( '\Predis\Collection\Iterator\Keyspace', [ $mock->redis, 'cache*' ] );
     $method->invokeArgs( $mock, [] );
