@@ -10,6 +10,7 @@ RUN apk update && apk add --no-cache make bash composer zip libpng libpng-dev $P
     && pecl install xdebug-beta
 RUN docker-php-ext-enable xdebug
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install opcache
 
 SHELL ["/bin/bash", "-c"]
 CMD ["."]

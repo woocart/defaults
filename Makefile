@@ -75,3 +75,6 @@ i18n:
 
 cover: clover.xml
 	bin/coverage-check clover.xml 100
+
+clean:
+	rm -rf vendor/ bin src/vendor/
