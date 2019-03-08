@@ -1,23 +1,22 @@
 <?php
 
-
 use Niteo\WooCart\Defaults\CacheManager;
 use PHPUnit\Framework\TestCase;
 
 class CacheManagerTest extends TestCase {
 
-	function setUp() {
+
+	public function setUp() {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
 		\WP_Mock::tearDown();
 		\Mockery::close();
 	}
-
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
@@ -79,8 +78,8 @@ class CacheManagerTest extends TestCase {
 		);
 
 		$admin_bar = $this->getMockBuilder( FakeMenuClass::class )
-						  ->setMethods( [ 'add_menu' ] )
-						  ->getMock();
+			->setMethods( [ 'add_menu' ] )
+			->getMock();
 		$cache->admin_button( $admin_bar );
 	}
 
@@ -105,8 +104,8 @@ class CacheManagerTest extends TestCase {
 		);
 
 		$admin_bar = $this->getMockBuilder( FakeMenuClass::class )
-						  ->setMethods( [ 'add_menu' ] )
-						  ->getMock();
+			->setMethods( [ 'add_menu' ] )
+			->getMock();
 		$cache->admin_button( $admin_bar );
 	}
 
@@ -238,10 +237,10 @@ class CacheManagerTest extends TestCase {
 	 */
 	public function testCheckCacheRequestFlushComplete() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-					  ->shouldAllowMockingProtectedMethods()
-					  ->makePartial();
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
 		$mock->shouldReceive( 'flush_cache' )
-		 ->andReturn( true );
+			->andReturn( true );
 
 		$_REQUEST['wc_cache'] = true;
 		\WP_Mock::userFunction(
@@ -298,10 +297,10 @@ class CacheManagerTest extends TestCase {
 	 */
 	public function testRedisConnect() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-					  ->shouldAllowMockingProtectedMethods()
-					  ->makePartial();
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
 		$mock->shouldReceive( 'redis_connect' )
-		 ->andReturn( true );
+			->andReturn( true );
 
 		$this->assertTrue( $mock->redis_connect() );
 	}
@@ -316,15 +315,15 @@ class CacheManagerTest extends TestCase {
 	public function testFlushCache() {
 		$method = self::getMethod( 'flush_cache' );
 		$mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-					  ->shouldAllowMockingProtectedMethods()
-					  ->makePartial();
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
 
 		$mock->shouldReceive( 'flush_opcache' )
-		 ->andReturn( true );
+			->andReturn( true );
 		$mock->shouldReceive( 'flush_redis_cache' )
-		 ->andReturn( true );
+			->andReturn( true );
 		$mock->shouldReceive( 'flush_fcgi_cache' )
-		 ->andReturn( true );
+			->andReturn( true );
 
 		$method->invokeArgs( $mock, [] );
 	}
@@ -375,8 +374,8 @@ class CacheManagerTest extends TestCase {
 	public function testFlushRedisCache() {
 		$method = self::getMethod( 'flush_redis_cache' );
 		$mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-					  ->shouldAllowMockingProtectedMethods()
-					  ->makePartial();
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
 
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
@@ -386,25 +385,28 @@ class CacheManagerTest extends TestCase {
 		);
 
 		$mock->shouldReceive( 'redis_connect' )
-		 ->andReturn( true );
+			->andReturn( true );
 		$mock->connected = true;
 
 		// Fake class with the required method for mocking.
-		$fake = new class() {
+		$fake = new class()
+		{
 			public function supportsCommand( $arg ) {
 				return true;
 			}
 		};
 
-		$mock->redis = \Mockery::mock( '\Predis\ClientInterface' );
+		$mock->redis = \Mockery::mock( 'Predis\ClientInterface' );
 		$mock->redis->shouldReceive( 'getProfile' )
-				->andReturn( $fake );
-		$mock->redis->shouldReceive( 'scan' )
-				->andReturn( true );
-		$mock->redis->shouldReceive( 'del' )
-		->andReturn( true );
+			->andReturn( $fake );
 
-		\Mockery::mock( '\Predis\Collection\Iterator\Keyspace', [ $mock->redis, 'cache*' ] );
+		$mock->redis->shouldReceive( 'scan' )
+			->withArgs( [ 0, [ 'MATCH' => 'cache%3A*' ] ] )
+			->andReturn( [ 0, [ 'cache%3A1st' ] ] );
+		$mock->redis->shouldReceive( 'del' )
+			->withArgs( [ 'cache%3A1st' ] )
+			->andReturn( true );
+
 		$method->invokeArgs( $mock, [] );
 	}
 

@@ -111,6 +111,7 @@ namespace Niteo\WooCart\Defaults {
 		 * Button for flushing cache in the admin panel bar.
 		 *
 		 * @param $admin_bar
+		 * @return bool
 		 */
 		public function admin_button( $admin_bar ) {
 			if ( is_admin() ) {
@@ -235,9 +236,7 @@ namespace Niteo\WooCart\Defaults {
 				$pattern = 'cache%3A*';
 
 				foreach ( new Keyspace( $this->redis, $pattern ) as $key ) {
-					// @codeCoverageIgnoreStart
 					$this->redis->del( $key );
-					// @codeCoverageIgnoreEnd
 				}
 			}
 		}
