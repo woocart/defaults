@@ -1,4 +1,4 @@
-VERSION := 3.7.6
+VERSION := 3.8.0
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
