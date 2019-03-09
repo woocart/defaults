@@ -93,8 +93,10 @@ class PluginManagerTest extends TestCase {
 						->shouldAllowMockingProtectedMethods()
 						->makePartial();
 		$mock->list    = [
-			'name' => 'Autoptimize',
-			'slug' => 'autoptimize',
+			[
+				'name' => 'Autoptimize',
+				'slug' => 'autoptimize',
+			],
 		];
 		$mock->plugins = [
 			'name' => 'Autoptimize',
@@ -124,8 +126,61 @@ class PluginManagerTest extends TestCase {
 			]
 		);
 
-		// $mock->shouldReceive( 'register' )
-		// ->andReturn( true );
+		$mock->shouldReceive( '_get_plugin_basename_from_slug' )
+		->andReturn( 'autoptimize/autoptimize.php' );
+
+		\WP_Mock::expectActionAdded( 'admin_init', [ $mock, 'force_activation' ] );
+		\WP_Mock::expectActionAdded( 'after_plugin_row', [ $mock, 'add_required_text' ], PHP_INT_MAX, 3 );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $mock, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+
+		$mock->init();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 */
+	public function testInitTwo() {
+		define( 'SENDGRID_API_KEY', true );
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
+						->shouldAllowMockingProtectedMethods()
+						->makePartial();
+		$mock->list    = [
+			[
+				'name' => 'Sendgrid',
+				'slug' => 'sendgrid-email-delivery-simplified',
+			],
+		];
+		$mock->plugins = [
+			'name' => 'Autoptimize',
+			'slug' => 'autoptimize',
+		];
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			[
+				'return' => true,
+			]
+		);
+		\WP_Mock::userFunction(
+			'wp_parse_args',
+			[
+				'return' => [
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
+				],
+			]
+		);
+		\WP_Mock::userFunction(
+			'sanitize_key',
+			[
+				'return' => 'autoptimize',
+			]
+		);
+
 		$mock->shouldReceive( '_get_plugin_basename_from_slug' )
 		->andReturn( 'autoptimize/autoptimize.php' );
 

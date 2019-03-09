@@ -74,7 +74,19 @@ namespace Niteo\WooCart\Defaults {
 
 			// Register plugins.
 			foreach ( $this->list as $plugin ) {
-				$this->register( $plugin );
+				/**
+				 * Special case for Sendgrid.
+				 * We register the plugin only if the the `SENDGRID_API_KEY` is defined.
+				 *
+				 * @see https://github.com/niteoweb/woocart-docker-web/blob/master/fixtures/config/wp-config.php
+				 */
+				if ( 'sendgrid-email-delivery-simplified' === $plugin['slug'] ) {
+					if ( defined( 'SENDGRID_API_KEY' ) ) {
+						$this->register( $plugin );
+					}
+				} else {
+					$this->register( $plugin );
+				}
 			}
 
 			// Proceed only if we have plugins to handle.
