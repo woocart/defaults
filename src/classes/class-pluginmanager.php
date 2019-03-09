@@ -170,19 +170,19 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			$defaults = [
-				'name'             => '',      // String.
-				'slug'             => '',      // String.
-				'file_path' 			 => '' 			 // String.
+				'name'      => '',      // String.
+				'slug'      => '',      // String.
+				'file_path' => '',           // String.
 			];
 
 			// Prepare the received data.
 			$plugin = wp_parse_args( $plugin, $defaults );
 
 			// Standardize the received slug.
-			$plugin['slug']             = sanitize_key( $plugin['slug'] );
+			$plugin['slug'] = sanitize_key( $plugin['slug'] );
 
 			// Enrich the received data.
-			$plugin['file_path'] 				= $this->_get_plugin_basename_from_slug( $plugin['slug'] );
+			$plugin['file_path'] = $this->_get_plugin_basename_from_slug( $plugin['slug'] );
 
 			// Add to $paths if not empty.
 			if ( ! empty( $plugin['file_path'] ) ) {
@@ -197,7 +197,7 @@ namespace Niteo\WooCart\Defaults {
 		 * Filter function to remove deactivation links from the required plugins
 		 * on the plugins.php page.
 		 *
-		 * @param array $actions Plugin actions such as deactivate, edit.
+		 * @param array  $actions Plugin actions such as deactivate, edit.
 		 * @param string $plugin_file Path to the plugin main file relative to the plugins directory.
 		 *
 		 * @return array
@@ -215,7 +215,7 @@ namespace Niteo\WooCart\Defaults {
 		 * Add required text below the plugin row on the page.
 		 *
 		 * @param string $plugin_file Path to the plugin main file relative to the plugins directory.
-		 * @param array $plugin_data Plugin data such as name, description, etc.
+		 * @param array  $plugin_data Plugin data such as name, description, etc.
 		 *
 		 * @return void
 		 */

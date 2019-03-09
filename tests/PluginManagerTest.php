@@ -30,8 +30,8 @@ class PluginManagerTest extends TestCase {
 			'WOOCART_REQUIRED',
 			[
 				[
-					'name'     => 'Autoptimize',
-					'slug'     => 'autoptimize',
+					'name' => 'Autoptimize',
+					'slug' => 'autoptimize',
 				],
 			]
 		);
@@ -89,16 +89,16 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
 	 */
 	public function testInit() {
-		$mock                    = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
 						->shouldAllowMockingProtectedMethods()
 						->makePartial();
-		$mock->list = [
-			'name'     => 'Autoptimize',
-			'slug'     => 'autoptimize'
+		$mock->list    = [
+			'name' => 'Autoptimize',
+			'slug' => 'autoptimize',
 		];
-		$mock->plugins           = [
-			'name'     => 'Autoptimize',
-			'slug'     => 'autoptimize',
+		$mock->plugins = [
+			'name' => 'Autoptimize',
+			'slug' => 'autoptimize',
 		];
 
 		\WP_Mock::userFunction(
@@ -111,9 +111,9 @@ class PluginManagerTest extends TestCase {
 			'wp_parse_args',
 			[
 				'return' => [
-					'name'             => 'Autoptimize',
-					'slug'             => 'autoptimize',
-					'file_path'        => '',
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
 				],
 			]
 		);
@@ -147,9 +147,9 @@ class PluginManagerTest extends TestCase {
 			'wp_parse_args',
 			[
 				'return' => [
-					'name'             => 'Autoptimize',
-					'slug'             => 'autoptimize',
-					'file_path'        => '',
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
 				],
 			]
 		);
@@ -172,8 +172,8 @@ class PluginManagerTest extends TestCase {
 
 		$mock->register(
 			[
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
+				'name' => 'Autoptimize',
+				'slug' => 'autoptimize',
 			]
 		);
 	}
@@ -206,11 +206,11 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
 	 */
 	public function testIsPluginActive() {
-		$plugins = new PluginManager();
+		$plugins          = new PluginManager();
 		$plugins->plugins = [
 			'autoptimize' => [
-				'file_path' => 'autoptimize/autoptimize.php'
-			]
+				'file_path' => 'autoptimize/autoptimize.php',
+			],
 		];
 
 		\WP_Mock::userFunction(
@@ -228,9 +228,9 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
 	 */
 	public function testAddRequiredText() {
-		$plugins = new PluginManager();
+		$plugins        = new PluginManager();
 		$plugins->paths = [
-			'plugin_file'
+			'plugin_file',
 		];
 
 		$plugins->add_required_text( 'plugin_file', [ 'Name' => 'Plugin' ] );
@@ -242,12 +242,21 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_deactivation_link
 	 */
 	public function testRemoveDeactivationLink() {
-		$plugins = new PluginManager();
+		$plugins        = new PluginManager();
 		$plugins->paths = [
-			'plugin_file'
+			'plugin_file',
 		];
 
-		$this->assertEquals( [ 'Another' => 'This will be returned' ], $plugins->remove_deactivation_link( [ 'deactivate' => 'Link', 'Another' => 'This will be returned' ], 'plugin_file' ) );
+		$this->assertEquals(
+			[ 'Another' => 'This will be returned' ],
+			$plugins->remove_deactivation_link(
+				[
+					'deactivate' => 'Link',
+					'Another'    => 'This will be returned',
+				],
+				'plugin_file'
+			)
+		);
 	}
 
 	/**
@@ -304,9 +313,9 @@ class PluginManagerTest extends TestCase {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
 		$mock->plugins = [
 			'autoptimize' => [
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'file_path'        => 'autoptimize/autoptimize.php',
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
 			],
 		];
 		$mock->shouldReceive( 'get_plugins' )
@@ -329,9 +338,9 @@ class PluginManagerTest extends TestCase {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
 		$mock->plugins = [
 			'autoptimize' => [
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'file_path'        => 'autoptimize/autoptimize.php',
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
 			],
 		];
 		$mock->shouldReceive( 'get_plugins' )
@@ -363,9 +372,9 @@ class PluginManagerTest extends TestCase {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
 		$mock->plugins = [
 			'autoptimize' => [
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'file_path'        => 'autoptimize/autoptimize.php',
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
 			],
 		];
 		$mock->shouldReceive( 'is_plugin_installed' )
