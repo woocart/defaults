@@ -30,9 +30,8 @@ class PluginManagerTest extends TestCase {
 			'WOOCART_REQUIRED',
 			[
 				[
-					'name'     => 'Autoptimize',
-					'slug'     => 'autoptimize',
-					'required' => true,
+					'name' => 'Autoptimize',
+					'slug' => 'autoptimize',
 				],
 			]
 		);
@@ -87,18 +86,21 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
 	 */
 	public function testInit() {
-		$mock                    = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
 						->shouldAllowMockingProtectedMethods()
 						->makePartial();
-		$mock->forced_activation = true;
-		$mock->plugins           = [
-			'name'     => 'Autoptimize',
-			'slug'     => 'autoptimize',
-			'required' => true,
+		$mock->list    = [
+			[
+				'name' => 'Autoptimize',
+				'slug' => 'autoptimize',
+			],
+		];
+		$mock->plugins = [
+			'name' => 'Autoptimize',
+			'slug' => 'autoptimize',
 		];
 
 		\WP_Mock::userFunction(
@@ -111,12 +113,9 @@ class PluginManagerTest extends TestCase {
 			'wp_parse_args',
 			[
 				'return' => [
-					'name'             => 'Autoptimize',
-					'slug'             => 'autoptimize',
-					'required'         => true,
-					'version'          => '',
-					'force_activation' => true,
-					'file_path'        => '',
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
 				],
 			]
 		);
@@ -129,14 +128,87 @@ class PluginManagerTest extends TestCase {
 
 		$mock->shouldReceive( '_get_plugin_basename_from_slug' )
 		->andReturn( 'autoptimize/autoptimize.php' );
-		$mock->shouldReceive( 'is_complete' )
-		->andReturn( false );
 
-		\WP_Mock::expectActionAdded( 'admin_notices', [ $mock, 'notices' ] );
-		\WP_Mock::expectActionAdded( 'admin_enqueue_scripts', [ $mock, 'thickbox' ] );
 		\WP_Mock::expectActionAdded( 'admin_init', [ $mock, 'force_activation' ] );
+		\WP_Mock::expectActionAdded( 'current_screen', [ $mock, 'plugins_page' ] );
 
 		$mock->init();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 */
+	public function testInitTwo() {
+		define( 'SENDGRID_API_KEY', true );
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
+						->shouldAllowMockingProtectedMethods()
+						->makePartial();
+		$mock->list    = [
+			[
+				'name' => 'Sendgrid',
+				'slug' => 'sendgrid-email-delivery-simplified',
+			],
+		];
+		$mock->plugins = [
+			'name' => 'Autoptimize',
+			'slug' => 'autoptimize',
+		];
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			[
+				'return' => true,
+			]
+		);
+		\WP_Mock::userFunction(
+			'wp_parse_args',
+			[
+				'return' => [
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
+				],
+			]
+		);
+		\WP_Mock::userFunction(
+			'sanitize_key',
+			[
+				'return' => 'autoptimize',
+			]
+		);
+
+		$mock->shouldReceive( '_get_plugin_basename_from_slug' )
+		->andReturn( 'autoptimize/autoptimize.php' );
+
+		\WP_Mock::expectActionAdded( 'admin_init', [ $mock, 'force_activation' ] );
+		\WP_Mock::expectActionAdded( 'current_screen', [ $mock, 'plugins_page' ] );
+
+		$mock->init();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
+	 */
+	public function testPluginsPage() {
+		$plugins = new PluginManager();
+
+		\WP_Mock::userFunction(
+			'get_current_screen',
+			[
+				'return' => (object) [
+					'id' => 'plugins',
+				],
+			]
+		);
+
+		\WP_Mock::expectActionAdded( 'after_plugin_row', [ $plugins, 'add_required_text' ], PHP_INT_MAX, 3 );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $plugins, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+
+		$plugins->plugins_page();
 	}
 
 	/**
@@ -150,12 +222,9 @@ class PluginManagerTest extends TestCase {
 			'wp_parse_args',
 			[
 				'return' => [
-					'name'             => 'Autoptimize',
-					'slug'             => 'autoptimize',
-					'required'         => true,
-					'version'          => '',
-					'force_activation' => true,
-					'file_path'        => '',
+					'name'      => 'Autoptimize',
+					'slug'      => 'autoptimize',
+					'file_path' => '',
 				],
 			]
 		);
@@ -178,10 +247,8 @@ class PluginManagerTest extends TestCase {
 
 		$mock->register(
 			[
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'required'         => true,
-				'force_activation' => true,
+				'name' => 'Autoptimize',
+				'slug' => 'autoptimize',
 			]
 		);
 	}
@@ -197,34 +264,16 @@ class PluginManagerTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_plugins
 	 */
-	public function testIsComplete() {
-		$plugins = new PluginManager();
+	public function testIsPluginInstalled() {
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
+											->makePartial();
+		$mock->shouldReceive( 'get_plugins' )
+				 ->andReturn( [ 'fake-one', 'fake-two' ] );
 
-		$this->assertTrue( $plugins->is_complete() );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_complete
-	 */
-	public function testIsCompleteFalse() {
-		$plugins = new PluginManager();
-
-		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
-		$mock->plugins = [
-			'name'     => 'Autoptimize',
-			'slug'     => 'autoptimize',
-			'required' => true,
-		];
-
-		$mock->shouldReceive( 'does_plugin_have_update' )
-		->andReturn( true );
-		$mock->shouldReceive( 'is_plugin_active' )
-		->andReturn( true );
-
-		$this->assertFalse( $mock->is_complete() );
+		$this->assertFalse( $mock->is_plugin_installed( 'fake-slug' ) );
 	}
 
 	/**
@@ -232,16 +281,67 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
 	 */
 	public function testIsPluginActive() {
-		$plugins = new PluginManager();
+		$plugins          = new PluginManager();
+		$plugins->plugins = [
+			'autoptimize' => [
+				'file_path' => 'autoptimize/autoptimize.php',
+			],
+		];
 
 		\WP_Mock::userFunction(
 			'is_plugin_active',
 			[
-				'return' => false,
+				'return' => true,
 			]
 		);
 
-		$this->assertFalse( $plugins->is_plugin_active( 'autoptimize' ) );
+		$this->assertTrue( $plugins->is_plugin_active( 'autoptimize' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
+	 */
+	public function testAddRequiredText() {
+		$plugins        = new PluginManager();
+		$plugins->paths = [
+			'plugin_file',
+		];
+
+		$plugins->add_required_text( 'plugin_file', [ 'Name' => 'Plugin' ] );
+		$this->expectOutputString( '<tr><td colspan="3" style="background:#fcd670"><strong>Plugin</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_deactivation_link
+	 */
+	public function testRemoveDeactivationLink() {
+		$plugins        = new PluginManager();
+		$plugins->paths = [
+			'plugin_file',
+		];
+
+		$this->assertEquals(
+			[ 'Another' => 'This will be returned' ],
+			$plugins->remove_deactivation_link(
+				[
+					'deactivate' => 'Link',
+					'Another'    => 'This will be returned',
+				],
+				'plugin_file'
+			)
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 */
+	public function testIsPluginActiveTwo() {
+		$plugins = new PluginManager();
+
+		$this->assertFalse( $plugins->is_plugin_active( 'fake-slug' ) );
 	}
 
 	/**
@@ -281,42 +381,57 @@ class PluginManagerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_installed_version
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_require_update
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::can_plugin_activate
+	 * * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
 	 */
 	public function testForceActivation() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
 		$mock->plugins = [
 			'autoptimize' => [
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'file_path'        => 'autoptimize/autoptimize.php',
-				'required'         => true,
-				'force_activation' => true,
-				'version'          => '1.0',
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
 			],
 		];
 		$mock->shouldReceive( 'get_plugins' )
 		->andReturn(
 			[
-				'autoptimize/autoptimize.php' => [
-					'Version' => '1.0',
-				],
+				'autoptimize/autoptimize.php',
 			]
 		);
+
+		$mock->force_activation();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 */
+	public function testForceActivationTwo() {
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
+		$mock->plugins = [
+			'autoptimize' => [
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
+			],
+		];
+		$mock->shouldReceive( 'get_plugins' )
+		->andReturn(
+			[
+				'autoptimize/autoptimize.php',
+			]
+		);
+		$mock->shouldReceive( 'is_plugin_installed' )
+		->andReturn( true );
+		$mock->shouldReceive( 'is_plugin_active' )
+		->andReturn( false );
 		\WP_Mock::userFunction(
 			'activate_plugin',
 			[
 				'return' => true,
-			]
-		);
-		\WP_Mock::userFunction(
-			'is_plugin_active',
-			[
-				'return' => false,
 			]
 		);
 
@@ -332,361 +447,15 @@ class PluginManagerTest extends TestCase {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
 		$mock->plugins = [
 			'autoptimize' => [
-				'name'             => 'Autoptimize',
-				'slug'             => 'autoptimize',
-				'file_path'        => 'autoptimize/autoptimize.php',
-				'required'         => true,
-				'force_activation' => true,
-				'version'          => '1.0',
+				'name'      => 'Autoptimize',
+				'slug'      => 'autoptimize',
+				'file_path' => 'autoptimize/autoptimize.php',
 			],
 		];
 		$mock->shouldReceive( 'is_plugin_installed' )
 		->andReturn( false );
 
 		$this->assertEmpty( $mock->force_activation() );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::thickbox
-	 */
-	public function testThickbox() {
-		$plugins = new PluginManager();
-
-		\WP_Mock::userFunction(
-			'get_current_user_id',
-			[
-				'return' => 1,
-			]
-		);
-		\WP_Mock::userFunction(
-			'get_user_meta',
-			[
-				'return' => false,
-			]
-		);
-		\WP_Mock::userFunction(
-			'add_thickbox',
-			[
-				'return' => true,
-			]
-		);
-
-		$plugins->thickbox();
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_info_link
-	 */
-	public function testGetInfoLink() {
-		$plugins          = new PluginManager();
-		$plugins->plugins = [
-			'something' => [
-				'name' => 'Something',
-			],
-		];
-
-		\WP_Mock::userFunction(
-			'self_admin_url',
-			[
-				'return' => true,
-			]
-		);
-		\WP_Mock::userFunction(
-			'add_query_arg',
-			[
-				'return' => 'URL',
-			]
-		);
-		\WP_Mock::userFunction(
-			'esc_url',
-			[
-				'return' => 'URL',
-			]
-		);
-		\WP_Mock::userFunction(
-			'esc_html',
-			[
-				'return' => 'Something',
-			]
-		);
-
-		$this->assertEquals( '<a href="URL" class="thickbox">Something</a>', $plugins->get_info_link( 'something' ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_installed_version
-	 */
-	public function testGetInstalledVersion() {
-		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
-		$mock->shouldReceive( 'get_plugins' )
-		->andReturn(
-			[
-				'something/something.php' => [],
-			]
-		);
-
-		$this->assertEquals( '', $mock->get_installed_version( 'fake' ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testIsCoreUpdatePageOne() {
-		$method  = self::getMethod( 'is_core_update_page' );
-		$plugins = new PluginManager();
-		$this->assertFalse( $method->invokeArgs( $plugins, [] ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testIsCoreUpdatePageTwo() {
-		$method  = self::getMethod( 'is_core_update_page' );
-		$plugins = new PluginManager();
-
-		\WP_Mock::userFunction(
-			'get_current_screen',
-			[
-				'return' => (object) [
-					'base' => 'update-core',
-				],
-			]
-		);
-
-		$this->assertTrue( $method->invokeArgs( $plugins, [] ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testIsCoreUpdatePageThree() {
-		$method  = self::getMethod( 'is_core_update_page' );
-		$plugins = new PluginManager();
-
-		$_POST['action'] = 'somevalue';
-		\WP_Mock::userFunction(
-			'get_current_screen',
-			[
-				'return' => (object) [
-					'base' => 'plugins',
-				],
-			]
-		);
-
-		$this->assertTrue( $method->invokeArgs( $plugins, [] ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testIsCoreUpdatePageFour() {
-		$method  = self::getMethod( 'is_core_update_page' );
-		$plugins = new PluginManager();
-
-		$_POST['action'] = 'somevalue';
-		\WP_Mock::userFunction(
-			'get_current_screen',
-			[
-				'return' => (object) [
-					'base' => 'update',
-				],
-			]
-		);
-
-		$this->assertTrue( $method->invokeArgs( $plugins, [] ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testIsCoreUpdatePageFive() {
-		$method  = self::getMethod( 'is_core_update_page' );
-		$plugins = new PluginManager();
-
-		\WP_Mock::userFunction(
-			'get_current_screen',
-			[
-				'return' => (object) [
-					'base' => 'random',
-				],
-			]
-		);
-
-		$this->assertFalse( $method->invokeArgs( $plugins, [] ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::settings_errors
-	 */
-	public function testSettingsErrors() {
-		global $wp_settings_errors;
-
-		$method  = self::getMethod( 'settings_errors' );
-		$plugins = new PluginManager();
-
-		$wp_settings_errors = [
-			'something' => [
-				'setting' => 'wc_plugins',
-			],
-		];
-
-		\WP_Mock::userFunction(
-			'settings_errors',
-			[
-				'return' => true,
-			]
-		);
-
-		$method->invokeArgs( $plugins, [] );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_have_update
-	 */
-	public function testDoesPluginHaveUpdateFalse() {
-		$plugins = new PluginManager();
-
-		\WP_Mock::userFunction(
-			'get_site_transient',
-			[
-				'return' => false,
-			]
-		);
-
-		$this->assertFalse( $plugins->does_plugin_have_update( '' ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_have_update
-	 */
-	public function testDoesPluginHaveUpdateVersion() {
-		$plugins          = new PluginManager();
-		$plugins->plugins = [
-			'autoptimize' => [
-				'file_path' => 'autoptimize/autoptimize.php',
-			],
-		];
-
-		\WP_Mock::userFunction(
-			'get_site_transient',
-			[
-				'return' => (object) [
-					'response' => [
-						'autoptimize/autoptimize.php' => (object) [
-							'new_version' => '1.0',
-						],
-					],
-				],
-			]
-		);
-
-		$this->assertEquals( '1.0', $plugins->does_plugin_have_update( 'autoptimize' ) );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::notices
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 */
-	public function testNoticesEmpty() {
-		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
-						->shouldAllowMockingProtectedMethods()
-						->makePartial();
-		$mock->shouldReceive( 'is_core_update_page' )
-		 ->andReturn( true );
-
-		$this->assertEmpty( $mock->notices() );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::notices
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_core_update_page
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::settings_errors
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::can_plugin_activate
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::does_plugin_require_update
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_installed_version
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_info_link
-	 */
-	public function testNotices() {
-		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
-						->shouldAllowMockingProtectedMethods()
-						->makePartial();
-		$mock->plugins = [
-			'autoptimize' => [
-				'name'      => 'Autoptimize',
-				'slug'      => 'autoptimize',
-				'required'  => true,
-				'file_path' => 'autoptimize/autoptimize.php',
-				'version'   => '1.0',
-			],
-		];
-
-		$mock->shouldReceive( 'get_plugins' )
-		->andReturn(
-			[
-				'autoptimize/autoptimize.php' => [],
-			]
-		);
-		$mock->shouldReceive( 'is_core_update_page' )
-		 ->andReturn( false );
-		$mock->shouldReceive( 'is_plugin_active' )
-		 ->andReturn( false );
-		$mock->shouldReceive( 'does_plugin_have_update' )
-		 ->andReturn( true );
-		$mock->shouldReceive( 'is_plugin_installed' )
-		 ->andReturn( true );
-		$mock->shouldReceive( 'can_plugin_activate' )
-		 ->andReturn( true );
-
-		\WP_Mock::userFunction(
-			'get_current_user_id',
-			[
-				'return' => 1,
-			]
-		);
-		\WP_Mock::userFunction(
-			'get_user_meta',
-			[
-				'return' => false,
-			]
-		);
-		\WP_Mock::userFunction(
-			'current_user_can',
-			[
-				'return' => true,
-			]
-		);
-		\WP_Mock::userFunction(
-			'translate_nooped_plural',
-			[
-				'return' => true,
-			]
-		);
-		\WP_Mock::userFunction(
-			'get_current_screen',
-			[
-				'return' => (object) [
-					'base' => 'fake-screen',
-				],
-			]
-		);
-
-		$GLOBALS['current_screen'] = (object) [
-			'parent_base' => 'options-none',
-		];
 	}
 
 	protected static function getMethod( $name ) {

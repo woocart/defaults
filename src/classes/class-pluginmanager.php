@@ -33,17 +33,11 @@ namespace Niteo\WooCart\Defaults {
 		public $plugins = [];
 
 		/**
-		 * @var bool
-		 */
-		public $forced_activation = false;
-
-		/**
-		 * Holds configurable array of strings.
-		 * Default values are added in the constructor.
+		 * Hold paths to plugin main file.
 		 *
 		 * @var array
 		 */
-		public $strings = [];
+		public $paths = [];
 
 		/**
 		 * PluginManager constructor.
@@ -75,34 +69,6 @@ namespace Niteo\WooCart\Defaults {
 		 * Initialise the magic.
 		 */
 		public function init() {
-			// Load class strings.
-			$this->strings = [
-				/* translators: 1: plugin name(s). */
-				'notice_can_install_required'  => _n_noop(
-					'WooCart requires the following plugin: %1$s.',
-					'WooCart requires the following plugins: %1$s.',
-					'woocart-defaults'
-				),
-				/* translators: 1: plugin name(s). */
-				'notice_ask_to_update'         => _n_noop(
-					'The following plugin needs to be updated to its latest version to ensure maximum compatibility with WooCart: %1$s.',
-					'The following plugins need to be updated to their latest version to ensure maximum compatibility with WooCart: %1$s.',
-					'woocart-defaults'
-				),
-				/* translators: 1: plugin name(s). */
-				'notice_ask_to_update_maybe'   => _n_noop(
-					'There is an update available for: %1$s.',
-					'There are updates available for the following plugins: %1$s.',
-					'woocart-defaults'
-				),
-				/* translators: 1: plugin name(s). */
-				'notice_can_activate_required' => _n_noop(
-					'The following required plugin is currently inactive: %1$s.',
-					'The following required plugins are currently inactive: %1$s.',
-					'woocart-defaults'
-				),
-			];
-
 			// Check for the admin panel.
 			if ( true !== ( is_admin() && ! defined( 'DOING_AJAX' ) ) ) {
 				return;
@@ -110,9 +76,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// Register plugins.
 			foreach ( $this->list as $plugin ) {
-				// @codeCoverageIgnoreStart
 				$this->register( $plugin );
-				// @codeCoverageIgnoreEnd
 			}
 
 			// Proceed only if we have plugins to handle.
@@ -120,16 +84,11 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			if ( true !== $this->is_complete() ) {
-				// Set up the menu and notices if we still have outstanding actions.
-				add_action( 'admin_notices', [ $this, 'notices' ] );
-				add_action( 'admin_enqueue_scripts', [ $this, 'thickbox' ] );
-			}
+			// Force activate required plugins.
+			add_action( 'admin_init', [ &$this, 'force_activation' ] );
 
-			// Setup the force activation hook.
-			if ( true === $this->forced_activation ) {
-				add_action( 'admin_init', [ $this, 'force_activation' ] );
-			}
+			// Execute other functions.
+			add_action( 'current_screen', [ &$this, 'plugins_page' ] );
 		}
 
 		/**
@@ -146,24 +105,6 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return get_plugins( $plugin_folder );
-		}
-
-		/**
-		 * Determine whether there are open actions for plugins.
-		 *
-		 * @return bool
-		 */
-		public function is_complete() {
-			$complete = true;
-
-			foreach ( $this->plugins as $slug => $plugin ) {
-				if ( ! $this->is_plugin_active( $slug ) || false !== $this->does_plugin_have_update( $slug ) ) {
-					$complete = false;
-					break;
-				}
-			}
-
-			return $complete;
 		}
 
 		/**
@@ -190,283 +131,44 @@ namespace Niteo\WooCart\Defaults {
 			// Retrieve a list of all installed plugins (WP cached).
 			$installed_plugins = $this->get_plugins();
 
-			return ( ! empty( $installed_plugins[ $this->plugins[ $slug ]['file_path'] ] ) );
-		}
-
-		/**
-		 * Check whether there is an update available for a plugin.
-		 *
-		 * @param string $slug Plugin slug.
-		 * @return false|string Version number string of the available update or false if no update available.
-		 */
-		public function does_plugin_have_update( $slug ) {
-			$updates = get_site_transient( 'update_plugins' );
-
+			// Ensure we have plugin in the array.
 			if ( isset( $this->plugins[ $slug ] ) ) {
-				if ( isset( $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version ) ) {
-					return $updates->response[ $this->plugins[ $slug ]['file_path'] ]->new_version;
-				}
+				return ( ! empty( $installed_plugins[ $this->plugins[ $slug ]['file_path'] ] ) );
 			}
 
 			return false;
 		}
 
 		/**
-		 * Echoes required plugin notice.
-		 *
-		 * @global object $current_screen
-		 * @return null Returns early if we're on the Install page.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		public function notices() {
-			// Remove nag on the install page.
-			if ( ( $this->is_core_update_page() ) || ! current_user_can( 'publish_posts' ) ) {
-				return;
-			}
-
-			// Store for the plugin slugs by message type.
-			$message = [];
-
-			// Initialize counters used to determine plurality of action link texts.
-			$install_link_count          = 0;
-			$update_link_count           = 0;
-			$activate_link_count         = 0;
-			$total_required_action_count = 0;
-
-			foreach ( $this->plugins as $slug => $plugin ) {
-				if ( $this->is_plugin_active( $slug ) && false === $this->does_plugin_have_update( $slug ) ) {
-					continue;
-				}
-
-				if ( ! $this->is_plugin_installed( $slug ) ) {
-					if ( current_user_can( 'install_plugins' ) ) {
-						$install_link_count++;
-						$message['notice_can_install_required'][] = $slug;
-					}
-
-					$total_required_action_count++;
-				} else {
-					if ( ! $this->is_plugin_active( $slug ) && $this->can_plugin_activate( $slug ) ) {
-						if ( current_user_can( 'activate_plugins' ) ) {
-							$activate_link_count++;
-							$message['notice_can_activate_required'][] = $slug;
-						}
-
-						$total_required_action_count++;
-					}
-
-					if ( $this->does_plugin_require_update( $slug ) || false !== $this->does_plugin_have_update( $slug ) ) {
-						if ( current_user_can( 'update_plugins' ) ) {
-							$update_link_count++;
-
-							if ( $this->does_plugin_require_update( $slug ) ) {
-								$message['notice_ask_to_update'][] = $slug;
-							} elseif ( false !== $this->does_plugin_have_update( $slug ) ) {
-								$message['notice_ask_to_update_maybe'][] = $slug;
-							}
-						}
-
-						if ( true === $plugin['required'] ) {
-							$total_required_action_count++;
-						}
-					}
-				}
-			}
-
-			unset( $slug, $plugin );
-
-			// If we have notices to display, we move forward.
-			if ( ! empty( $message ) || $total_required_action_count > 0 ) {
-				// Sort messages.
-				krsort( $message );
-				$rendered = '';
-
-				// As add_settings_error() wraps the final message in a <p> and as the final message can't be
-				// filtered, using <p>'s in our html would render invalid html output.
-				$line_template = '<span style="display: block; margin: 0.5em 0.5em 0 0; clear: both;">%s</span>' . "\n";
-
-				if ( ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
-					$rendered = esc_html__( 'There are one or more required plugins to install, update or activate. Please contact the administrator of this site for help.', 'woocart-defaults' );
-				} else {
-					// Render the individual message lines for the notice.
-					foreach ( $message as $type => $plugin_group ) {
-						$linked_plugins = [];
-
-						// Get the external info link for a plugin if one is available.
-						foreach ( $plugin_group as $plugin_slug ) {
-							$linked_plugins[] = $this->get_info_link( $plugin_slug );
-						}
-
-						unset( $plugin_slug );
-
-						$count       = count( $plugin_group );
-						$last_plugin = array_pop( $linked_plugins ); // Pop off last name to prep for readability.
-						$imploded    = empty( $linked_plugins ) ? $last_plugin : ( implode( ', ', $linked_plugins ) . ' ' . esc_html_x( 'and', 'plugin A *and* plugin B', 'woocart-defaults' ) . ' ' . $last_plugin );
-
-						$rendered .= sprintf(
-							$line_template,
-							sprintf(
-								translate_nooped_plural( $this->strings[ $type ], $count, 'woocart-defaults' ),
-								$imploded,
-								$count
-							)
-						);
-					}
-
-					unset( $type, $plugin_group, $linked_plugins, $count, $last_plugin, $imploded );
-				}
-
-				// Register the nag messages and prepare them to be processed.
-				add_settings_error( 'wc_plugins', 'wc_plugins', $rendered, 'notice-warning' );
-			}
-
-			// Admin options pages already output settings_errors, so this is to avoid duplication.
-			if ( 'options-general' !== $GLOBALS['current_screen']->parent_base ) {
-				$this->settings_errors();
-			}
-		}
-
-		/**
-		 * Display settings errors.
-		 */
-		protected function settings_errors() {
-			global $wp_settings_errors;
-
-			settings_errors( 'wc_plugins' );
-
-			foreach ( (array) $wp_settings_errors as $key => $details ) {
-				if ( 'wc_plugins' === $details['setting'] ) {
-					unset( $wp_settings_errors[ $key ] );
-					break;
-				}
-			}
-		}
-
-		/**
-		 * Determine if we're on a WP Core installation/upgrade page.
-		 *
-		 * @return boolean True when on a WP Core installation/upgrade page, false otherwise.
-		 */
-		protected function is_core_update_page() {
-			// Current screen is not always available, most notably on the customizer screen.
-			if ( ! function_exists( 'get_current_screen' ) ) {
-				return false;
-			}
-
-			$screen = get_current_screen();
-
-			if ( 'update-core' === $screen->base ) {
-				// Core update screen.
-				return true;
-			} elseif ( 'plugins' === $screen->base && ! empty( $_POST['action'] ) ) {
-				// Plugins bulk update screen.
-				return true;
-			} elseif ( 'update' === $screen->base && ! empty( $_POST['action'] ) ) {
-				// Individual updates (ajax call).
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Check if a plugin can be activated, i.e. is not currently active and meets the minimum
-		 * plugin version requirements set in TGMPA (if any).
-		 *
-		 * @param string $slug Plugin slug.
-		 * @return bool True if OK to activate, false otherwise.
-		 */
-		public function can_plugin_activate( $slug ) {
-			return ( ! $this->is_plugin_active( $slug ) && ! $this->does_plugin_require_update( $slug ) );
-		}
-
-		/**
-		 * Check whether a plugin complies with the minimum version requirements.
-		 *
-		 * @param string $slug Plugin slug.
-		 * @return bool True when a plugin needs to be updated, otherwise false.
-		 */
-		public function does_plugin_require_update( $slug ) {
-			$installed_version = $this->get_installed_version( $slug );
-			$minimum_version   = $this->plugins[ $slug ]['version'];
-
-			return version_compare( $minimum_version, $installed_version, '>' );
-		}
-
-		/**
-		 * Retrieve the version number of an installed plugin.
-		 *
-		 * @param string $slug Plugin slug.
-		 * @return string Version number as string or an empty string if the plugin is not installed
-		 *                or version unknown (plugins which don't comply with the plugin header standard).
-		 */
-		public function get_installed_version( $slug ) {
-			$installed_plugins = $this->get_plugins(); // Retrieve a list of all installed plugins (WP cached).
-
-			if ( isset( $this->plugins[ $slug ] ) ) {
-				if ( ! empty( $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'] ) ) {
-					return $installed_plugins[ $this->plugins[ $slug ]['file_path'] ]['Version'];
-				}
-			}
-
-			return '';
-		}
-
-		/**
-		 * Retrieve a link to a plugin information page.
-		 *
-		 * @param string $slug Plugin slug.
-		 * @return string Fully formed html link to a plugin information page if available
-		 *                or the plugin name if not.
-		 */
-		public function get_info_link( $slug ) {
-			$url = add_query_arg(
-				[
-					'tab'       => 'plugin-information',
-					'plugin'    => urlencode( $slug ),
-					'TB_iframe' => 'true',
-					'width'     => '640',
-					'height'    => '500',
-				],
-				self_admin_url( 'plugin-install.php' )
-			);
-
-			$link = sprintf(
-				'<a href="%1$s" class="thickbox">%2$s</a>',
-				esc_url( $url ),
-				esc_html( $this->plugins[ $slug ]['name'] )
-			);
-
-			return $link;
-		}
-
-		/**
-		 * Enqueue thickbox scripts/styles for plugin info.
-		 *
-		 * Thickbox is not automatically included on all admin pages, so we must
-		 * manually enqueue it for those pages. Thickbox is only loaded if there are
-		 * any plugins left to install and activate.
-		 */
-		public function thickbox() {
-			add_thickbox();
-		}
-
-		/**
-		 * Forces plugin activation if the parameter 'force_activation' is
-		 * set to true.
+		 * Forces plugin activation.
 		 */
 		public function force_activation() {
 			foreach ( $this->plugins as $slug => $plugin ) {
-				if ( true === $plugin['force_activation'] ) {
-					if ( ! $this->is_plugin_installed( $slug ) ) {
-						// Oops, plugin isn't there so iterate to next condition.
-						continue;
-					} elseif ( $this->can_plugin_activate( $slug ) ) {
-						// There we go, activate the plugin.
-						activate_plugin( $plugin['file_path'] );
-					}
+				if ( ! $this->is_plugin_installed( $slug ) ) {
+					// Oops, plugin isn't there so iterate to next condition.
+					continue;
+				} elseif ( ! $this->is_plugin_active( $slug ) ) {
+					// There we go, activate the plugin.
+					activate_plugin( $plugin['file_path'] );
 				}
+			}
+		}
+
+		/**
+		 * Execute other functions on the plugins.php page
+		 */
+		public function plugins_page() {
+			// Get the current screen to ensure that the functions only get executed
+			// on the plugins.php page
+			$screen = get_current_screen();
+
+			// Only on plugins page.
+			if ( 'plugins' === $screen->id ) {
+				// Filter out the deactivate link for required plugins.
+				add_filter( 'plugin_action_links', [ &$this, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+
+				// Add a small text to let the user know that why the plugin cannot be de-activated.
+				add_action( 'after_plugin_row', [ &$this, 'add_required_text' ], PHP_INT_MAX, 3 );
 			}
 		}
 
@@ -485,31 +187,58 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			$defaults = [
-				'name'             => '',      // String.
-				'slug'             => '',      // String.
-				'required'         => true,    // Boolean.
-				'version'          => '',      // String.
-				'force_activation' => false,   // Boolean.
+				'name'      => '',      // String.
+				'slug'      => '',      // String.
+				'file_path' => '',           // String.
 			];
 
 			// Prepare the received data.
 			$plugin = wp_parse_args( $plugin, $defaults );
 
 			// Standardize the received slug.
-			$plugin['slug']             = sanitize_key( $plugin['slug'] );
-			$plugin['required']         = $plugin['required'];
-			$plugin['version']          = (string) $plugin['version'];
-			$plugin['force_activation'] = $plugin['force_activation'];
+			$plugin['slug'] = sanitize_key( $plugin['slug'] );
 
 			// Enrich the received data.
 			$plugin['file_path'] = $this->_get_plugin_basename_from_slug( $plugin['slug'] );
 
+			// Add to $paths if not empty.
+			if ( ! empty( $plugin['file_path'] ) ) {
+				$this->paths[] = $plugin['file_path'];
+			}
+
 			// Set the class properties.
 			$this->plugins[ $plugin['slug'] ] = $plugin;
+		}
 
-			// Should we add the force activation hook ?
-			if ( true === $plugin['force_activation'] ) {
-				$this->forced_activation = true;
+		/**
+		 * Filter function to remove deactivation links from the required plugins
+		 * on the plugins.php page.
+		 *
+		 * @param array  $actions Plugin actions such as deactivate, edit.
+		 * @param string $plugin_file Path to the plugin main file relative to the plugins directory.
+		 *
+		 * @return array
+		 */
+		public function remove_deactivation_link( $actions, $plugin_file ) {
+			// Remove deactivate link for important plugins.
+			if ( array_key_exists( 'deactivate', $actions ) && in_array( $plugin_file, $this->paths ) ) {
+				unset( $actions['deactivate'] );
+			}
+
+			return $actions;
+		}
+
+		/**
+		 * Add required text below the plugin row on the page.
+		 *
+		 * @param string $plugin_file Path to the plugin main file relative to the plugins directory.
+		 * @param array  $plugin_data Plugin data such as name, description, etc.
+		 *
+		 * @return void
+		 */
+		public function add_required_text( $plugin_file, $plugin_data ) {
+			if ( in_array( $plugin_file, $this->paths ) ) {
+				echo '<tr><td colspan="3" style="background:#fcd670"><strong>' . $plugin_data['Name'] . '</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>';
 			}
 		}
 
