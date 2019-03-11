@@ -34,6 +34,8 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Hold paths to plugin main file.
+		 *
+		 * @var array
 		 */
 		public $paths = [];
 
@@ -74,19 +76,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// Register plugins.
 			foreach ( $this->list as $plugin ) {
-				/**
-				 * Special case for Sendgrid.
-				 * We register the plugin only if the the `SENDGRID_API_KEY` is defined.
-				 *
-				 * @see https://github.com/niteoweb/woocart-docker-web/blob/master/fixtures/config/wp-config.php
-				 */
-				if ( 'sendgrid-email-delivery-simplified' === $plugin['slug'] ) {
-					if ( defined( 'SENDGRID_API_KEY' ) ) {
-						$this->register( $plugin );
-					}
-				} else {
-					$this->register( $plugin );
-				}
+				$this->register( $plugin );
 			}
 
 			// Proceed only if we have plugins to handle.
@@ -97,11 +87,8 @@ namespace Niteo\WooCart\Defaults {
 			// Force activate required plugins.
 			add_action( 'admin_init', [ &$this, 'force_activation' ] );
 
-			// Filter out the deactivate link for required plugins.
-			add_filter( 'plugin_action_links', [ &$this, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
-
-			// Add a small text to let the user know that why the plugin cannot be de-activated.
-			add_action( 'after_plugin_row', [ &$this, 'add_required_text' ], PHP_INT_MAX, 3 );
+			// Execute other functions.
+			add_action( 'current_screen', [ &$this, 'plugins_page' ] );
 		}
 
 		/**
@@ -164,6 +151,24 @@ namespace Niteo\WooCart\Defaults {
 					// There we go, activate the plugin.
 					activate_plugin( $plugin['file_path'] );
 				}
+			}
+		}
+
+		/**
+		 * Execute other functions on the plugins.php page
+		 */
+		public function plugins_page() {
+			// Get the current screen to ensure that the functions only get executed
+			// on the plugins.php page
+			$screen = get_current_screen();
+
+			// Only on plugins page.
+			if ( 'plugins' === $screen->id ) {
+				// Filter out the deactivate link for required plugins.
+				add_filter( 'plugin_action_links', [ &$this, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+
+				// Add a small text to let the user know that why the plugin cannot be de-activated.
+				add_action( 'after_plugin_row', [ &$this, 'add_required_text' ], PHP_INT_MAX, 3 );
 			}
 		}
 

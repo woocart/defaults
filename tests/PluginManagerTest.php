@@ -130,8 +130,7 @@ class PluginManagerTest extends TestCase {
 		->andReturn( 'autoptimize/autoptimize.php' );
 
 		\WP_Mock::expectActionAdded( 'admin_init', [ $mock, 'force_activation' ] );
-		\WP_Mock::expectActionAdded( 'after_plugin_row', [ $mock, 'add_required_text' ], PHP_INT_MAX, 3 );
-		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $mock, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+		\WP_Mock::expectActionAdded( 'current_screen', [ $mock, 'plugins_page' ] );
 
 		$mock->init();
 	}
@@ -185,10 +184,31 @@ class PluginManagerTest extends TestCase {
 		->andReturn( 'autoptimize/autoptimize.php' );
 
 		\WP_Mock::expectActionAdded( 'admin_init', [ $mock, 'force_activation' ] );
-		\WP_Mock::expectActionAdded( 'after_plugin_row', [ $mock, 'add_required_text' ], PHP_INT_MAX, 3 );
-		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $mock, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+		\WP_Mock::expectActionAdded( 'current_screen', [ $mock, 'plugins_page' ] );
 
 		$mock->init();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
+	 */
+	public function testPluginsPage() {
+		$plugins = new PluginManager();
+
+		\WP_Mock::userFunction(
+			'get_current_screen',
+			[
+				'return' => (object) [
+					'id' => 'plugins',
+				],
+			]
+		);
+
+		\WP_Mock::expectActionAdded( 'after_plugin_row', [ $plugins, 'add_required_text' ], PHP_INT_MAX, 3 );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $plugins, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+
+		$plugins->plugins_page();
 	}
 
 	/**
@@ -387,7 +407,7 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
-	 * * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
 	 */
 	public function testForceActivationTwo() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
@@ -407,7 +427,7 @@ class PluginManagerTest extends TestCase {
 		$mock->shouldReceive( 'is_plugin_installed' )
 		->andReturn( true );
 		$mock->shouldReceive( 'is_plugin_active' )
-		->andReturn( true );
+		->andReturn( false );
 		\WP_Mock::userFunction(
 			'activate_plugin',
 			[
