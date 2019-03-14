@@ -207,10 +207,8 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * Flush OPcache.
-		 *
-		 * @access protected
 		 */
-		protected function flush_opcache() {
+		public function flush_opcache() {
 			// Flush OPcache.
 			opcache_reset();
 		}
@@ -218,7 +216,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush Redis cache.
 		 */
-		protected function flush_redis_cache() {
+		public function flush_redis_cache() {
 			// Flush WordPress cache object.
 			wp_cache_flush();
 
@@ -244,7 +242,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush FCGI cache.
 		 */
-		protected function flush_fcgi_cache( $directory ) {
+		public function flush_fcgi_cache( $directory ) {
 			// Check for cache folder.
 			if ( ! is_dir( $directory ) || ! file_exists( $directory ) ) {
 				return;
