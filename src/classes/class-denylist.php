@@ -132,7 +132,6 @@ namespace Niteo\WooCart\Defaults {
 			'eps-301-redirects',
 			'easy-digital-downloads-htaccess-editor',
 			'quick-pagepost-redirect-plugin',
-			'wp-file-manager',
 			'ewww-image-optimizer',
 			'eps-301-redirects',
 			'stat-counter',
