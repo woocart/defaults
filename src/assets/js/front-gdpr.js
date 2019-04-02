@@ -12,9 +12,12 @@ function setCookie(name, value, days) {
 }
 
 var consent = getCookie( 'woocart-gdpr' );
+var element = document.querySelector( '.wc-defaults-gdpr' );
 
 if (consent === null) {
-	document.querySelector( '.wc-defaults-gdpr' ).style.display = 'block';
+	if (document.body.contains( element )) {
+		element.style.display = 'block';
+	}
 }
 
 document.addEventListener(
@@ -31,7 +34,9 @@ document.addEventListener(
 		setCookie( 'woocart-gdpr', 'agree', 180 );
 
 		// Hide consent bar.
-		document.querySelector( '.wc-defaults-gdpr' ).style.display = 'none';
+		if (document.body.contains( element )) {
+			element.style.display = 'none';
+		}
 	},
 	false
 );
