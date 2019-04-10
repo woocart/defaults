@@ -13,7 +13,8 @@
     "ext-gd": "*",
     "krakjoe/pthreads-polyfill": "^1.1",
     "lcobucci/jwt": "^3.2",
-    "predis/predis": "^1.1"
+    "predis/predis": "^1.1",
+    "ext-zend-opcache": "*"
   },
   "autoload": {
     "psr-4": {

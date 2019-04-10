@@ -48,6 +48,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @param string $plugin_file String containing relative path to the main plugin file.
 		 * @param string $status Define whether plugin is activated or de-activated.
+		 * @return bool
 		 */
 		public function plugin_status_change( $plugin_file, $status ) {
 			// Get plugin data using the plugin file path.
