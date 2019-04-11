@@ -45,14 +45,28 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 		public function parse_plugins( array $report ): array {
 			$scripts        = $report['scripts'];
 			$wp_plugin_path = wp_normalize_path( WP_PLUGIN_DIR );
-			$plugin_start   = strlen( $wp_plugin_path ) + 1;
-			$plugins        = [];
+
+			// plugins path + /
+			$plugins_base_length = strlen( $wp_plugin_path ) + 1;
+			$plugins             = [];
 			foreach ( $scripts as $script => $stats ) {
+
+				// script should be a plugin
 				if ( ! strstr( $script, $wp_plugin_path ) ) {
 					continue;
 				}
-				$slug = substr( $script, $plugin_start, $plugin_start );
-				$slug = substr( $slug, 0, strpos( $slug, '/' ) );
+				// left trim so it becomes `plugin-slug/{index.php, ...}`
+				$plugin_base = substr( $script, $plugins_base_length, $plugins_base_length );
+
+				$plugin_slug_separator = strpos( $plugin_base, '/' );
+				// ignore any root files (drop-ins)
+				if ( $plugin_slug_separator < 1 ) {
+					continue;
+				}
+
+				// right trim so it becomes `plugin-slug`
+				$slug = substr( $plugin_base, 0, $plugin_slug_separator );
+
 				if ( ! array_key_exists( $slug, $plugins ) ) {
 					$plugins[ $slug ] = 0;
 				}

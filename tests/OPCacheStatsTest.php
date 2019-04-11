@@ -64,6 +64,13 @@ class OPCacheStatsTest extends TestCase {
 					'last_used'           => 'Wed Apr 10 17:52:04 2019',
 					'last_used_timestamp' => 1554918724,
 				),
+				'/var/www/public_html/wp-content/plugins/index.php' => array(
+					'full_path'           => '/var/www/public_html/wp-content/plugins/woocommerce/autoload_static.php',
+					'hits'                => 19,
+					'memory_consumption'  => 4512,
+					'last_used'           => 'Wed Apr 10 17:52:04 2019',
+					'last_used_timestamp' => 1554918724,
+				),
 				'/var/www/bundle/vendor/sentry/sentry/lib/Raven/Compat.php' => array(
 					'full_path'           => '/var/www/bundle/vendor/sentry/sentry/lib/Raven/Compat.php',
 					'hits'                => 19,
