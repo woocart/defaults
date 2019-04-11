@@ -16,6 +16,7 @@ namespace Niteo\WooCart {
 	require_once __DIR__ . '/vendor/autoload.php';
 
 	use Niteo\WooCart\Defaults\Filters;
+	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
 	use Niteo\WooCart\Defaults\Shortcodes;
 	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\AdminDashboard;
@@ -49,6 +50,7 @@ namespace Niteo\WooCart {
 			new PluginManager();
 			new PluginLogger();
 			new CacheManager();
+			new Reporter();
 		}
 	}
 }
