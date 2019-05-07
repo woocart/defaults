@@ -25,6 +25,7 @@ class WooProductsTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::get_product_count
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::import
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::parse_product
+	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::mark_products
 	 */
 	public function testImport() {
 
@@ -33,11 +34,37 @@ class WooProductsTest extends TestCase {
 			->shouldReceive( 'set_category_ids' )->times( 3 )
 			->shouldReceive( 'upload_images' )->times( 3 )
 			->shouldReceive( 'save' )->andReturnTrue()
+			->shouldReceive( 'getImageIds' )->andReturnTrue()
+			->shouldReceive( 'getCategoryIds' )->andReturnTrue()
 			->shouldReceive( 'fromArray' )->times( 3 )->andReturnSelf();
+
+		\WP_Mock::userFunction(
+			'update_option',
+			[
+				'return' => true,
+			]
+		);
 
 		$import = new WooProducts( __DIR__ . '/fixtures/products.html', __DIR__ );
 		$import->import();
 		$this->assertEquals( 3, $import->get_product_count() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::__construct
+	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::mark_products
+	 */
+	public function testMarkProducts() {
+		$import = new WooProducts( __DIR__ . '/fixtures/products.html', __DIR__ );
+
+		\WP_Mock::userFunction(
+			'update_option',
+			[
+				'return' => true,
+			]
+		);
+
+		$import->mark_products( [] );
 	}
 
 	/**
