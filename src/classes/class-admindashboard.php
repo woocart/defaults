@@ -123,7 +123,7 @@ namespace Niteo\WooCart\Defaults {
 							<p>
 							<?php
 							echo wp_kses(
-								__( 'You\'ll want to add your own logo and banners to the store. You can use something like %sthe free tool <a href="https://www.canva.com/create/banners/" target="_blank" rel="noopener noreferrer">Canva</a> to create these graphics.', 'woocart-defaults' ),
+								__( 'You\'ll want to add your own logo and banners to the store. You can use something like the free tool <a href="https://www.canva.com/create/banners/" target="_blank" rel="noopener noreferrer">Canva</a> to create these graphics.', 'woocart-defaults' ),
 								array(
 									'a' => array(
 										'href'   => array(),
