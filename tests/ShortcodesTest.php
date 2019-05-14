@@ -25,7 +25,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		new Shortcodes();
@@ -39,7 +39,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -63,7 +63,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -87,7 +87,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -106,12 +106,13 @@ class ShortcodesTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
 	 * @covers \Niteo\WooCart\Defaults\Shortcodes::policy_page
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
 	 */
 	public function testPolicy_page() {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -126,12 +127,73 @@ class ShortcodesTest extends TestCase {
 			array(
 				'args'   => 'wp_page_for_privacy_policy',
 				'times'  => 1,
-				'return' => 'slug',
+				'return' => 1,
 			)
 		);
 
 		$s = new Shortcodes();
 		$this->assertEquals( '<a href="slug">slug</a>', $s->policy_page( null, null ) );
+	}
+
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testWoo_permalink() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 10,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( [ 'id' => 1 ], null ) );
+	}
+
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testWoo_permalink_content() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 10,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( [ 'id' => 1 ], '<a href="%s">slug</a>' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testWoo_permalink_empty() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 10,
+			)
+		);
+		$s = new Shortcodes();
+		$this->assertEquals( '[woo-permalink]', $s->woo_permalink( [], '[woo-permalink]' ) );
 	}
 
 	/**
@@ -142,7 +204,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -173,7 +235,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -197,7 +259,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -222,7 +284,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 
@@ -248,7 +310,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 
@@ -274,7 +336,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 9,
+				'times' => 10,
 			)
 		);
 		\WP_Mock::userFunction(
