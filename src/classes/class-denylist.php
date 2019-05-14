@@ -107,7 +107,6 @@ namespace Niteo\WooCart\Defaults {
 			'forty-four',
 			'visitors-traffic-real-time-statistics',
 			'wordfence-security-live-traffic-admin-widget',
-			'file-manager',
 			'easy-404-redirect',
 			'404-to-301',
 			'w3-total-cache',
