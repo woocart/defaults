@@ -32,6 +32,15 @@ namespace Niteo\WooCart\Defaults\Importers {
 		protected $product_count;
 
 		/**
+		 * @var array
+		 */
+		protected $demo_content = [
+			'products'    => [],
+			'attachments' => [],
+			'categories'  => [],
+		];
+
+		/**
 		 * @param $file_path
 		 * @param $common_path
 		 */
@@ -54,7 +63,6 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * Read file, parse and add products.
 		 */
 		public function import() {
-
 			$contents = file_get_contents( $this->file_path );
 			$products = preg_split( '/^---$/m', $contents );
 			foreach ( $products as $product ) {
@@ -62,11 +70,26 @@ namespace Niteo\WooCart\Defaults\Importers {
 				$product->set_alias( 'common:', $this->common_path );
 				$product->set_category_ids();
 				$product->upload_images();
-				if ( $product->save() ) {
+				$product_id = $product->save();
+
+				if ( $product_id ) {
 					$this->product_count += 1;
+
+					// Add product_id.
+					$this->demo_content['products'][] = $product_id;
+
+					// Add attachments.
+					$attachment_ids                      = $product->getImageIds();
+					$this->demo_content['attachments'][] = $attachment_ids;
+
+					// Add categories.
+					$category_ids                       = $product->getCategoryIds();
+					$this->demo_content['categories'][] = $category_ids;
 				};
 			}
 
+			// Save demo_content in database.
+			$this->mark_products( $this->demo_content );
 		}
 
 		/**
@@ -84,6 +107,15 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$meta['short_description'] = $meta['description'];
 			$meta['description']       = trim( preg_replace( $re, '', $product ) );
 			return $meta;
+		}
+
+		/**
+		 * Save demo content to the database.
+		 *
+		 * @param array $demo_content
+		 */
+		public function mark_products( $demo_content ) {
+			update_option( 'woocart_demo_content', $demo_content );
 		}
 	}
 }
