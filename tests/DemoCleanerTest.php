@@ -129,6 +129,7 @@ class DemoCleanerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
 	 */
 	public function testDeleteNoAction() {
 		$demo_cleaner = new DemoCleaner();
@@ -138,6 +139,7 @@ class DemoCleanerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
 	 */
 	public function testDeleteEmptyAction() {
 		$demo_cleaner = new DemoCleaner();
@@ -159,6 +161,7 @@ class DemoCleanerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
 	 */
 	public function testDeleteNoOption() {
 		$demo_cleaner = new DemoCleaner();
@@ -187,6 +190,7 @@ class DemoCleanerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
 	 */
 	public function testDeleteProducts() {
 		$demo_cleaner = new DemoCleaner();
@@ -247,6 +251,7 @@ class DemoCleanerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
 	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
 	 */
 	public function testDeleteAttachments() {
 		$demo_cleaner = new DemoCleaner();
@@ -290,5 +295,19 @@ class DemoCleanerTest extends TestCase {
 		);
 
 		$this->assertEmpty( $demo_cleaner->delete() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::cli
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 */
+	public function testCli() {
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\DemoCleaner' )
+					  ->makePartial();
+		$mock->shouldReceive( 'process' )
+		 ->andReturn( true );
+
+		$this->assertEmpty( $mock->cli() );
 	}
 }
