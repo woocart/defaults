@@ -101,66 +101,64 @@ namespace Niteo\WooCart\Defaults {
 						$this->response['message'] = esc_html__( 'Demo content does not seem to exist for the store.', 'woocart-defaults' );
 					} else {
 						// Delete products & attachments.
-						if ( 'products' == $action ) {
-							// For products.
-							if ( isset( $demo_content['products'] ) ) {
-								if ( is_array( $demo_content['products'] ) ) {
-									$products_count = count( $demo_content['products'] );
+						// For products.
+						if ( isset( $demo_content['products'] ) ) {
+							if ( is_array( $demo_content['products'] ) ) {
+								$products_count = count( $demo_content['products'] );
 
-									foreach ( $demo_content['products'] as $product_id ) {
-										$product = wc_get_product( $product_id );
+								foreach ( $demo_content['products'] as $product_id ) {
+									$product = wc_get_product( $product_id );
 
-										if ( ! empty( $product ) ) {
-											$product->delete( true );
-											$result = $product->get_id() > 0 ? false : true;
+									if ( ! empty( $product ) ) {
+										$product->delete( true );
+										$result = $product->get_id() > 0 ? false : true;
 
-											// Increase the count on successful delete.
-											if ( $result ) {
-												++$this->products_count;
-											}
+										// Increase the count on successful delete.
+										if ( $result ) {
+											++$this->products_count;
 										}
 									}
+								}
 
-									// Unset the products array if all of them were deleted successfully.
-									if ( $products_count === $this->products_count ) {
-										unset( $demo_content['products'] );
-									}
+								// Unset the products array if all of them were deleted successfully.
+								if ( $products_count === $this->products_count ) {
+									unset( $demo_content['products'] );
 								}
 							}
-
-							// For attachments.
-							if ( isset( $demo_content['attachments'] ) ) {
-								if ( is_array( $demo_content['attachments'] ) ) {
-									$attachments_count = 0;
-
-									foreach ( $demo_content['attachments'] as $attachments ) {
-										$attachments_count = $attachments_count + count( $attachments );
-
-										// Loop again for the arrays.
-										foreach ( $attachments as $attachment_id ) {
-											$attachment = wp_delete_attachment( $attachment_id, true );
-
-											// Increase the count on successful delete.
-											if ( false !== $attachment ) {
-												++$this->attachments_count;
-											}
-										}
-									}
-
-									// Unset the attachments array if all of them were deleted successfully.
-									if ( $attachments_count === $this->attachments_count ) {
-										unset( $demo_content['attachments'] );
-									}
-								}
-							}
-
-							// Update the demo content option in database.
-							update_option( 'woocart_demo_content', $demo_content );
-
-							// Update the response for the screen.
-							$this->response['code']    = 'success';
-							$this->response['message'] = esc_html__( $this->products_count . ' products and ' . $this->attachments_count . ' related attachments were permanently removed from the store.', 'woocart-defaults' );
 						}
+
+						// For attachments.
+						if ( isset( $demo_content['attachments'] ) ) {
+							if ( is_array( $demo_content['attachments'] ) ) {
+								$attachments_count = 0;
+
+								foreach ( $demo_content['attachments'] as $attachments ) {
+									$attachments_count = $attachments_count + count( $attachments );
+
+									// Loop again for the arrays.
+									foreach ( $attachments as $attachment_id ) {
+										$attachment = wp_delete_attachment( $attachment_id, true );
+
+										// Increase the count on successful delete.
+										if ( false !== $attachment ) {
+											++$this->attachments_count;
+										}
+									}
+								}
+
+								// Unset the attachments array if all of them were deleted successfully.
+								if ( $attachments_count === $this->attachments_count ) {
+									unset( $demo_content['attachments'] );
+								}
+							}
+						}
+
+						// Update the demo content option in database.
+						update_option( 'woocart_demo_content', $demo_content );
+
+						// Update the response for the screen.
+						$this->response['code']    = 'success';
+						$this->response['message'] = esc_html__( $this->products_count . ' products and ' . $this->attachments_count . ' related attachments were permanently removed from the store.', 'woocart-defaults' );
 					}
 				}
 			}
@@ -205,6 +203,11 @@ namespace Niteo\WooCart\Defaults {
 			<?php
 		}
 
+		/**
+		 * Adds response message to admin notices.
+		 *
+		 * @codeCoverageIgnore
+		 */
 		public function notices() {
 			if ( ! empty( $this->response['message'] ) ) {
 				?>
