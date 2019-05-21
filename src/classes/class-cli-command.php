@@ -14,6 +14,7 @@ namespace Niteo\WooCart\Defaults {
 	use Niteo\WooCart\Defaults\Importers\SellingLimit;
 	use Niteo\WooCart\Defaults\Importers\WooPage;
 	use Niteo\WooCart\Defaults\Importers\WooProducts;
+	use Niteo\WooCart\Defaults\DemoCleaner;
 	use WP_CLI;
 	use WP_CLI_Command;
 
@@ -216,6 +217,38 @@ namespace Niteo\WooCart\Defaults {
 
 			$data = (array) $sales_by_date->get_report_data();
 			echo $data[ $field ];
+		}
+
+		/**
+		 * Removes demo content from the store.
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd remove_demo_content
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function remove_demo_content( $args, $assoc_args ) {
+			try {
+				$demo_cleaner = new DemoCleaner();
+				$demo_cleaner->cli();
+
+				// Show message.
+				if ( ! empty( $demo_cleaner->response['message'] ) ) {
+					if ( 'error' === $demo_cleaner->response['code'] ) {
+						WP_CLI::error( $demo_cleaner->response['message'] );
+					} else {
+						WP_CLI::success( $demo_cleaner->response['message'] );
+					}
+				} else {
+					WP_CLI::error( 'There was an error removing demo products from the store.' );
+				}
+			} catch ( \Exception $e ) {
+				WP_CLI::error( 'There was an error removing demo products from the store.' );
+			}
 		}
 
 	}
