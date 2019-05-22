@@ -25,6 +25,10 @@ namespace Niteo\WooCart\Defaults {
 			add_shortcode( 'store-url', [ &$this, 'store_url' ] );
 			add_shortcode( 'store-name', [ &$this, 'store_name' ] );
 			add_shortcode( 'woo-permalink', [ &$this, 'woo_permalink' ] );
+			add_shortcode( 'cookie-page', [ &$this, 'cookie_page' ] );
+			add_shortcode( 'returns-page', [ &$this, 'returns_page' ] );
+			add_shortcode( 'terms-page', [ &$this, 'terms_page' ] );
+			add_shortcode( 'contact-page', [ &$this, 'contact_page' ] );
 		}
 
 		/**
@@ -127,6 +131,46 @@ namespace Niteo\WooCart\Defaults {
 		function policy_page( $props, $content = null ) {
 
 			return $this->woo_permalink( [ 'option' => 'wp_page_for_privacy_policy' ] );
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function cookie_page( $props, $content = null ) {
+
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_cookies_policy' ] );
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function returns_page( $props, $content = null ) {
+
+			return $this->woo_permalink( [ 'option' => 'woocommerce_returns_page_id' ] );
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function terms_page( $props, $content = null ) {
+
+			return $this->woo_permalink( [ 'option' => 'woocommerce_terms_page_id' ] );
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function contact_page( $props, $content = null ) {
+
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_contact' ] );
 		}
 
 		/**
