@@ -24,6 +24,7 @@ namespace Niteo\WooCart\Defaults {
 			add_shortcode( 'policy-page', [ &$this, 'policy_page' ] );
 			add_shortcode( 'store-url', [ &$this, 'store_url' ] );
 			add_shortcode( 'store-name', [ &$this, 'store_name' ] );
+			add_shortcode( 'woo-permalink', [ &$this, 'woo_permalink' ] );
 		}
 
 		/**
@@ -124,10 +125,36 @@ namespace Niteo\WooCart\Defaults {
 		 * @return null
 		 */
 		function policy_page( $props, $content = null ) {
-			$url     = get_permalink( get_option( 'wp_page_for_privacy_policy' ) );
-			$content = sprintf( '<a href="%s">%s</a>', $url, $url );
-			return $content;
+
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_privacy_policy' ] );
 		}
 
+		/**
+		 * Create a permalink based on post/page/product id.
+		 *
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function woo_permalink( $props, $content = null ) {
+
+			$a = '<a href="%s">%s</a>';
+			if ( ! is_null( $content ) && strlen( $content ) > 1 ) {
+				$a = $content;
+			}
+
+			if ( array_key_exists( 'option', $props ) ) {
+				$url     = get_permalink( get_option( $props['option'] ) );
+				$content = sprintf( $a, $url, $url );
+				return $content;
+			}
+
+			if ( array_key_exists( 'id', $props ) ) {
+				$url     = get_permalink( get_option( $props['id'] ) );
+				$content = sprintf( $a, $url, $url );
+				return $content;
+			}
+			return $content;
+		}
 	}
 }
