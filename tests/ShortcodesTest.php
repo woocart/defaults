@@ -25,7 +25,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		new Shortcodes();
@@ -39,7 +39,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -63,7 +63,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -87,7 +87,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -112,7 +112,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -135,6 +135,133 @@ class ShortcodesTest extends TestCase {
 		$this->assertEquals( '<a href="slug">slug</a>', $s->policy_page( null, null ) );
 	}
 
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::cookie_page
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testCookie_page() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 14,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'wp_page_for_cookies_policy',
+				'times'  => 1,
+				'return' => 1,
+			)
+		);
+
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->cookie_page( null, null ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::returns_page
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testReturns_page() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 14,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'woocommerce_returns_page_id',
+				'times'  => 1,
+				'return' => 1,
+			)
+		);
+
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->returns_page( null, null ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::terms_page
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testTerms_page() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 14,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'woocommerce_terms_page_id',
+				'times'  => 1,
+				'return' => 1,
+			)
+		);
+
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->terms_page( null, null ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::contact_page
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 */
+	public function testContact_page() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 14,
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_permalink',
+			array(
+				'times'  => 1,
+				'return' => 'slug',
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'wp_page_for_contact',
+				'times'  => 1,
+				'return' => 1,
+			)
+		);
+
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="slug">slug</a>', $s->contact_page( null, null ) );
+	}
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
@@ -144,7 +271,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -167,7 +294,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -189,7 +316,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		$s = new Shortcodes();
@@ -204,7 +331,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -235,7 +362,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -259,7 +386,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -284,7 +411,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 
@@ -310,7 +437,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 
@@ -336,7 +463,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 10,
+				'times' => 14,
 			)
 		);
 		\WP_Mock::userFunction(
