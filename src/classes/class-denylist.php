@@ -152,7 +152,6 @@ namespace Niteo\WooCart\Defaults {
 			'better-search-replace',
 			'litespeed-cache',
 			'sg-cachepress',
-			'cookie-law-info',
 			'wps-hide-login',
 			'bbpress',
 			'ssl-insecure-content-fixer',

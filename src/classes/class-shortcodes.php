@@ -130,7 +130,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function policy_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_privacy_policy' ] );
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_privacy_policy' ], $content );
 		}
 
 		/**
@@ -140,7 +140,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function cookie_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_cookies_policy' ] );
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_cookies_policy' ], $content );
 		}
 
 		/**
@@ -150,7 +150,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function returns_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'woocommerce_returns_page_id' ] );
+			return $this->woo_permalink( [ 'option' => 'woocommerce_returns_page_id' ], $content );
 		}
 
 		/**
@@ -160,7 +160,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function terms_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'woocommerce_terms_page_id' ] );
+			return $this->woo_permalink( [ 'option' => 'woocommerce_terms_page_id' ], $content );
 		}
 
 		/**
@@ -170,7 +170,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function contact_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_contact' ] );
+			return $this->woo_permalink( [ 'option' => 'wp_page_for_contact' ], $content );
 		}
 
 		/**
