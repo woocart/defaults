@@ -18,12 +18,19 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class GDPR {
 
+		use Extend\WooCommerce;
+
 		/**
 		 * GDPR constructor.
 		 */
 		public function __construct() {
 			add_action( 'wp_footer', [ &$this, 'show_consent' ] );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'scripts' ] );
+
+			// WooCommerce checkout form customizations for GDPR compliance.
+			add_action( 'woocommerce_checkout_after_terms_and_conditions', [ &$this, 'privacy_checkbox' ] );
+			add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
+			add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
 
 			if ( is_admin() ) {
 				/**

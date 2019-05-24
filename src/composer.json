@@ -19,7 +19,8 @@
   "autoload": {
     "psr-4": {
       "Niteo\\WooCart\\Defaults\\": "classes",
-      "Niteo\\WooCart\\Defaults\\Importers\\": "importers"
+      "Niteo\\WooCart\\Defaults\\Importers\\": "importers",
+      "Niteo\\WooCart\\Defaults\\Extend\\": "classes/traits"
     }
   },
   "require-dev": {
