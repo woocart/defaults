@@ -52,6 +52,10 @@ class GDPRTest extends TestCase {
 		$gdpr = new GDPR();
 		\WP_Mock::expectActionAdded( 'wp_footer', [ $gdpr, 'show_consent' ] );
 		\WP_Mock::expectActionAdded( 'wp_enqueue_scripts', [ $gdpr, 'scripts' ] );
+		\WP_Mock::expectActionAdded( 'woocommerce_checkout_after_terms_and_conditions', [ $gdpr, 'privacy_checkbox' ] );
+		\WP_Mock::expectActionAdded( 'woocommerce_checkout_process', [ $gdpr, 'show_notice' ] );
+		\WP_Mock::expectActionAdded( 'woocommerce_checkout_update_order_meta', [ $gdpr, 'update_order_meta' ] );
+
 		\WP_Mock::expectActionAdded( 'admin_menu', [ $gdpr, 'add_menu_item' ], 1 );
 
 		$gdpr->__construct();
@@ -152,43 +156,61 @@ class GDPRTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::options_page
-	 *
-	public function testOptionsPage() {
+	 * @covers \Niteo\WooCart\Defaults\GDPR::privacy_checkbox
+	 */
+	public function testPrivacyCheckbox() {
 		$gdpr = new GDPR();
 		\WP_Mock::userFunction(
-			'current_user_can', array(
-				'args'   => 'manage_privacy_options',
+			'do_shortcode',
+			[
 				'times'  => 1,
-				'return' => false
-			)
+				'return' => 'privacy text',
+			]
 		);
 		\WP_Mock::userFunction(
-			'wp_die', array(
-				'times'  => 1
-			)
-		);
-		\WP_Mock::userFunction(
-			'settings_errors', array(
-				'times'  => 1
-			)
-		);
-		\WP_Mock::userFunction(
-			'get_posts', array(
-				'times'  => 1
-			)
-		);
-		\WP_Mock::userFunction(
-			'wp_nonce_field', array(
-				'times'  => 1
-			)
-		);
-		\WP_Mock::userFunction(
-			'submit_button', array(
-				'times'  => 1
-			)
+			'woocommerce_form_field',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
 		);
 
-		$gdpr->options_page();
-	} */
+		$gdpr->privacy_checkbox();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::show_notice
+	 */
+	public function testShowNotice() {
+		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'wc_add_notice',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
+		);
+
+		$gdpr->show_notice();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::update_order_meta
+	 */
+	public function testUpdateOrderMeta() {
+		$_POST['woocart_privacy_checkbox'] = 'yes';
+
+		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'update_post_meta',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
+		);
+
+		$gdpr->update_order_meta( 10 );
+	}
 }
