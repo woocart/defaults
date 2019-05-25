@@ -55,8 +55,9 @@ class GDPRTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'woocommerce_checkout_after_terms_and_conditions', [ $gdpr, 'privacy_checkbox' ] );
 		\WP_Mock::expectActionAdded( 'woocommerce_checkout_process', [ $gdpr, 'show_notice' ] );
 		\WP_Mock::expectActionAdded( 'woocommerce_checkout_update_order_meta', [ $gdpr, 'update_order_meta' ] );
-
 		\WP_Mock::expectActionAdded( 'admin_menu', [ $gdpr, 'add_menu_item' ], 1 );
+
+		\WP_Mock::expectFilterAdded( 'woocommerce_get_terms_and_conditions_checkbox_text', 'do_shortcode' );
 
 		$gdpr->__construct();
 		$gdpr->scripts();

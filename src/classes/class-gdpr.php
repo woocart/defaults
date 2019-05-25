@@ -32,6 +32,9 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
 			add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
 
+			// Process shortcode for terms and conditions checkbox text.
+			add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', 'do_shortcode' );
+
 			if ( is_admin() ) {
 				/**
 				 * Set priority one so that the menu item shows just below the default
