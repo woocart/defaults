@@ -19,6 +19,7 @@ namespace Niteo\WooCart\Defaults {
 	class GDPR {
 
 		use Extend\WooCommerce;
+		use Extend\WPCF7;
 
 		/**
 		 * GDPR constructor.
@@ -31,6 +32,9 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'woocommerce_checkout_after_terms_and_conditions', [ &$this, 'privacy_checkbox' ] );
 			add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
 			add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
+
+			// Add privacy checkbox to all contact forms.
+			add_action( 'wpcf7_init', [ &$this, 'cf_privacy_checkbox' ] );
 
 			// Process shortcode for terms and conditions checkbox text.
 			add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', 'do_shortcode' );
