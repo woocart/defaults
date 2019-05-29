@@ -158,9 +158,17 @@ class GDPRTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
 	 * @covers \Niteo\WooCart\Defaults\GDPR::privacy_checkbox
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
 	 */
 	public function testPrivacyCheckbox() {
 		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => false,
+			]
+		);
 		\WP_Mock::userFunction(
 			'do_shortcode',
 			[
@@ -181,10 +189,32 @@ class GDPRTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::privacy_checkbox
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 */
+	public function testPrivacyCheckboxEmpty() {
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
+											->makePartial();
+		$mock->shouldReceive( 'check_user' )
+				 ->andReturn( true );
+
+		$this->assertEmpty( $mock->privacy_checkbox() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
 	 * @covers \Niteo\WooCart\Defaults\GDPR::show_notice
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
 	 */
 	public function testShowNotice() {
 		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => false,
+			]
+		);
 		\WP_Mock::userFunction(
 			'wc_add_notice',
 			[
@@ -198,12 +228,33 @@ class GDPRTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::show_notice
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 */
+	public function testShowNoticeEmpty() {
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
+											->makePartial();
+		$mock->shouldReceive( 'check_user' )
+				 ->andReturn( true );
+
+		$this->assertEmpty( $mock->show_notice() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
 	 * @covers \Niteo\WooCart\Defaults\GDPR::update_order_meta
 	 */
-	public function testUpdateOrderMeta() {
+	public function testUpdateOrderMetaGuest() {
 		$_POST['woocart_privacy_checkbox'] = 'yes';
 
 		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => false,
+			]
+		);
 		\WP_Mock::userFunction(
 			'update_post_meta',
 			[
@@ -213,6 +264,75 @@ class GDPRTest extends TestCase {
 		);
 
 		$gdpr->update_order_meta( 10 );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::update_order_meta
+	 */
+	public function testUpdateOrderMetaUser() {
+		$_POST['woocart_privacy_checkbox'] = 'yes';
+
+		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => 10,
+			]
+		);
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
+		);
+
+		$gdpr->update_order_meta( 10 );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 */
+	public function testCheckUserFalse() {
+		$gdpr = new GDPR();
+
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => false,
+			]
+		);
+
+		$this->assertFalse( $gdpr->check_user() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 */
+	public function testCheckUserTrue() {
+		$gdpr = new GDPR();
+
+		\WP_Mock::userFunction(
+			'get_current_user_id',
+			[
+				'times'  => 1,
+				'return' => 10,
+			]
+		);
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			[
+				'times'  => 1,
+				'return' => 'not empty',
+			]
+		);
+
+		$this->assertTrue( $gdpr->check_user() );
 	}
 
 	/**
