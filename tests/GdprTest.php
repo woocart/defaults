@@ -214,4 +214,71 @@ class GDPRTest extends TestCase {
 
 		$gdpr->update_order_meta( 10 );
 	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::cf_privacy_checkbox
+	 * @covers \Niteo\WooCart\Defaults\GDPR::get_forms
+	 * @covers \Niteo\WooCart\Defaults\GDPR::update_template
+	 */
+	public function testCfPrivacyCheckbox() {
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
+											->makePartial();
+		$mock->shouldReceive(
+			[
+				'get_forms'       => true,
+				'update_template' => true,
+			]
+		);
+
+		$mock->cf_privacy_checkbox();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::get_forms
+	 */
+	public function testGetForms() {
+		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_posts',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
+		);
+
+		$gdpr->get_forms();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::update_template
+	 */
+	public function testUpdateTemplate() {
+		$gdpr = new GDPR();
+		\WP_Mock::userFunction(
+			'get_post_meta',
+			[
+				'times'  => 1,
+				'return' => 'Content form template [name] [email] [submit]',
+			]
+		);
+		\WP_Mock::userFunction(
+			'do_shortcode',
+			[
+				'times'  => 1,
+				'return' => 'privacy policy text',
+			]
+		);
+		\WP_Mock::userFunction(
+			'update_post_meta',
+			[
+				'times'  => 1,
+				'return' => true,
+			]
+		);
+
+		$gdpr->update_template( [ 30 ] );
+	}
 }
