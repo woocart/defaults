@@ -26,7 +26,8 @@
     "psr-4": {
       "Niteo\\WooCart\\Defaults\\": "classes",
       "Niteo\\WooCart\\Defaults\\Importers\\": "importers",
-      "Niteo\\WooCart\\Defaults\\Generators\\": "generators"
+      "Niteo\\WooCart\\Defaults\\Generators\\": "generators",
+      "Niteo\\WooCart\\Defaults\\Extend\\": "classes/traits"
     }
   }
 }
