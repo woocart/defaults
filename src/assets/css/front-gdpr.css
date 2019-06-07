@@ -13,9 +13,9 @@
 	margin: 0 !important;
 	text-align: center;
 }
-.wc-defaults-gdpr a.wcil,
-.wc-defaults-gdpr a.wcil:hover,
-.wc-defaults-gdpr a.wcil:focus {
+.wc-defaults-gdpr a:not(#wc-defaults-ok),
+.wc-defaults-gdpr a:not(#wc-defaults-ok):hover,
+.wc-defaults-gdpr a:not(#wc-defaults-ok):focus {
 	color: #ffffff !important;
 	text-decoration: underline;
 }
