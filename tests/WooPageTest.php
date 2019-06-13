@@ -49,6 +49,33 @@ class WooPageTest extends TestCase {
 	}
 
 	/**
+	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::__construct
+	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::getPageMeta
+	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
+	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
+	 */
+	function testgetMetaComments() {
+
+		$p    = new WooPage( dirname( __FILE__ ) . '/fixtures/comments-page.html' );
+		$meta = $p->getPageMeta();
+
+		$this->assertEquals(
+			[
+				'post_title'       => 'Comments Page',
+				'post_type'        => 'page',
+				'post_status'      => 'publish',
+				'post_content'     => '<!-- This comment should be allowed --><p>This page should have comments included.</p>',
+				'post_name'        => 'comments-page',
+				'post_excerpt'     => null,
+				'post_category'    => null,
+				'meta_input'       => null,
+				'woocart_defaults' => null,
+			],
+			$meta->toArray()
+		);
+	}
+
+	/**
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::insertPage
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::getPageMeta
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::__construct
