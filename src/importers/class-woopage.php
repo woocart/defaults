@@ -151,7 +151,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$re = '/<!--([\s\S]+?)-->/';
 			preg_match( $re, $contents, $matches, PREG_OFFSET_CAPTURE, 0 );
 			$meta                 = Yaml::parse( $matches[1][0] );
-			$meta['post_content'] = trim( preg_replace( $re, '', $contents ) );
+			$meta['post_content'] = trim( preg_replace( $re, '', $contents, 1 ) );
 
 			return PageMeta::fromArray( $meta );
 
