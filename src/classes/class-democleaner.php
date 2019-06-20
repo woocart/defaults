@@ -52,7 +52,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// Only if demo content exists.
 			if ( $this->check() ) {
-				add_meta_box( 'wc-demo-cleaner', 'Remove Demo Content', [ &$this, 'widget' ], 'dashboard', 'normal', 'high' );
+				add_meta_box( 'wc-demo-cleaner', esc_html__( 'WooCart Turnkey Store', 'woocart-defaults' ), [ &$this, 'widget' ], 'dashboard', 'normal', 'high' );
 				add_action( 'admin_enqueue_scripts', [ &$this, 'scripts' ] );
 			}
 
@@ -199,10 +199,10 @@ namespace Niteo\WooCart\Defaults {
 			$products_url = esc_url( wp_nonce_url( admin_url( 'index.php?woo-action=products' ), 'woo-democleaner', 'woo-nonce' ) );
 			?>
 			<div class="panel-content">
-				<p class="about-description"><?php esc_html_e( 'Demo content exists for your store. You can go ahead and remove it safely from your store by using the buttons below.', 'woocart-defaults' ); ?></p>
+				<p class="about-description"><?php esc_html_e( 'Your store came installed with demo products. When you\'re ready you can safely remove them with one click by clicking the button below.', 'woocart-defaults' ); ?></p>
 
 				<p>
-					<a href="javscript:;" data-url="<?php echo $products_url; ?>" class="button button-primary woocart-remove-products">Remove Demo Products</a>&nbsp;
+					<a href="javscript:;" data-url="<?php echo $products_url; ?>" class="button button-primary woocart-remove-products"><?php esc_html_e( 'Remove Demo Products', 'woocart-defaults' ); ?></a>&nbsp;
 				</p>
 			</div>
 			<?php
