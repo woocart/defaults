@@ -190,6 +190,7 @@ namespace Niteo\WooCart\Defaults {
 			'wp-rollback',
 			'login-customizer',
 			'real-time-find-and-replace',
+            'wp-stats-manager',
 		];
 
 		/**
