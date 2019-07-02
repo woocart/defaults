@@ -136,7 +136,6 @@ namespace Niteo\WooCart\Defaults {
 			'coming-soon-maintenance-mode-from-acurax',
 			'wp-statistics',
 			'serplifywp',
-			'wp-all-import',
 			'recent-search-terms',
 			'ari-adminer',
 			'https-redirection',
@@ -190,7 +189,7 @@ namespace Niteo\WooCart\Defaults {
 			'wp-rollback',
 			'login-customizer',
 			'real-time-find-and-replace',
-            'wp-stats-manager',
+			'wp-stats-manager',
 		];
 
 		/**
