@@ -225,6 +225,24 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
+		 * Disable all denied plugins if they are active.
+		 *
+		 * @return array of disabled plugins
+		 */
+		public function force_deactivate(): array {
+			$deactivated_plugins = [];
+			$all_plugins         = get_plugins();
+			foreach ( $all_plugins as $plugin => $info ) {
+				$slug = plugin_basename( $plugin );
+				if ( in_array( $slug, $this->blacklist ) ) {
+					deactivate_plugins( $slug, true );
+					$deactivated_plugins[ $slug ] = $info['Name'];
+				}
+			}
+			return $deactivated_plugins;
+		}
+
+		/**
 		 * Check whether a plugin exists in the list of blacklisted plugins or not.
 		 *
 		 * @param string $plugin Plugin name to check from the list.
