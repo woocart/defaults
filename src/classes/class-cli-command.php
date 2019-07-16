@@ -251,5 +251,32 @@ namespace Niteo\WooCart\Defaults {
 			}
 		}
 
+		/**
+		 * Disables all plugins on deny list.
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd disable_denied_plugins
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function disable_denied_plugins( $args, $assoc_args ) {
+			try {
+				$deny             = new DenyList();
+				$disabled_plugins = $deny->force_deactivate();
+
+				if ( ! empty( $disabled_plugins ) ) {
+					foreach ( $disabled_plugins as $plugin => $name ) {
+						WP_CLI::log( sprintf( '%s(%s) disabled', $name, $plugin ) );
+					}
+				}
+			} catch ( \Exception $e ) {
+				WP_CLI::log( 'There was an error deactivating denied plugins.' );
+				WP_CLI::error( $e );
+			}
+		}
 	}
 }
