@@ -233,7 +233,7 @@ namespace Niteo\WooCart\Defaults {
 			$deactivated_plugins = [];
 			$all_plugins         = get_plugins();
 			foreach ( $all_plugins as $plugin => $info ) {
-				$slug = plugin_basename( $plugin );
+				$slug = explode( '/', $plugin )[0];
 				if ( in_array( $slug, $this->blacklist ) ) {
 					deactivate_plugins( $slug, true );
 					$deactivated_plugins[ $slug ] = $info['Name'];

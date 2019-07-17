@@ -47,14 +47,6 @@ class DenyListTest extends TestCase {
 				'return' => true,
 			]
 		);
-		\WP_Mock::userFunction(
-			'plugin_basename',
-			[
-				'return' => function ( $value ) {
-						return explode( '/', $value )[0];
-				},
-			]
-		);
 
 		\WP_Mock::userFunction(
 			'get_plugins',
