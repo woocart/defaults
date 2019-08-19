@@ -56,10 +56,7 @@ namespace Niteo\WooCart\Defaults {
 			return $this->key;
 		}
 
-		/**
-		 * @return string
-		 */
-		public function getValue(): string {
+		public function getValue() {
 			return $this->value;
 		}
 

@@ -61,6 +61,12 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$this->value = $values;
 		}
 
+		/**
+		 * Gets value of WooCommerce tax option.
+		 */
+		public function getValue(): array {
+			return $this->value;
+		}
 	}
 
 

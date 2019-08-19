@@ -26,6 +26,34 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class CLI_Command extends WP_CLI_Command {
 
+		/**
+		 * Exports db to bundle.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <type>
+		 * : The type of bundle that should be exported (wootax, woo, wp, wooship).
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd export wootax > taxes.yaml
+		 *
+		 * @codeCoverageIgnore
+		 * @when after_wp_load
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function export( $args, $assoc_args ) {
+			list($type) = $args;
+			$exporter   = new Exporter();
+			try {
+				$exporter->export( $type );
+			} catch ( \Exception $e ) {
+				WP_CLI::error( "There was an error in pulling $type from the database." );
+			}
+
+		}
 
 
 		/**
