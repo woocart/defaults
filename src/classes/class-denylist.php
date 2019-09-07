@@ -190,6 +190,9 @@ namespace Niteo\WooCart\Defaults {
 			'login-customizer',
 			'real-time-find-and-replace',
 			'wp-stats-manager',
+			'wps-hide-login',
+			'wpe-advanced-cache-options',
+			'post-views-counter',
 		];
 
 		/**
