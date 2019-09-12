@@ -13,6 +13,13 @@ class AutoLoginTest extends TestCase {
 				'return' => true,
 			)
 		);
+		$_SERVER['STORE_ID'] = 'uuid-42';
+		\WP_Mock::userFunction(
+			'get_site_url',
+			array(
+				'return' => 'http://localhost',
+			)
+		);
 	}
 
 	function tearDown() {

@@ -12,7 +12,7 @@
     "ext-json": "*",
     "ext-gd": "*",
     "krakjoe/pthreads-polyfill": "^1.1",
-    "lcobucci/jwt": "^3.2",
+    "lcobucci/jwt": "^3.3",
     "predis/predis": "^1.1",
     "ext-zend-opcache": "*"
   },
