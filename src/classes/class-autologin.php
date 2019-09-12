@@ -48,7 +48,9 @@ namespace Niteo\WooCart\Defaults {
 		 * @return bool
 		 */
 		public function validate_jwt_token( $auth, $secret ): bool {
-			$data   = new ValidationData();
+			$data = new ValidationData();
+			$data->setAudience( get_site_url() );
+			$data->setId( $_SERVER['STORE_ID'] );
 			$signer = new Sha256();
 			try {
 				$token = ( new Parser() )->parse( (string) $auth ); // Parses from a string

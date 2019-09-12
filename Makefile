@@ -1,4 +1,4 @@
-VERSION := 3.9.9
+VERSION := 3.9.10
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -13,7 +13,11 @@ vendor: src/vendor
 	composer install --dev
 	composer dump-autoload -a
 
+
 clover.xml: vendor test
+
+unit:test
+
 test: vendor
 	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	bin/phpunit --coverage-html=./reports

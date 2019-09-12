@@ -15,6 +15,7 @@ namespace Niteo\WooCart\Defaults {
 	use Niteo\WooCart\Defaults\Importers\WooPage;
 	use Niteo\WooCart\Defaults\Importers\WooProducts;
 	use Niteo\WooCart\Defaults\DemoCleaner;
+	use Niteo\WooCart\Defaults\AutoLoginCLI;
 	use WP_CLI;
 	use WP_CLI_Command;
 
@@ -51,6 +52,29 @@ namespace Niteo\WooCart\Defaults {
 				$exporter->export( $type );
 			} catch ( \Exception $e ) {
 				WP_CLI::error( "There was an error in pulling $type from the database." );
+			}
+
+		}
+
+		/**
+		 * Prints login url.
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd login
+		 *
+		 * @codeCoverageIgnore
+		 * @when after_wp_load
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function login( $args, $assoc_args ) {
+			try {
+				$login = new AutoLoginCLI();
+				WP_CLI::success( $login->url() );
+			} catch ( \Exception $e ) {
+				WP_CLI::error( 'There was an error creating login url.' );
 			}
 
 		}
