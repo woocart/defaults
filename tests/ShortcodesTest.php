@@ -25,7 +25,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		new Shortcodes();
@@ -39,7 +39,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -63,7 +63,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -87,7 +87,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -112,7 +112,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -144,7 +144,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -176,7 +176,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -208,7 +208,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -240,7 +240,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -271,7 +271,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -294,7 +294,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -316,7 +316,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		$s = new Shortcodes();
@@ -331,7 +331,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -362,7 +362,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -386,7 +386,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -411,7 +411,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 
@@ -437,7 +437,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 
@@ -463,7 +463,7 @@ class ShortcodesTest extends TestCase {
 		\WP_Mock::userFunction(
 			'add_shortcode',
 			array(
-				'times' => 14,
+				'times' => 15,
 			)
 		);
 		\WP_Mock::userFunction(
@@ -477,5 +477,21 @@ class ShortcodesTest extends TestCase {
 
 		$s = new Shortcodes();
 		$this->assertEquals( 'woocommerce_store_address', $s->company_address( null, null ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woocart
+	 */
+	public function testWoocart() {
+		\WP_Mock::userFunction(
+			'add_shortcode',
+			array(
+				'times' => 15,
+			)
+		);
+
+		$s = new Shortcodes();
+		$this->assertEquals( '<a href="https://woocart.com">WooCart</a>', $s->woocart( null, null ) );
 	}
 }

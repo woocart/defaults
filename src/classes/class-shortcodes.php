@@ -29,6 +29,7 @@ namespace Niteo\WooCart\Defaults {
 			add_shortcode( 'returns-page', [ &$this, 'returns_page' ] );
 			add_shortcode( 'terms-page', [ &$this, 'terms_page' ] );
 			add_shortcode( 'contact-page', [ &$this, 'contact_page' ] );
+			add_shortcode( 'woocart', [ &$this, 'woocart' ] );
 		}
 
 		/**
@@ -198,6 +199,18 @@ namespace Niteo\WooCart\Defaults {
 				$content = sprintf( $a, $url, $url );
 				return $content;
 			}
+			return $content;
+		}
+
+		/**
+		 * @param $props
+		 * @param null  $content
+		 * @return null
+		 */
+		function woocart( $props, $content = null ) {
+			$url     = 'https://woocart.com';
+			$name    = esc_html__( 'WooCart', 'woocart-defaults' );
+			$content = sprintf( '<a href="%s">%s</a>', $url, $name );
 			return $content;
 		}
 	}
