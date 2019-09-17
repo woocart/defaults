@@ -70,6 +70,13 @@ namespace Niteo\WooCart\Defaults\Importers {
 				$product->set_alias( 'common:', $this->common_path );
 				$product->set_category_ids();
 				$product->upload_images();
+
+				// Add attachments.
+				// Calling this before the save() method where we remove one image from the array.
+				$attachment_ids                      = $product->getImageIds();
+				$this->demo_content['attachments'][] = $attachment_ids;
+
+				// Save product.
 				$product_id = $product->save();
 
 				if ( $product_id ) {
@@ -77,10 +84,6 @@ namespace Niteo\WooCart\Defaults\Importers {
 
 					// Add product_id.
 					$this->demo_content['products'][] = $product_id;
-
-					// Add attachments.
-					$attachment_ids                      = $product->getImageIds();
-					$this->demo_content['attachments'][] = $attachment_ids;
 
 					// Add categories.
 					$category_ids                       = $product->getCategoryIds();
