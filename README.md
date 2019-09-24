@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/woocart/defaults/badge.svg?branch=master)](https://coveralls.io/github/woocart/defaults?branch=master)
+[![Build Status](https://github.com/woocart/defaults/workflows/Tests/badge.svg)](https://github.com/woocart/defaults/actions)
 
 Manage and deploy WooCommerce configuration changes
 ===================================================
