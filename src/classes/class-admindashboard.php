@@ -18,6 +18,8 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class AdminDashboard {
 
+		protected $admin_url;
+
 		/**
 		 * AdminDashboard constructor.
 		 */
@@ -30,8 +32,14 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function init() {
 			if ( is_admin() ) {
+				// add admin url for linking to plugins
+				$this->admin_url = esc_url( get_admin_url() );
+
 				remove_action( 'welcome_panel', 'wp_welcome_panel' );
-				add_action( 'welcome_panel', array( &$this, 'welcome_panel' ) );
+				add_action( 'welcome_panel', [ &$this, 'welcome_panel' ] );
+
+				// add thickbox to the dashboard page
+				add_thickbox();
 			}
 		}
 
@@ -66,12 +74,12 @@ namespace Niteo\WooCart\Defaults {
 							<p><?php esc_html_e( 'To start receiving payments, you\'ll need to set up a payment gateway.', 'woocart-defaults' ); ?></p>
 							<p><?php esc_html_e( 'Here are the instructions and the recommended plugins for the popular gateways:', 'woocart-defaults' ); ?></p>
 							<ul>
-								<li><a href="https://wordpress.org/plugins/paypal-for-woocommerce/" target="_blank" rel="noopener noreferrer">PayPal</a></li>
-								<li><a href="https://wordpress.org/plugins/woocommerce-gateway-stripe/" target="_blank" rel="noopener noreferrer">Stripe</a></li>
-								<li><a href="https://wordpress.org/plugins/klarna-checkout-for-woocommerce/" target="_blank" rel="noopener noreferrer">Klarna</a></li>
-								<li><a href="https://wordpress.org/plugins/woocommerce-gateway-paypal-powered-by-braintree/" target="_blank" rel="noopener noreferrer">BrainTree</a></li>
-								<li><a href="https://wordpress.org/plugins/paymill/" target="_blank" rel="noopener noreferrer">Paymill</a></li>
-								<li><a href="https://wordpress.org/plugins/woocommerce-payu-paisa/" target="_blank" rel="noopener noreferrer">PayU</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-paypal-express-checkout&TB_iframe=true&width=772&height=306" class="thickbox">PayPal</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-stripe&TB_iframe=true&width=772&height=306" class="thickbox">Stripe</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=klarna-checkout-for-woocommerce&TB_iframe=true&width=772&height=306" class="thickbox">Klarna</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-paypal-powered-by-braintree&TB_iframe=true&width=772&height=306" class="thickbox">BrainTree</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=paymill&TB_iframe=true&width=772&height=306" class="thickbox">Paymill</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-payu-paisa&TB_iframe=true&width=772&height=306" class="thickbox">PayU</a></li>
 							</ul>
 						</div>
 					</div>
@@ -83,9 +91,9 @@ namespace Niteo\WooCart\Defaults {
 							<p><?php esc_html_e( 'If you prepare shipping slips automatically, you\'ll need to use a shipping courier plugin.', 'woocart-defaults' ); ?></p>
 							<p><?php esc_html_e( 'Here are the recommended plugins for the most popular couriers:', 'woocart-defaults' ); ?></p>
 							<ul>
-								<li><a href="https://wordpress.org/plugins/dhl-for-woocommerce/" target="_blank" rel="noopener noreferrer">DHL</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=dhl-for-woocommerce&TB_iframe=true&width=772&height=306" class="thickbox">DHL</a></li>
 								<li><a href="https://woocommerce.com/products/fedex-shipping-module/" target="_blank" rel="noopener noreferrer">FedEx</a></li>
-								<li><a href="https://wordpress.org/plugins/flexible-shipping-ups/" target="_blank" rel="noopener noreferrer">UPS</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=flexible-shipping-ups&TB_iframe=true&width=772&height=306" class="thickbox">UPS</a></li>
 							</ul>
 						</div>
 					</div>
