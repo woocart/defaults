@@ -36,23 +36,47 @@ class AdminDashboardTest extends TestCase {
 	 */
 	public function testInit() {
 		$dashboard = new AdminDashboard();
-		\WP_Mock::expectActionAdded( 'welcome_panel', [ $dashboard, 'welcome_panel' ] );
 
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'remove_action',
-			array(
-				'args' => array(
+			[
+				'args' =>
+				[
 					'welcome_panel',
 					'wp_welcome_panel',
-				),
-			)
+				],
+			]
 		);
-		\WP_Mock::wpFunction(
+
+		\WP_Mock::userFunction(
 			'is_admin',
-			array(
+			[
 				'return' => true,
-			)
+			]
 		);
+
+		\WP_Mock::userFunction(
+			'esc_url',
+			[
+				'return' => true,
+			]
+		);
+
+		\WP_Mock::userFunction(
+			'get_admin_url',
+			[
+				'return' => true,
+			]
+		);
+
+		\WP_Mock::userFunction(
+			'add_thickbox',
+			[
+				'return' => true,
+			]
+		);
+
+		\WP_Mock::expectActionAdded( 'welcome_panel', [ $dashboard, 'welcome_panel' ] );
 
 		$dashboard->init();
 		\WP_Mock::assertHooksAdded();
