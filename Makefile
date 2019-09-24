@@ -78,7 +78,7 @@ i18n:
 	msgfmt -o src/i18n/woocart-defaults-ro_RO.mo src/i18n/woocart-defaults-ro_RO.po
 
 cover: clover.xml
-	bin/coverage-check clover.xml 100
+	bin/coverage-check clover.xml 97
 
 clean:
 	rm -rf vendor/ bin src/vendor/
