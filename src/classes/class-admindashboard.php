@@ -79,7 +79,7 @@ namespace Niteo\WooCart\Defaults {
 								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=klarna-checkout-for-woocommerce&TB_iframe=true&width=772&height=306" class="thickbox">Klarna</a></li>
 								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-paypal-powered-by-braintree&TB_iframe=true&width=772&height=306" class="thickbox">BrainTree</a></li>
 								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=paymill&TB_iframe=true&width=772&height=306" class="thickbox">Paymill</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-payu-paisa&TB_iframe=true&width=772&height=306" class="thickbox">PayU</a></li>
+								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woo-payu-payment-gateway&TB_iframe=true&width=772&height=306" class="thickbox">PayU</a></li>
 							</ul>
 						</div>
 					</div>
