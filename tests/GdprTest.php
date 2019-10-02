@@ -26,28 +26,40 @@ class GDPRTest extends TestCase {
 	public function testConstructor() {
 		\WP_Mock::userFunction(
 			'plugin_dir_url',
-			array(
+			[
 				'times' => 1,
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'wp_enqueue_style',
-			array(
-				'args' => [ 'woocart-gdpr', '/assets/css/front-gdpr.css', [], '@##VERSION##@' ],
-			)
+			[
+				'args' => [
+					'woocart-gdpr',
+					'/assets/css/front-gdpr.css',
+					[],
+					'@##VERSION##@',
+				],
+			]
 		);
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
-			array(
+			[
 				'args' => [ 'woocart-gdpr', '/assets/js/front-gdpr.js', [], '@##VERSION##@', true ],
-			)
+			]
+		);
+		\WP_Mock::userFunction(
+			'get_option',
+			[
+				'times'  => 2,
+				'return' => 'yes',
+			]
 		);
 		\WP_Mock::userFunction(
 			'is_admin',
-			array(
+			[
 				'times'  => 2,
 				'return' => true,
-			)
+			]
 		);
 		$gdpr = new GDPR();
 		\WP_Mock::expectActionAdded( 'wp_footer', [ $gdpr, 'show_consent' ] );
@@ -72,9 +84,9 @@ class GDPRTest extends TestCase {
 		$gdpr = new GDPR();
 		\WP_Mock::userFunction(
 			'add_options_page',
-			array(
+			[
 				'times' => 1,
-			)
+			]
 		);
 
 		$gdpr->add_menu_item();
@@ -88,65 +100,65 @@ class GDPRTest extends TestCase {
 		$gdpr = new GDPR();
 		\WP_Mock::userFunction(
 			'is_admin',
-			array(
+			[
 				'return' => true,
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_option',
-			array(
+			[
 				'args'   => 'woocommerce_allow_tracking',
 				'return' => 'no',
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_option',
-			array(
+			[
 				'args'   => [
 					'wc_gdpr_notification_message',
 					'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].',
 				],
 				'return' => 'Test message with [privacy_policy] and [cookies_policy]',
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_option',
-			array(
+			[
 				'args'   => 'wp_page_for_privacy_policy',
 				'return' => true,
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_option',
-			array(
+			[
 				'args'   => 'wp_page_for_cookies_policy',
 				'return' => true,
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'absint',
-			array(
+			[
 				'return' => true,
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_permalink',
-			array(
+			[
 				'return' => 'https://woocart.com',
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'sanitize_text_field',
-			array(
+			[
 				'times'  => 2,
 				'return' => 'Replace Link',
-			)
+			]
 		);
 		\WP_Mock::userFunction(
 			'get_the_title',
-			array(
+			[
 				'times' => 2,
-			)
+			]
 		);
 
 		$gdpr->show_consent();

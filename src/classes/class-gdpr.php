@@ -28,13 +28,16 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_footer', [ &$this, 'show_consent' ] );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'scripts' ] );
 
-			// WooCommerce checkout form customizations for GDPR compliance.
-			add_action( 'woocommerce_checkout_after_terms_and_conditions', [ &$this, 'privacy_checkbox' ] );
-			add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
-			add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
+			// Don't extend if the option is disabled.
+			if ( 'yes' === get_option( 'wc_gdpr_extend', 'yes' ) ) {
+				// WooCommerce checkout form customizations for GDPR compliance.
+				add_action( 'woocommerce_checkout_after_terms_and_conditions', [ &$this, 'privacy_checkbox' ] );
+				add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
+				add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
 
-			// Add privacy checkbox to all contact forms.
-			add_action( 'wpcf7_init', [ &$this, 'cf_privacy_checkbox' ] );
+				// Add privacy checkbox to all contact forms.
+				add_action( 'wpcf7_init', [ &$this, 'cf_privacy_checkbox' ] );
+			}
 
 			// Process shortcode for terms and conditions checkbox text.
 			add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', 'do_shortcode' );
@@ -137,9 +140,11 @@ namespace Niteo\WooCart\Defaults {
 				if ( 'set-cookies-page' === $action ) {
 					$notification_message   = isset( $_POST['notification_message'] ) ? (string) $_POST['notification_message'] : '';
 					$cookies_policy_page_id = isset( $_POST['page_for_cookies_policy'] ) ? (int) $_POST['page_for_cookies_policy'] : 0;
+					$extend_gdpr            = isset( $_POST['extend_gdpr_compliance'] ) ? (string) $_POST['extend_gdpr_compliance'] : 'no';
 
 					update_option( 'wc_gdpr_notification_message', sanitize_text_field( $notification_message ) );
 					update_option( 'wp_page_for_cookies_policy', $cookies_policy_page_id );
+					update_option( 'wc_gdpr_extend', $extend_gdpr );
 
 					$cookies_page_updated_message = esc_html__( 'Cookies Policy page and notification message has been updated successfully.', 'woocart-defaults' );
 
@@ -339,6 +344,21 @@ namespace Niteo\WooCart\Defaults {
 				<?php endif; ?>
 			  </td>
 			</tr>
+	  <tr>
+		<th scope="row">
+				  <?php esc_html_e( 'Extend GDPR compliance' ); ?>
+			  </th>
+
+		<td>
+		  <label for="extend_gdpr_compliance">
+			<input name="extend_gdpr_compliance" type="checkbox" id="extend_gdpr_compliance" value="yes" <?php checked( 'yes', get_option( 'wc_gdpr_extend', 'yes' ) ); ?> />
+					  <?php esc_html_e( 'This extends GDPR compliance to plugins such as WooCommerce and Contact Form 7.' ); ?>
+					</label>
+		</td>
+		<td>
+
+		</td>
+	  </tr>
 						<tr>
 							<th scope="row"></th>
 							<td>
