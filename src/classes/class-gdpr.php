@@ -352,7 +352,7 @@ namespace Niteo\WooCart\Defaults {
 		<td>
 		  <label for="extend_gdpr_compliance">
 			<input name="extend_gdpr_compliance" type="checkbox" id="extend_gdpr_compliance" value="yes" <?php checked( 'yes', get_option( 'wc_gdpr_extend', 'yes' ) ); ?> />
-					  <?php esc_html_e( 'This extends GDPR compliance to plugins such as WooCommerce, Contact Form 7 and others.' ); ?>
+					  <?php esc_html_e( 'This extends GDPR compliance to plugins such as WooCommerce and Contact Form 7.' ); ?>
 					</label>
 		</td>
 		<td>
