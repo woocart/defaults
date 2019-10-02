@@ -43,6 +43,13 @@ class GDPRTest extends TestCase {
 			)
 		);
 		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 2,
+				'return' => 'yes',
+			)
+		);
+		\WP_Mock::userFunction(
 			'is_admin',
 			array(
 				'times'  => 2,
