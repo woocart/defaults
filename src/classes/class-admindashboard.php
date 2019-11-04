@@ -38,7 +38,13 @@ namespace Niteo\WooCart\Defaults {
 				$this->admin_url = esc_url( get_admin_url() );
 
 				remove_action( 'welcome_panel', 'wp_welcome_panel' );
-				add_action( 'welcome_panel', [ &$this, 'welcome_panel' ] );
+
+				// check if the proteus theme is active
+				if ( $this->is_proteus_active() ) {
+					add_action( 'welcome_panel', [ &$this, 'proteus_welcome_panel' ] );
+				} else {
+					add_action( 'welcome_panel', [ &$this, 'welcome_panel' ] );
+				}
 
 				// add thickbox to the dashboard page
 				add_thickbox();
@@ -53,6 +59,9 @@ namespace Niteo\WooCart\Defaults {
 		public function welcome_panel() {
 			?>
 			<style>
+				.welcome-panel {
+					padding-bottom: 20px;
+				}
 				.welcome-panel-content .welcome-panel-column .welcome-panel-inner,
 				.welcome-panel-content h2,
 				.welcome-panel-content .about-description {

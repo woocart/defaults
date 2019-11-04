@@ -13,7 +13,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 *
 		 * @return boolean
 		 */
-		public function check_active_theme() {
+		public function is_proteus_active() {
 			$theme = wp_get_theme();
 
 			// Looking for "WoonderShop" name for the theme or parent theme
@@ -31,7 +31,10 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 */
 		public function proteus_welcome_panel() {
 			?>
-	  <style>
+		  <style>
+				.welcome-panel {
+					padding-bottom: 20px;
+				}
 				.welcome-panel-content .welcome-panel-column .welcome-panel-inner,
 				.welcome-panel-content h2,
 				.welcome-panel-content .about-description {
@@ -46,6 +49,14 @@ namespace Niteo\WooCart\Defaults\Extend {
 			<div class="welcome-panel-content">
 				<h2><?php esc_html_e( 'Welcome to your new store!', 'woocart-defaults' ); ?></h2>
 				<p class="about-description"><?php esc_html_e( 'You are only a few steps away from selling.', 'woocart-defaults' ); ?></p>
+
+				<?php
+
+					// banner for time left before expiry
+					// shown only for the proteus theme
+					$this->banner();
+
+				?>
 
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
@@ -82,7 +93,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 						</div>
 					</div>
 
-		  <div class="welcome-panel-column">
+				  <div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
 							<!-- Edit content -->
 							<h3><?php esc_html_e( 'Edit website content', 'woocart-defaults' ); ?></h3>
@@ -110,6 +121,127 @@ namespace Niteo\WooCart\Defaults\Extend {
 			$landing_page_slug = preg_replace( '/-[pc]t$/', '', $theme_slug );
 
 			return sprintf( 'https://proteusthemes.onfastspring.com/%1$s-wp?utm_source=woocart&utm_medium=%2$s&utm_campaign=woocart&utm_content=%1$s', $landing_page_slug, $utm_medium );
+		}
+
+		/**
+		 * Sandbox banner HTML to inform store owners of the time left.
+		 *
+		 * @codeCoverageIgnore
+		 */
+		public function banner() {
+			$days = $this->date_diff();
+
+			$buttons = [
+				0 => [
+					esc_html__( 'Learn more about WooCart »', 'woocart-defaults' ),
+					'https://woocart.com/',
+				],
+				1 => [
+					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
+					$this->purchase_link(),
+				],
+			];
+
+			// conditional logic
+			if ( $days >= 7 && $days < 10 ) {
+				$header = sprintf( 'Your store will be deleted in %1$s days', $days );
+				$text   = esc_html__( 'Don\'t let your store get deleted! Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free.', 'woocart-defaults' );
+			} elseif ( $days >= 4 && $days < 7 ) {
+				$header = esc_html__( 'Continue using WoonderShop for free with WooCart hosting', 'woocart-defaults' );
+				$text   = esc_html__( 'Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free!', 'woocart-defaults' );
+			} elseif ( $days < 4 ) {
+				$header  = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days', $days );
+				$text    = sprintf( '<a href="%1$s">Export the content</a>, <a href="%2$s" target="_blank">buy the theme</a>, install it on your hosting and import the content and continue where you left off!', esc_url( admin_url( 'export.php' ) ), esc_url( $this->purchase_link() ) );
+				$buttons = [
+					0 => [
+						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
+						$this->purchase_link(),
+					],
+					1 => [
+						esc_html__( 'I would like to keep this hosting.', 'woocart-defaults' ),
+						'https://woocart.com/',
+					],
+				];
+			}
+			?>
+			<style>
+				.sandbox-banner {
+					background-color: #e4f4fb;
+					border: 2px dashed #0285ba;
+					border-radius: 7px;
+					text-align: center;
+					padding: 30px 60px;
+					margin: 20px 0;
+				}
+				.sandbox-banner h2 {
+					font-weight: 600;
+					font-size: 2em;
+				}
+				.sandbox-banner p {
+					max-width: 600px;
+					font-size: 15px;
+					color: #686868;
+					margin: 15px auto;
+				}
+				.sandbox-banner small,
+				.sandbox-banner small a {
+					color: #9b9b9b;
+				}
+				.sandbox-banner small a:hover {
+					color: #686868;
+				}
+			</style>
+			<div class="sandbox-banner">
+				<h2><?php echo $header; ?></h2>
+				<p><?php echo $text; ?></p>
+				<p>
+					<a href="<?php echo $buttons[0][1]; ?>" class="button button-primary button-hero" target="_blank"><?php echo $buttons[0][0]; ?></a>
+					<a href="<?php echo $buttons[1][1]; ?>" class="button button-secondary button-hero" target="_blank"><?php echo $buttons[1][0]; ?></a><br/>
+					<small>If you have any questions, <a href="https://help.woocart.com/en/" target="_blank">contact us</a>.</small>
+				</p>
+			</div>
+			<?php
+		}
+
+		/**
+		 * Return time when the instance was created.
+		 *
+		 * @return timestamp
+		 */
+		public function created_time() {
+			$created_time = intval( get_option( 'wc_instance_created', -1 ) );
+
+			if ( $created_time < 1 ) {
+				$created_time = time();
+
+				// update option in the database
+				update_option( 'wc_instance_created', $created_time );
+			}
+
+			return $created_time;
+		}
+
+		/**
+		 * Calculate time left before trial expires.
+		 *
+		 * @return timestamp
+		 */
+		public function expiry_time() {
+			$created_time = $this->created_time();
+
+			return $created_time + ( DAY_IN_SECONDS * 7 );
+		}
+
+		/**
+		 * Calculate difference in number of days between two dates.
+		 *
+		 * @return int
+		 */
+		public function date_diff() {
+			$expiry_time = $this->expiry_time();
+			$time_diff   = $expiry_time - time();
+
+			return round( $time_diff / ( 60 * 60 * 24 ) );
 		}
 
 	}
