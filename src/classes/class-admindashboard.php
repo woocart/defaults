@@ -18,6 +18,8 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class AdminDashboard {
 
+		use Extend\Proteus;
+
 		protected $admin_url;
 
 		/**
@@ -69,56 +71,25 @@ namespace Niteo\WooCart\Defaults {
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
-							<!-- Connect a payment gateway -->
-							<h3><?php esc_html_e( 'Connect a Payment Gateway', 'woocart-defaults' ); ?></h3>
-							<p><?php esc_html_e( 'To start receiving payments, you\'ll need to set up a payment gateway.', 'woocart-defaults' ); ?></p>
-							<p><?php esc_html_e( 'Here are the instructions and the recommended plugins for the popular gateways:', 'woocart-defaults' ); ?></p>
-							<ul>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-paypal-express-checkout&TB_iframe=true&width=772&height=306" class="thickbox">PayPal</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-stripe&TB_iframe=true&width=772&height=306" class="thickbox">Stripe</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=klarna-checkout-for-woocommerce&TB_iframe=true&width=772&height=306" class="thickbox">Klarna</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woocommerce-gateway-paypal-powered-by-braintree&TB_iframe=true&width=772&height=306" class="thickbox">BrainTree</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=paymill&TB_iframe=true&width=772&height=306" class="thickbox">Paymill</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=woo-payu-payment-gateway&TB_iframe=true&width=772&height=306" class="thickbox">PayU</a></li>
-							</ul>
+							<!-- Logo & slider banners -->
+							<h3><?php esc_html_e( 'Add Your Own Logo and Slider Banners', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'You can use something like the free tool Canva to create these graphics. Add them in the theme <a href="%1$s">Customizer</a>', esc_url( get_admin_url( null, 'customize.php' ) ) ); ?></p>
 						</div>
 					</div>
 
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
-							<!-- Connect a shipping courier -->
-							<h3><?php esc_html_e( 'Connect a Shipping Courier', 'woocart-defaults' ); ?></h3>
-							<p><?php esc_html_e( 'If you prepare shipping slips automatically, you\'ll need to use a shipping courier plugin.', 'woocart-defaults' ); ?></p>
-							<p><?php esc_html_e( 'Here are the recommended plugins for the most popular couriers:', 'woocart-defaults' ); ?></p>
-							<ul>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=dhl-for-woocommerce&TB_iframe=true&width=772&height=306" class="thickbox">DHL</a></li>
-								<li><a href="https://woocommerce.com/products/fedex-shipping-module/" target="_blank" rel="noopener noreferrer">FedEx</a></li>
-								<li><a href="<?php echo $this->admin_url; ?>plugin-install.php?tab=plugin-information&plugin=flexible-shipping-ups&TB_iframe=true&width=772&height=306" class="thickbox">UPS</a></li>
-							</ul>
+							<!-- Add your products -->
+							<h3><?php esc_html_e( 'Add Your Products', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'Add your products manually or import a CSV with the WooCommerce import. Go to <a href="%1$s">Import products</a>.', esc_url( get_admin_url( null, 'edit.php?post_type=product&page=product_importer' ) ) ); ?></p>
 						</div>
 					</div>
 
 					<div class="welcome-panel-column welcome-panel-last">
 						<div class="welcome-panel-inner">
-							<!-- Add your products -->
-							<h3><?php esc_html_e( 'Add Your Products', 'woocart-defaults' ); ?></h3>
-							<p>
-							<?php
-							printf(
-								wp_kses(
-									__( 'Add your products manually or import a CSV with the <a href="%s">WooCommerce import</a>.', 'woocart-defaults' ),
-									array(
-										'a' => array(
-											'href' => array(),
-										),
-									)
-								),
-								esc_url(
-									get_admin_url( null, 'edit.php?post_type=product&page=product_importer' )
-								)
-							);
-							?>
-							</p>
+							<!-- Connect a payment gateway -->
+							<h3><?php esc_html_e( 'Connect a Payment Gateway', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'To start receiving payments, you\'ll need to set up a payment gateway. Go to <a href="%1$s">Plugins</a>', admin_url( 'plugins.php' ) ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -126,36 +97,17 @@ namespace Niteo\WooCart\Defaults {
 				<div class="welcome-panel-column-container">
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
-							<!-- Logo & slider banners -->
-							<h3><?php esc_html_e( 'Add Your Own Logo and Slider Banners', 'woocart-defaults' ); ?></h3>
-							<p>
-							<?php
-							echo wp_kses(
-								__( 'You\'ll want to add your own logo and banners to the store. You can use something like the free tool <a href="https://www.canva.com/create/banners/" target="_blank" rel="noopener noreferrer">Canva</a> to create these graphics.', 'woocart-defaults' ),
-								array(
-									'a' => array(
-										'href'   => array(),
-										'target' => array(),
-										'rel'    => array(),
-									),
-								)
-							);
-							?>
-							</p>
-							<ul>
-								<li><a href="<?php echo esc_url( get_admin_url( null, 'customize.php' ) ); ?>"><?php esc_html_e( 'Start Customizing', 'woocart-defaults' ); ?></a></li>
-							</ul>
+							<!-- Test checkout -->
+							<h3><?php esc_html_e( 'Test The Checkout', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'Go through the buying process and review that everything is working as it should. <a href="%1$s">Visit your store</a>', esc_url( get_site_url() ) ); ?></p>
 						</div>
 					</div>
 
 					<div class="welcome-panel-column welcome-panel-last">
 						<div class="welcome-panel-inner">
-							<!-- Test checkout -->
-							<h3><?php esc_html_e( 'Test The Checkout', 'woocart-defaults' ); ?></h3>
-							<p><?php esc_html_e( 'Go through the buying process and review that everything is working as it should.', 'woocart-defaults' ); ?></p>
-							<ul>
-								<li><a href="<?php echo esc_url( get_site_url() ); ?>" target="_blank"><?php esc_html_e( 'Visit Your Store', 'woocart-defaults' ); ?></a></li>
-							</ul>
+							<!-- Set domain -->
+							<h3><?php esc_html_e( 'Set the Domain in WooCart', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'Ready to publish and stop using <em>mywoocart.com</em> subdomain? <a href="%1$s" target="_blank">Go to WooCart</a> and set your domain under Settings.', 'https://woocart.com' ); ?></p>
 						</div>
 					</div>
 				</div>
