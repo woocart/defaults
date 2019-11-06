@@ -1,12 +1,6 @@
-VERSION := 3.11.0
+VERSION := 3.11.1
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
-
-bin/linux/amd64/github-release:
-	wget https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2
-	tar -xvf linux-amd64-github-release.tar.bz2
-	chmod +x bin/linux/amd64/github-release
-	rm linux-amd64-github-release.tar.bz2
 
 ensure: vendor
 vendor: src/vendor
@@ -42,14 +36,6 @@ build: ensure
 	mv $(PLUGINSLUG).zip build/
 	sed -i "s/${VERSION}/@##VERSION##@/" src/index.php
 	sed -i "s/${VERSION}/@##VERSION##@/" src/classes/class-release.php
-
-publish: build bin/linux/amd64/github-release
-	bin/linux/amd64/github-release upload \
-		--user woocart \
-		--repo $(PLUGINSLUG) \
-		--tag "v$(VERSION)" \
-		--name $(PLUGINSLUG)-$(VERSION).zip \
-		--file build/$(PLUGINSLUG).zip
 
 release:
 	git stash
