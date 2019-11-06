@@ -148,9 +148,8 @@ class AdminDashboardTest extends TestCase {
 	public function testIsProteusActive() {
 		$dashboard = new AdminDashboard();
 
-		$fake               = new stdClass();
-		$fake->name         = 'WoonderShop';
-		$fake->parent_theme = 'WoonderShop';
+		$fake           = new stdClass();
+		$fake->template = 'woondershop-pt';
 
 		\WP_Mock::userFunction(
 			'wp_get_theme',
@@ -169,9 +168,8 @@ class AdminDashboardTest extends TestCase {
 	public function testIsProteusInactive() {
 		$dashboard = new AdminDashboard();
 
-		$fake               = new stdClass();
-		$fake->name         = 'Astra';
-		$fake->parent_theme = 'Astra';
+		$fake           = new stdClass();
+		$fake->template = 'astra';
 
 		\WP_Mock::userFunction(
 			'wp_get_theme',

@@ -17,7 +17,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 			$theme = wp_get_theme();
 
 			// Looking for "WoonderShop" name for the theme or parent theme
-			if ( 'WoonderShop' === $theme->name || 'WoonderShop' === $theme->parent_theme ) {
+			if ( 'woondershop-pt' === $theme->template ) {
 				return true;
 			}
 
@@ -134,7 +134,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 			$buttons = [
 				0 => [
 					esc_html__( 'Learn more about WooCart »', 'woocart-defaults' ),
-					'https://woocart.com/',
+					'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
 				],
 				1 => [
 					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
@@ -159,7 +159,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					],
 					1 => [
 						esc_html__( 'I would like to keep this hosting.', 'woocart-defaults' ),
-						'https://woocart.com/',
+						'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
 					],
 				];
 			}
