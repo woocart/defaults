@@ -156,7 +156,6 @@ namespace Niteo\WooCart\Defaults {
 			'wordpress-gzip-compression',
 			'wordpress-https',
 			'wordpress-popular-posts',
-			'wp-all-import-pro',
 			'wp-backup-plus',
 			'wp-cache',
 			'wp-cachecom',
