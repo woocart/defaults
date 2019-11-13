@@ -219,8 +219,14 @@ namespace Niteo\WooCart\Defaults {
 
 			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
 			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
+			add_action( 'init', [ &$this, 'get_whitelisted_plugins' ], 10 );
 			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
+		}
 
+		/**
+		 * Get whitelisted plugins from the options table.
+		 */
+		public function get_whitelisted_plugins() {
 			// Fetch whitelist from wp-options
 			$this->whitelist = get_option( 'woocart_whitelisted_plugins', [] );
 		}
@@ -379,5 +385,6 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 	}
+
 
 }
