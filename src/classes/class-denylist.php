@@ -203,6 +203,8 @@ namespace Niteo\WooCart\Defaults {
 			'zencache',
 		];
 
+		protected $whitelist = [];
+
 		/**
 		 * Denylist constructor.
 		 */
@@ -218,6 +220,9 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
 			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
 			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
+
+			// Fetch whitelist from wp-options
+			$this->whitelist = get_option( 'woocart_whitelisted_plugins', [] );
 		}
 
 		/**
@@ -256,6 +261,9 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Check whether a plugin exists in the list of blacklisted plugins or not.
 		 *
+		 * Also, checks for the on-the-fly whitelisted plugins from wp-options table
+		 * and ignores the plugin denial if the plugin is in the whitelisted plugins array.
+		 *
 		 * @param string $plugin Plugin name to check from the list.
 		 * @return boolean
 		 * @access private
@@ -273,9 +281,11 @@ namespace Niteo\WooCart\Defaults {
 				$_plugin = dirname( $_plugin );
 			}
 
-			foreach ( $this->blacklist as $bad_plugin ) {
-				if ( 0 === strcasecmp( $_plugin, $bad_plugin ) ) {
-					return true;
+			if ( ! in_array( $_plugin, $this->whitelist ) ) {
+				foreach ( $this->blacklist as $bad_plugin ) {
+					if ( 0 === strcasecmp( $_plugin, $bad_plugin ) ) {
+						return true;
+					}
 				}
 			}
 
