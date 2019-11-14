@@ -220,6 +220,7 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
 			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
 			add_action( 'init', [ &$this, 'get_whitelisted_plugins' ], 10 );
+			add_action( 'init', [ &$this, 'get_denylisted_plugins' ], 10 );
 			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
 		}
 
@@ -229,6 +230,25 @@ namespace Niteo\WooCart\Defaults {
 		public function get_whitelisted_plugins() {
 			// Fetch whitelist from wp-options
 			$this->whitelist = get_option( 'woocart_whitelisted_plugins', [] );
+		}
+
+		/**
+		 * Get denylisted plugins from the options table.
+		 */
+		public function get_denylisted_plugins() {
+			// Fetch denylist from wp-options
+			$denylist = get_option( 'woocart_denylisted_plugins', [] );
+
+			// Merge it with the list which already exists
+			if ( count( $denylist ) > 0 ) {
+				$new_denylist = array_merge( $this->blacklist, $denylist );
+
+				// Remove dupes
+				$new_denylist = array_unique( $new_denylist );
+
+				// Set $blacklist to the new list
+				$this->blacklist = $new_denylist;
+			}
 		}
 
 		/**
