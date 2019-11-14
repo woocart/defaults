@@ -30,6 +30,7 @@ class DenyListTest extends TestCase {
 		\WP_Mock::expectFilterAdded( 'plugin_install_action_links', [ $denylist, 'disable_install_link' ], 10, 2 );
 		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $denylist, 'disable_activate_link' ], 10, 2 );
 		\WP_Mock::expectActionAdded( 'init', [ $denylist, 'get_whitelisted_plugins' ], 10 );
+		\WP_Mock::expectActionAdded( 'init', [ $denylist, 'get_denylisted_plugins' ], 10 );
 		\WP_Mock::expectActionAdded( 'activate_plugin', [ $denylist, 'disable_activation' ], PHP_INT_MAX, 2 );
 
 		$denylist->__construct();
@@ -45,11 +46,31 @@ class DenyListTest extends TestCase {
 		\WP_Mock::userFunction(
 			'get_option',
 			[
-				'return' => true,
+				'return' => [],
 			]
 		);
 
 		$denylist->get_whitelisted_plugins();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
+	 * @covers \Niteo\WooCart\Defaults\DenyList::get_denylisted_plugins
+	 */
+	public function testGetDenylistedPlugins() {
+		$denylist = new DenyList();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			[
+				'return' => [
+					'plugin1',
+					'plugin2',
+				],
+			]
+		);
+
+		$denylist->get_denylisted_plugins();
 	}
 
 	/**
