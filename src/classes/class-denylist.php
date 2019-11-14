@@ -20,7 +20,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * @var array
 		 */
-		protected $blacklist = [
+		protected $denylist = [
 			'404-error-logger',
 			'404-redirected',
 			'404-redirection',
@@ -203,7 +203,7 @@ namespace Niteo\WooCart\Defaults {
 			'zencache',
 		];
 
-		protected $whitelist = [];
+		protected $allowlist = [];
 
 		/**
 		 * Denylist constructor.
@@ -219,40 +219,40 @@ namespace Niteo\WooCart\Defaults {
 
 			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
 			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
-			add_action( 'init', [ &$this, 'get_whitelisted_plugins' ], 10 );
-			add_action( 'init', [ &$this, 'get_denylisted_plugins' ], 10 );
+			add_action( 'init', [ &$this, 'get_allowlist_plugins' ], 10 );
+			add_action( 'init', [ &$this, 'get_denylist_plugins' ], 10 );
 			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
 		}
 
 		/**
-		 * Get whitelisted plugins from the options table.
+		 * Get allowlist plugins from the options table.
 		 */
-		public function get_whitelisted_plugins() {
-			// Fetch whitelist from wp-options
-			$this->whitelist = get_option( 'woocart_whitelisted_plugins', [] );
+		public function get_allowlist_plugins() {
+			// Fetch allowlist from wp-options
+			$this->allowlist = get_option( 'woocart_allowlist_plugins', [] );
 		}
 
 		/**
 		 * Get denylisted plugins from the options table.
 		 */
-		public function get_denylisted_plugins() {
+		public function get_denylist_plugins() {
 			// Fetch denylist from wp-options
-			$denylist = get_option( 'woocart_denylisted_plugins', [] );
+			$denylist = get_option( 'woocart_denylist_plugins', [] );
 
 			// Merge it with the list which already exists
 			if ( count( $denylist ) > 0 ) {
-				$new_denylist = array_merge( $this->blacklist, $denylist );
+				$new_denylist = array_merge( $this->denylist, $denylist );
 
 				// Remove dupes
 				$new_denylist = array_unique( $new_denylist );
 
-				// Set $blacklist to the new list
-				$this->blacklist = $new_denylist;
+				// Set $this->denylist to the new list
+				$this->denylist = $new_denylist;
 			}
 		}
 
 		/**
-		 * Disable activation of a blacklisted plugin.
+		 * Disable activation of a denylisted plugin.
 		 *
 		 * @param string $plugin Plugin name to check and disable.
 		 */
@@ -276,7 +276,7 @@ namespace Niteo\WooCart\Defaults {
 			$all_plugins         = get_plugins();
 			foreach ( $all_plugins as $plugin => $info ) {
 				$slug = explode( '/', $plugin )[0];
-				if ( in_array( $slug, $this->blacklist ) ) {
+				if ( in_array( $slug, $this->denylist ) ) {
 					deactivate_plugins( $slug, true );
 					$deactivated_plugins[ $slug ] = $info['Name'];
 				}
@@ -285,10 +285,10 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Check whether a plugin exists in the list of blacklisted plugins or not.
+		 * Check whether a plugin exists in the list of denylisted plugins or not.
 		 *
-		 * Also, checks for the on-the-fly whitelisted plugins from wp-options table
-		 * and ignores the plugin denial if the plugin is in the whitelisted plugins array.
+		 * Also, checks for the on-the-fly allowlist plugins from wp-options table
+		 * and ignores the plugin denial if the plugin is in the allowlist plugins array.
 		 *
 		 * @param string $plugin Plugin name to check from the list.
 		 * @return boolean
@@ -307,8 +307,8 @@ namespace Niteo\WooCart\Defaults {
 				$_plugin = dirname( $_plugin );
 			}
 
-			if ( ! in_array( $_plugin, $this->whitelist ) ) {
-				foreach ( $this->blacklist as $bad_plugin ) {
+			if ( ! in_array( $_plugin, $this->allowlist ) ) {
+				foreach ( $this->denylist as $bad_plugin ) {
 					if ( 0 === strcasecmp( $_plugin, $bad_plugin ) ) {
 						return true;
 					}
@@ -319,7 +319,7 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * De-activate all plugins which are blacklisted.
+		 * De-activate all plugins which are denylisted.
 		 */
 		public function deactivate_plugins() {
 			if ( ! function_exists( 'deactivate_plugins' ) ) {
