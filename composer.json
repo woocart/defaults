@@ -4,6 +4,7 @@
     "ext-gd": "*",
     "ext-json": "*"
   },
+  "prefer-stable": true,
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "*",
     "phpunit/phpunit": "6.5.9",
@@ -15,9 +16,9 @@
     "rregeer/phpunit-coverage-check": "^0.1.6",
     "phpunit/phpcov": "*",
     "phpro/grumphp": "^0.14.2",
-    "sensiolabs/security-checker": "^5.0",
-    "maglnet/composer-require-checker": "^1.1",
-    "wp-cli/wp-cli": "^2.0"
+    "sensiolabs/security-checker": "*",
+    "maglnet/composer-require-checker": "*",
+    "wp-cli/wp-cli": "*"
   },
   "config": {
     "bin-dir": "bin/"
