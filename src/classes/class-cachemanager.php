@@ -89,6 +89,10 @@ namespace Niteo\WooCart\Defaults {
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
 
+			// WooCommerce attributes
+			add_action( 'woocommerce_after_add_attribute_fields', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_redis_cache' ) );
+
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
 			 */
