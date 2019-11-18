@@ -25,11 +25,11 @@ namespace Niteo\WooCart\Defaults\Extend {
 			// WooCommerce checkbox for privacy text.
 			woocommerce_form_field(
 				'woocart_privacy_checkbox',
-				[
+				array(
 					'type'     => 'checkbox',
 					'label'    => $privacy_text,
 					'required' => true,
-				]
+				)
 			);
 		}
 

@@ -36,7 +36,7 @@ class AutoLoginTest extends TestCase {
 	 */
 	public function testConstructor() {
 		$login = new AutoLogin();
-		\WP_Mock::expectActionAdded( 'login_header', [ $login, 'test_for_auto_login' ] );
+		\WP_Mock::expectActionAdded( 'login_header', array( $login, 'test_for_auto_login' ) );
 
 		$login->__construct();
 
@@ -50,7 +50,7 @@ class AutoLoginTest extends TestCase {
 		\WP_Mock::userFunction(
 			'is_user_logged_in',
 			array(
-				'return_in_order' => [ true, false, false, false ],
+				'return_in_order' => array( true, false, false, false ),
 				'times'           => 4,
 			)
 		);
@@ -114,20 +114,20 @@ class AutoLoginTest extends TestCase {
 		\WP_Mock::userFunction(
 			'get_users',
 			array(
-				'args'   => [
+				'args'   => array(
 					array(
 						'role'    => 'administrator',
 						'orderby' => 'ID',
 					),
-				],
-				'return' => [ $user ],
+				),
+				'return' => array( $user ),
 				'times'  => 1,
 			)
 		);
 		\WP_Mock::userFunction(
 			'wp_set_auth_cookie',
 			array(
-				'args'  => [ 1, true, '' ],
+				'args'  => array( 1, true, '' ),
 				'times' => 1,
 			)
 		);

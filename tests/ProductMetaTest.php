@@ -33,12 +33,12 @@ class ProductMetaTest extends TestCase {
 		\WP_Mock::userFunction(
 			'get_term_by',
 			array(
-				'return' => (object) [ 'term_id' => 33 ],
+				'return' => (object) array( 'term_id' => 33 ),
 			)
 		);
-		$product = ProductMeta::fromArray( [ 'category' => 'test' ] );
+		$product = ProductMeta::fromArray( array( 'category' => 'test' ) );
 		$product->set_category_ids();
-		$this->assertEquals( [ 33 ], $product->getCategoryIds() );
+		$this->assertEquals( array( 33 ), $product->getCategoryIds() );
 
 	}
 
@@ -58,12 +58,12 @@ class ProductMetaTest extends TestCase {
 		\WP_Mock::userFunction(
 			'wp_insert_term',
 			array(
-				'return' => [ 'term_id' => 33 ],
+				'return' => array( 'term_id' => 33 ),
 			)
 		);
-		$product = ProductMeta::fromArray( [ 'category' => 'test' ] );
+		$product = ProductMeta::fromArray( array( 'category' => 'test' ) );
 		$product->set_category_ids();
-		$this->assertEquals( [ 33 ], $product->getCategoryIds() );
+		$this->assertEquals( array( 33 ), $product->getCategoryIds() );
 
 	}
 
@@ -129,50 +129,50 @@ class ProductMetaTest extends TestCase {
 		\WP_Mock::userFunction(
 			'get_term_by',
 			array(
-				'return' => (object) [ 'term_id' => 33 ],
+				'return' => (object) array( 'term_id' => 33 ),
 			)
 		);
 
 		$WC_Product = \Mockery::mock( 'overload:WC_Product' );
 		$WC_Product->shouldReceive( 'set_props' )->once()->with(
-			[
+			array(
 				'name'              => 'test',
 				'description'       => null,
 				'short_description' => null,
 				'sale_price'        => null,
 				'regular_price'     => null,
-				'category_ids'      => [ 33 ],
+				'category_ids'      => array( 33 ),
 				'image_id'          => 1234,
-				'gallery_image_ids' => [ 1234, 1234, 1234 ],
+				'gallery_image_ids' => array( 1234, 1234, 1234 ),
 				'weight'            => 1,
 				'length'            => 1,
 				'width'             => 1,
 				'height'            => 1,
 				'featured'          => 1,
 				'shipping_class_id' => 0,
-			]
+			)
 		);
 		$WC_Product->shouldReceive( 'save' )->times( 1 )->andReturnTrue();
 		$product = ProductMeta::fromArray(
-			[
+			array(
 				'title'  => 'test',
-				'images' => [
+				'images' => array(
 					__DIR__ . '/fixtures/image.jpg',
 					__DIR__ . '/fixtures/image.jpg',
 					'common:/fixtures/image.jpg',
 					'common:/fixtures/image.jpg',
 					'/tmp/fixtures/image.jpg',
-				],
-			]
+				),
+			)
 		);
 		$product->set_alias( 'common:', __DIR__ );
 		$product->set_category_ids();
 		$product->upload_images();
 		$product->save();
 
-		$this->assertEquals( [ 1234, 1234, 1234 ], $product->getImageIds() );
+		$this->assertEquals( array( 1234, 1234, 1234 ), $product->getImageIds() );
 		$this->count( 1, $product->getAliases() );
-		$this->assertEquals( [ 33 ], $product->getCategoryIds() );
+		$this->assertEquals( array( 33 ), $product->getCategoryIds() );
 	}
 
 

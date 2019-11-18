@@ -36,7 +36,7 @@ namespace Niteo\WooCart\Defaults {
 				if ( $type == $tx::namespace ) {
 					foreach ( $tx->items() as $item ) {
 						$key = sprintf( '%s/%s', WooTaxes::namespace, $item->getKey() );
-						echo Yaml::dump( [ $key => $item->getValue() ], 2, 4 );
+						echo Yaml::dump( array( $key => $item->getValue() ), 2, 4 );
 						echo "\n";
 					}
 				}

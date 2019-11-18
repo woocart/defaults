@@ -30,7 +30,7 @@ class WooPageTest extends TestCase {
 		$meta = $p->getPageMeta();
 
 		$this->assertEquals(
-			[
+			array(
 				'post_title'       => 'Cookie Policy',
 				'post_type'        => 'page',
 				'post_status'      => 'publish',
@@ -39,11 +39,11 @@ class WooPageTest extends TestCase {
 				'post_excerpt'     => null,
 				'post_category'    => null,
 				'meta_input'       => null,
-				'woocart_defaults' => [
+				'woocart_defaults' => array(
 					'wp/wp_page_for_privacy_policy' => '$ID',
 					'wp/cookie_page'                => '$post_name',
-				],
-			],
+				),
+			),
 			$meta->toArray()
 		);
 	}
@@ -60,7 +60,7 @@ class WooPageTest extends TestCase {
 		$meta = $p->getPageMeta();
 
 		$this->assertEquals(
-			[
+			array(
 				'post_title'       => 'Comments Page',
 				'post_type'        => 'page',
 				'post_status'      => 'publish',
@@ -70,7 +70,7 @@ class WooPageTest extends TestCase {
 				'post_category'    => null,
 				'meta_input'       => null,
 				'woocart_defaults' => null,
-			],
+			),
 			$meta->toArray()
 		);
 	}
@@ -101,34 +101,34 @@ class WooPageTest extends TestCase {
 		$meta = $p->getPageMeta();
 		\WP_Mock::userFunction(
 			'wp_insert_post',
-			[
+			array(
 				'return' => 1234,
-				'args'   => [
-					[
+				'args'   => array(
+					array(
 						'post_content' => '<p>[company-name] ("us", "we", or "our")</p>',
 						'post_title'   => 'Cookie Policy',
 						'post_status'  => 'publish',
 						'post_type'    => 'page',
 						'post_name'    => 'cookie-policy',
-					],
-				],
-			]
+					),
+				),
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'update' )
-			->with( 'wp_options', [ 'option_value' => '1234' ], [ 'option_name' => 'wp_page_for_privacy_policy' ] )
+			->with( 'wp_options', array( 'option_value' => '1234' ), array( 'option_name' => 'wp_page_for_privacy_policy' ) )
 			->andReturn( true );
 		$wpdb->shouldReceive( 'update' )
-			->with( 'wp_options', [ 'option_value' => 'cookie-policy' ], [ 'option_name' => 'cookie_page' ] )
+			->with( 'wp_options', array( 'option_value' => 'cookie-policy' ), array( 'option_name' => 'cookie_page' ) )
 			->andReturn( true );
 
 		$id = $p->insertPage( $meta );

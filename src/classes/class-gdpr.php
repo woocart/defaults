@@ -25,18 +25,18 @@ namespace Niteo\WooCart\Defaults {
 		 * GDPR constructor.
 		 */
 		public function __construct() {
-			add_action( 'wp_footer', [ &$this, 'show_consent' ] );
-			add_action( 'wp_enqueue_scripts', [ &$this, 'scripts' ] );
+			add_action( 'wp_footer', array( &$this, 'show_consent' ) );
+			add_action( 'wp_enqueue_scripts', array( &$this, 'scripts' ) );
 
 			// Don't extend if the option is disabled.
 			if ( 'yes' === get_option( 'wc_gdpr_extend', 'yes' ) ) {
 				// WooCommerce checkout form customizations for GDPR compliance.
-				add_action( 'woocommerce_checkout_after_terms_and_conditions', [ &$this, 'privacy_checkbox' ] );
-				add_action( 'woocommerce_checkout_process', [ &$this, 'show_notice' ] );
-				add_action( 'woocommerce_checkout_update_order_meta', [ &$this, 'update_order_meta' ] );
+				add_action( 'woocommerce_checkout_after_terms_and_conditions', array( &$this, 'privacy_checkbox' ) );
+				add_action( 'woocommerce_checkout_process', array( &$this, 'show_notice' ) );
+				add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'update_order_meta' ) );
 
 				// Add privacy checkbox to all contact forms.
-				add_action( 'wpcf7_init', [ &$this, 'cf_privacy_checkbox' ] );
+				add_action( 'wpcf7_init', array( &$this, 'cf_privacy_checkbox' ) );
 			}
 
 			// Process shortcode for terms and conditions checkbox text.
@@ -47,7 +47,7 @@ namespace Niteo\WooCart\Defaults {
 				 * Set priority one so that the menu item shows just below the default
 				 * settings menu options.
 				 */
-				add_action( 'admin_menu', [ &$this, 'add_menu_item' ], 1 );
+				add_action( 'admin_menu', array( &$this, 'add_menu_item' ), 1 );
 			}
 		}
 
@@ -115,10 +115,10 @@ namespace Niteo\WooCart\Defaults {
 				esc_html__( 'Cookies Policy & Notification', 'woocart-defaults' ),
 				'manage_options',
 				'cookies_policy_settings',
-				[
+				array(
 					&$this,
 					'options_page',
-				]
+				)
 			);
 		}
 
@@ -412,8 +412,8 @@ namespace Niteo\WooCart\Defaults {
 		public function scripts() {
 			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 
-			wp_enqueue_style( 'woocart-gdpr', "$plugin_dir/assets/css/front-gdpr.css", [], Release::Version );
-			wp_enqueue_script( 'woocart-gdpr', "$plugin_dir/assets/js/front-gdpr.js", [], Release::Version, true );
+			wp_enqueue_style( 'woocart-gdpr', "$plugin_dir/assets/css/front-gdpr.css", array(), Release::Version );
+			wp_enqueue_script( 'woocart-gdpr', "$plugin_dir/assets/js/front-gdpr.js", array(), Release::Version, true );
 		}
 
 	}

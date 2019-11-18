@@ -32,26 +32,26 @@ class WPOptionsTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => false,
-				'args'   => [ 'test_name' ],
-			]
+				'args'   => array( 'test_name' ),
+			)
 		);
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'insert' )
 			->with(
 				'wp_options',
-				[
+				array(
 					'option_value' => 'test_value',
 					'autoload'     => 'yes',
 					'option_name'  => 'test_name',
-				],
-				[
+				),
+				array(
 					0 => '%s',
 					1 => '%s',
 					2 => '%s',
-				]
+				)
 			)
 			->andReturn( true );
 		$value = WPOptions::toValue( 'test_name', 'test_value' );
@@ -77,7 +77,7 @@ class WPOptionsTest extends TestCase {
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' );
-		$wpdb->shouldReceive( 'get_results' )->andReturn( [ $option, $option, $option, $option ] );
+		$wpdb->shouldReceive( 'get_results' )->andReturn( array( $option, $option, $option, $option ) );
 
 		$o = new WPOptions();
 		$this->assertCount( 4, $o->items() );

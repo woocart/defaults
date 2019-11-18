@@ -61,7 +61,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 *
 		 * @var array
 		 */
-		const wp_insert_post_params = [
+		const wp_insert_post_params = array(
 			'post_content',
 			'post_title',
 			'post_excerpt',
@@ -70,7 +70,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 			'post_name',
 			'post_category',
 			'meta_input',
-		];
+		);
 
 		/**
 		 * Return only array with keys valid for wp_insert_post.
@@ -97,7 +97,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @return iterable
 		 */
 		public function getDefaultsImport( array $extra ): array {
-			$out = [];
+			$out = array();
 
 			if ( is_null( $this->woocart_defaults ) ) {
 				return $out;
@@ -167,7 +167,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$post_id = wp_insert_post( $page->getInsertParams() );
 
 			$import = new Importer();
-			$import->parse( (array) $page->getDefaultsImport( [ 'ID' => $post_id ] ) );
+			$import->parse( (array) $page->getDefaultsImport( array( 'ID' => $post_id ) ) );
 
 			return $post_id;
 		}

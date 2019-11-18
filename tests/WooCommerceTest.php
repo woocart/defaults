@@ -23,7 +23,7 @@ class WooCommerceTest extends TestCase {
 	 */
 	public function testConstructor() {
 		$woocommerce = new WooCommerce();
-		\WP_Mock::expectFilterAdded( 'woocommerce_general_settings', [ $woocommerce, 'general_settings' ] );
+		\WP_Mock::expectFilterAdded( 'woocommerce_general_settings', array( $woocommerce, 'general_settings' ) );
 
 		$woocommerce->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -38,26 +38,26 @@ class WooCommerceTest extends TestCase {
 
 		$this->assertEquals(
 			$woocommerce->general_settings(
-				[
-					[
+				array(
+					array(
 						'id'   => 'general_options',
 						'type' => 'sectionend',
-					],
-				]
+					),
+				)
 			),
-			[
-				[
+			array(
+				array(
 					'name'     => 'Business Name',
 					'desc_tip' => 'Name of the business used for operating the store.',
 					'id'       => 'woocommerce_company_name',
 					'type'     => 'text',
 					'default'  => '',
-				],
-				[
+				),
+				array(
 					'id'   => 'general_options',
 					'type' => 'sectionend',
-				],
-			]
+				),
+			)
 		);
 	}
 

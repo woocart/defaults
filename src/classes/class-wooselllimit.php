@@ -54,7 +54,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 				"SELECT location_code FROM {$wpdb->prefix}woocommerce_shipping_zone_locations WHERE zone_id = %d",
 				$zone_id
 			);
-			$out   = [];
+			$out   = array();
 			foreach ( $wpdb->get_results( $query, 'ARRAY_A' ) as $result ) {
 				$out[] = $result['location_code'];
 			}

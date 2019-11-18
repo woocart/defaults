@@ -46,48 +46,48 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var array
 		 */
-		public $redis_credentials = [];
+		public $redis_credentials = array();
 
 		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
-			add_action( 'admin_bar_menu', [ &$this, 'admin_button' ], 100 );
-			add_action( 'admin_init', [ &$this, 'check_cache_request' ] );
+			add_action( 'admin_bar_menu', array( &$this, 'admin_button' ), 100 );
+			add_action( 'admin_init', array( &$this, 'check_cache_request' ) );
 
 			// Hooks for OPcache.
 			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'flush_opcache' ] );
+			add_action( 'activated_plugin', array( &$this, 'flush_opcache' ) );
 
 			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'flush_opcache' ] );
+			add_action( 'deactivated_plugin', array( &$this, 'flush_opcache' ) );
 
 			// When the upgrade process is completed (for theme, plugin, core).
-			add_action( 'upgrader_process_complete', [ &$this, 'flush_opcache' ] );
+			add_action( 'upgrader_process_complete', array( &$this, 'flush_opcache' ) );
 
 			// On theme switch.
-			add_action( 'check_theme_switched', [ &$this, 'flush_opcache' ] );
+			add_action( 'check_theme_switched', array( &$this, 'flush_opcache' ) );
 
 			// Hooks for Redis & FCGI cache.
 			// Runs after a post is saved (after the database process is complete).
-			add_action( 'save_post', [ &$this, 'flush_redis_cache' ] );
-			add_action( 'save_post', [ &$this, 'flush_fcgi_cache' ] );
+			add_action( 'save_post', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'save_post', array( &$this, 'flush_fcgi_cache' ) );
 
 			// Post delete.
-			add_action( 'after_delete_post', [ &$this, 'flush_redis_cache' ] );
-			add_action( 'after_delete_post', [ &$this, 'flush_fcgi_cache' ] );
+			add_action( 'after_delete_post', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'after_delete_post', array( &$this, 'flush_fcgi_cache' ) );
 
 			// Runs after Customizer settings have been saved.
-			add_action( 'customize_save_after', [ &$this, 'flush_redis_cache' ] );
-			add_action( 'customize_save_after', [ &$this, 'flush_fcgi_cache' ] );
+			add_action( 'customize_save_after', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
 
 			// On product shipping (inventory decreases).
-			add_action( 'woocommerce_reduce_order_stock', [ &$this, 'flush_redis_cache' ] );
-			add_action( 'woocommerce_reduce_order_stock', [ &$this, 'flush_fcgi_cache' ] );
+			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache' ) );
 
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
-			add_action( 'wp_ajax_edit_theme_plugin_file', [ &$this, 'flush_cache' ], PHP_INT_MAX );
+			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
 
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
@@ -100,10 +100,10 @@ namespace Niteo\WooCart\Defaults {
 			 * If the connection constants are defined, we use them.
 			 */
 			if ( defined( 'WP_REDIS_SCHEME' ) && defined( 'WP_REDIS_PATH' ) ) {
-				$this->redis_credentials = [
+				$this->redis_credentials = array(
 					'scheme' => WP_REDIS_SCHEME,
 					'path'   => WP_REDIS_PATH,
-				];
+				);
 			}
 		}
 
@@ -121,20 +121,20 @@ namespace Niteo\WooCart\Defaults {
 				}
 
 				// Button parameters.
-				$flush_url = add_query_arg( [ 'wc_cache' => 'flush' ] );
+				$flush_url = add_query_arg( array( 'wc_cache' => 'flush' ) );
 				$nonce_url = wp_nonce_url( $flush_url, 'wc_cache_nonce' );
 
 				// Add button to the bar.
 				$admin_bar->add_menu(
-					[
+					array(
 						'parent' => '',
 						'id'     => 'wc_cache_button',
 						'title'  => esc_html__( 'Flush Cache', 'woocart-defaults' ),
-						'meta'   => [
+						'meta'   => array(
 							'title' => esc_html__( 'Flush Cache', 'woocart-defaults' ),
-						],
+						),
 						'href'   => $nonce_url,
-					]
+					)
 				);
 			}
 		}
@@ -155,7 +155,7 @@ namespace Niteo\WooCart\Defaults {
 				$action = sanitize_key( $_REQUEST['wc_cache'] );
 
 				if ( 'done' === $action ) {
-					add_action( 'admin_notices', [ &$this, 'show_notices' ] );
+					add_action( 'admin_notices', array( &$this, 'show_notices' ) );
 				} elseif ( 'flush' === $action ) {
 					// Check for nonce.
 					check_admin_referer( 'wc_cache_nonce' );
@@ -167,7 +167,7 @@ namespace Niteo\WooCart\Defaults {
 					wp_redirect(
 						esc_url_raw(
 							add_query_arg(
-								[ 'wc_cache' => 'done' ]
+								array( 'wc_cache' => 'done' )
 							)
 						)
 					);

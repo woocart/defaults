@@ -15,12 +15,12 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * @var array
 		 */
-		private $_plugins_to_deactivate = [];
+		private $_plugins_to_deactivate = array();
 
 		/**
 		 * @var array
 		 */
-		protected $denylist = [
+		protected $denylist = array(
 			'404-error-logger',
 			'404-redirected',
 			'404-redirection',
@@ -201,9 +201,9 @@ namespace Niteo\WooCart\Defaults {
 			'wysija-newsletters',
 			'xcloner-backup-and-restore',
 			'zencache',
-		];
+		);
 
-		protected $allowlist = [];
+		protected $allowlist = array();
 
 		/**
 		 * Denylist constructor.
@@ -214,14 +214,14 @@ namespace Niteo\WooCart\Defaults {
 				 * This isn't used at the moment but might be useful in future.
 				 * So, keeping this over here.
 				 */
-				add_filter( 'plugin_action_links', [ &$this, 'forced_plugins' ], 10, 4 );
+				add_filter( 'plugin_action_links', array( &$this, 'forced_plugins' ), 10, 4 );
 			}
 
-			add_filter( 'plugin_install_action_links', [ &$this, 'disable_install_link' ], 10, 2 );
-			add_filter( 'plugin_action_links', [ &$this, 'disable_activate_link' ], 10, 2 );
-			add_action( 'init', [ &$this, 'get_allowlist_plugins' ], 10 );
-			add_action( 'init', [ &$this, 'get_denylist_plugins' ], 10 );
-			add_action( 'activate_plugin', [ &$this, 'disable_activation' ], PHP_INT_MAX, 2 );
+			add_filter( 'plugin_install_action_links', array( &$this, 'disable_install_link' ), 10, 2 );
+			add_filter( 'plugin_action_links', array( &$this, 'disable_activate_link' ), 10, 2 );
+			add_action( 'init', array( &$this, 'get_allowlist_plugins' ), 10 );
+			add_action( 'init', array( &$this, 'get_denylist_plugins' ), 10 );
+			add_action( 'activate_plugin', array( &$this, 'disable_activation' ), PHP_INT_MAX, 2 );
 		}
 
 		/**
@@ -229,7 +229,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function get_allowlist_plugins() {
 			// Fetch allowlist from wp-options
-			$this->allowlist = get_option( 'woocart_allowlist_plugins', [] );
+			$this->allowlist = get_option( 'woocart_allowlist_plugins', array() );
 		}
 
 		/**
@@ -237,7 +237,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function get_denylist_plugins() {
 			// Fetch denylist from wp-options
-			$denylist = get_option( 'woocart_denylist_plugins', [] );
+			$denylist = get_option( 'woocart_denylist_plugins', array() );
 
 			// Merge it with the list which already exists
 			if ( count( $denylist ) > 0 ) {
@@ -260,8 +260,8 @@ namespace Niteo\WooCart\Defaults {
 			if ( $this->is_plugin_denied( $plugin ) ) {
 				$this->_plugins_to_deactivate[] = $plugin;
 
-				if ( false == has_action( 'shutdown', [ &$this, 'deactivate_plugins' ] ) ) {
-					add_action( 'shutdown', [ &$this, 'deactivate_plugins' ] );
+				if ( false == has_action( 'shutdown', array( &$this, 'deactivate_plugins' ) ) ) {
+					add_action( 'shutdown', array( &$this, 'deactivate_plugins' ) );
 				}
 			}
 		}
@@ -272,7 +272,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @return array of disabled plugins
 		 */
 		public function force_deactivate(): array {
-			$deactivated_plugins = [];
+			$deactivated_plugins = array();
 			$all_plugins         = get_plugins();
 			foreach ( $all_plugins as $plugin => $info ) {
 				$slug = explode( '/', $plugin )[0];
@@ -341,13 +341,13 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function disable_install_link( $links, $plugin ) {
 			if ( $this->is_plugin_denied( $plugin ) ) {
-				return [
+				return array(
 					sprintf(
 						'<a href="https://woocart.com/plugins-denylist" title="%2$s" target="_blank">%1$s</a>',
 						'Not available',
 						'This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions.'
 					),
-				];
+				);
 			}
 
 			return $links;

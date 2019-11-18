@@ -26,12 +26,12 @@ class DenyListTest extends TestCase {
 		define( '_FORCED_PLUGINS', true );
 		$denylist = new DenyList();
 
-		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $denylist, 'forced_plugins' ], 10, 4 );
-		\WP_Mock::expectFilterAdded( 'plugin_install_action_links', [ $denylist, 'disable_install_link' ], 10, 2 );
-		\WP_Mock::expectFilterAdded( 'plugin_action_links', [ $denylist, 'disable_activate_link' ], 10, 2 );
-		\WP_Mock::expectActionAdded( 'init', [ $denylist, 'get_allowlist_plugins' ], 10 );
-		\WP_Mock::expectActionAdded( 'init', [ $denylist, 'get_denylist_plugins' ], 10 );
-		\WP_Mock::expectActionAdded( 'activate_plugin', [ $denylist, 'disable_activation' ], PHP_INT_MAX, 2 );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links', array( $denylist, 'forced_plugins' ), 10, 4 );
+		\WP_Mock::expectFilterAdded( 'plugin_install_action_links', array( $denylist, 'disable_install_link' ), 10, 2 );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links', array( $denylist, 'disable_activate_link' ), 10, 2 );
+		\WP_Mock::expectActionAdded( 'init', array( $denylist, 'get_allowlist_plugins' ), 10 );
+		\WP_Mock::expectActionAdded( 'init', array( $denylist, 'get_denylist_plugins' ), 10 );
+		\WP_Mock::expectActionAdded( 'activate_plugin', array( $denylist, 'disable_activation' ), PHP_INT_MAX, 2 );
 
 		$denylist->__construct();
 	}
@@ -45,9 +45,9 @@ class DenyListTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
-				'return' => [],
-			]
+			array(
+				'return' => array(),
+			)
 		);
 
 		$denylist->get_allowlist_plugins();
@@ -62,12 +62,12 @@ class DenyListTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
-				'return' => [
+			array(
+				'return' => array(
 					'plugin1',
 					'plugin2',
-				],
-			]
+				),
+			)
 		);
 
 		$denylist->get_denylist_plugins();
@@ -81,14 +81,14 @@ class DenyListTest extends TestCase {
 		$deny = new DenyList();
 		\WP_Mock::userFunction(
 			'deactivate_plugins',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'get_plugins',
-			[
+			array(
 				'return' => array(
 					'astra-addon/astra-addon.php'          =>
 						array(
@@ -165,11 +165,11 @@ class DenyListTest extends TestCase {
 							'AuthorName'  => 'Automattic',
 						),
 				),
-			]
+			)
 		);
 
 		$disabled_plugins = $deny->force_deactivate();
-		$this->assertEquals( [ 'wp-dbmanager' => 'DB Manager' ], $disabled_plugins );
+		$this->assertEquals( array( 'wp-dbmanager' => 'DB Manager' ), $disabled_plugins );
 	}
 
 	/**
@@ -182,18 +182,18 @@ class DenyListTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'has_action',
-			[
-				'args'   => [
+			array(
+				'args'   => array(
 					'shutdown',
-					[
+					array(
 						$denylist,
 						'deactivate_plugins',
-					],
-				],
+					),
+				),
 				'return' => false,
-			]
+			)
 		);
-		\WP_Mock::expectActionAdded( 'shutdown', [ $denylist, 'deactivate_plugins' ] );
+		\WP_Mock::expectActionAdded( 'shutdown', array( $denylist, 'deactivate_plugins' ) );
 
 		$denylist->disable_activation( 'wp-clone-by-wp-academy' );
 	}
@@ -208,20 +208,20 @@ class DenyListTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'has_action',
-			[
-				'args'   => [
+			array(
+				'args'   => array(
 					'shutdown',
-					[
+					array(
 						$denylist,
 						'deactivate_plugins',
-					],
-				],
+					),
+				),
 				'return' => false,
-			]
+			)
 		);
-		\WP_Mock::expectActionAdded( 'shutdown', [ $denylist, 'deactivate_plugins' ] );
+		\WP_Mock::expectActionAdded( 'shutdown', array( $denylist, 'deactivate_plugins' ) );
 
-		$denylist->disable_activation( [ 'slug' => 'wp-clone-by-wp-academy' ] );
+		$denylist->disable_activation( array( 'slug' => 'wp-clone-by-wp-academy' ) );
 	}
 
 	/**
@@ -234,17 +234,17 @@ class DenyListTest extends TestCase {
 		$refObject   = new ReflectionObject( $denylist );
 		$refProperty = $refObject->getProperty( '_plugins_to_deactivate' );
 		$refProperty->setAccessible( true );
-		$refProperty->setValue( $denylist, [ 'adminer' ] );
+		$refProperty->setValue( $denylist, array( 'adminer' ) );
 
 		\WP_Mock::userFunction(
 			'deactivate_plugins',
-			[
-				'args'   => [
+			array(
+				'args'   => array(
 					'adminer',
 					true,
-				],
+				),
 				'return' => true,
-			]
+			)
 		);
 
 		$denylist->deactivate_plugins();
@@ -259,8 +259,8 @@ class DenyListTest extends TestCase {
 		$denylist = new DenyList();
 
 		$this->assertEquals(
-			$denylist->disable_install_link( [], 'adminer' ),
-			[ '<a href="https://woocart.com/plugins-denylist" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' ]
+			$denylist->disable_install_link( array(), 'adminer' ),
+			array( '<a href="https://woocart.com/plugins-denylist" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' )
 		);
 	}
 
@@ -273,8 +273,8 @@ class DenyListTest extends TestCase {
 		$denylist = new DenyList();
 
 		$this->assertEquals(
-			$denylist->disable_install_link( [], 'whitelisted-plugin' ),
-			[]
+			$denylist->disable_install_link( array(), 'whitelisted-plugin' ),
+			array()
 		);
 	}
 
@@ -287,8 +287,8 @@ class DenyListTest extends TestCase {
 		$denylist = new DenyList();
 
 		$this->assertEquals(
-			$denylist->disable_activate_link( [ 'activate' => '' ], 'adminer' ),
-			[ 'activate' => '<a href="https://woocart.com/plugins-denylist" data-plugin="adminer" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' ]
+			$denylist->disable_activate_link( array( 'activate' => '' ), 'adminer' ),
+			array( 'activate' => '<a href="https://woocart.com/plugins-denylist" data-plugin="adminer" title="This plugin is not allowed on our system due to performance, security, or compatibility concerns. Please contact our support with any questions." target="_blank">Not available</a>' )
 		);
 	}
 
@@ -301,8 +301,8 @@ class DenyListTest extends TestCase {
 		$denylist = new DenyList();
 
 		$this->assertEquals(
-			$denylist->disable_activate_link( [], 'whitelisted-plugin' ),
-			[]
+			$denylist->disable_activate_link( array(), 'whitelisted-plugin' ),
+			array()
 		);
 	}
 

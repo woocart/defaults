@@ -24,18 +24,18 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 */
 		public function get_forms() {
 			return get_posts(
-				[
+				array(
 					'post_type'      => 'wpcf7_contact_form',
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
-				]
+				)
 			);
 		}
 
 		/**
 		 * Update cf template stored in post meta.
 		 */
-		public function update_template( $forms = [] ) {
+		public function update_template( $forms = array() ) {
 			if ( count( $forms ) > 0 ) {
 				foreach ( $forms as $form_id ) {
 					$content = get_post_meta( $form_id, '_form', true );

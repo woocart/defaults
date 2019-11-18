@@ -20,7 +20,7 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 				wp_schedule_event( time(), 'hourly', self::cron_hook );
 			}
 
-			add_action( self::cron_hook, [ $this, 'report_stats' ] );
+			add_action( self::cron_hook, array( $this, 'report_stats' ) );
 		}
 
 		/**
@@ -48,7 +48,7 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 
 			// plugins path + /
 			$plugins_base_length = strlen( $wp_plugin_path ) + 1;
-			$plugins             = [];
+			$plugins             = array();
 			foreach ( $scripts as $script => $stats ) {
 
 				// script should be a plugin
@@ -83,10 +83,10 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 		 * @return bool
 		 */
 		public function emit( array $plugins ): bool {
-			$emit_data = [
+			$emit_data = array(
 				'kind'    => 'opcache_stats',
 				'plugins' => $plugins,
-			];
+			);
 
 			Socket::log( $emit_data );
 			return true;
@@ -117,7 +117,7 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 		 */
 		public function decorate( array $plugins ): array {
 			$all_plugins = $this->get_plugins();
-			$report      = [];
+			$report      = array();
 			foreach ( $all_plugins as $base_path => $info ) {
 				$slug = substr( $base_path, 0, strpos( $base_path, '/' ) );
 
@@ -125,12 +125,12 @@ namespace Niteo\WooCart\Defaults\OpCacheStats {
 					continue;
 				}
 
-				$report[] = [
+				$report[] = array(
 					'memory'  => $plugins[ $slug ],
 					'title'   => $info['Title'],
 					'version' => $info['Version'],
 					'slug'    => $slug,
-				];
+				);
 			}
 			return $report;
 		}

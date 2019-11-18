@@ -15,9 +15,9 @@ class Optimizations {
 	 * Filters constructor.
 	 */
 	public function __construct() {
-		add_action( 'init', [ &$this, 'disable_wp_emojicons' ] );
+		add_action( 'init', array( &$this, 'disable_wp_emojicons' ) );
 		// Filter to remove TinyMCE Emojis
-		add_filter( 'tiny_mce_plugins', [ &$this, 'disable_emojicons_tinymce' ] );
+		add_filter( 'tiny_mce_plugins', array( &$this, 'disable_emojicons_tinymce' ) );
 	}
 
 	/**

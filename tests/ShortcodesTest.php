@@ -282,7 +282,7 @@ class ShortcodesTest extends TestCase {
 			)
 		);
 		$s = new Shortcodes();
-		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( [ 'id' => 1 ], null ) );
+		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( array( 'id' => 1 ), null ) );
 	}
 
 
@@ -305,7 +305,7 @@ class ShortcodesTest extends TestCase {
 			)
 		);
 		$s = new Shortcodes();
-		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( [ 'id' => 1 ], '<a href="%s">slug</a>' ) );
+		$this->assertEquals( '<a href="slug">slug</a>', $s->woo_permalink( array( 'id' => 1 ), '<a href="%s">slug</a>' ) );
 	}
 
 	/**
@@ -320,7 +320,7 @@ class ShortcodesTest extends TestCase {
 			)
 		);
 		$s = new Shortcodes();
-		$this->assertEquals( '[woo-permalink]', $s->woo_permalink( [], '[woo-permalink]' ) );
+		$this->assertEquals( '[woo-permalink]', $s->woo_permalink( array(), '[woo-permalink]' ) );
 	}
 
 	/**
@@ -426,7 +426,7 @@ class ShortcodesTest extends TestCase {
 			->andReturn( 'slug' );
 
 		$s = new Shortcodes();
-		$this->assertEquals( 'slug', $s->page( [ 'page' => 'slug' ], null ) );
+		$this->assertEquals( 'slug', $s->page( array( 'page' => 'slug' ), null ) );
 	}
 
 	/**
@@ -452,7 +452,7 @@ class ShortcodesTest extends TestCase {
 			->andReturn( 'slug' );
 
 		$s = new Shortcodes();
-		$this->assertEquals( 'slug', $s->page( [ 'post' => 'slug' ], null ) );
+		$this->assertEquals( 'slug', $s->page( array( 'post' => 'slug' ), null ) );
 	}
 
 	/**
