@@ -34,11 +34,11 @@ namespace Niteo\WooCart\Defaults\Importers {
 		/**
 		 * @var array
 		 */
-		protected $demo_content = [
-			'products'    => [],
-			'attachments' => [],
-			'categories'  => [],
-		];
+		protected $demo_content = array(
+			'products'    => array(),
+			'attachments' => array(),
+			'categories'  => array(),
+		);
 
 		/**
 		 * @param $file_path

@@ -40,9 +40,9 @@ class WooProductsTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'update_option',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$import = new WooProducts( __DIR__ . '/fixtures/products.html', __DIR__ );
@@ -59,12 +59,12 @@ class WooProductsTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'update_option',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
-		$import->mark_products( [] );
+		$import->mark_products( array() );
 	}
 
 	/**

@@ -221,7 +221,7 @@ class OPCacheStatsTest extends TestCase {
 		);
 
 		$stats = new Reporter();
-		$this->assertEquals( [ 'woocommerce' => 40528 ], $stats->parse_plugins( $data ) );
+		$this->assertEquals( array( 'woocommerce' => 40528 ), $stats->parse_plugins( $data ) );
 	}
 
 	/**
@@ -333,18 +333,18 @@ class OPCacheStatsTest extends TestCase {
 		);
 
 		$stats   = new Reporter();
-		$plugins = [ 'woocommerce' => 40528 ];
+		$plugins = array( 'woocommerce' => 40528 );
 		$info    = $stats->decorate( $plugins );
 		$this->assertEquals(
-			[
+			array(
 
-				[
+				array(
 					'memory'  => 40528,
 					'title'   => 'WooCommerce',
 					'version' => '3.5.7',
 					'slug'    => 'woocommerce',
-				],
-			],
+				),
+			),
 			$info
 		);
 	}
@@ -366,23 +366,23 @@ class OPCacheStatsTest extends TestCase {
 				'times' => 1,
 			)
 		);
-		$plugins = [
-			[
+		$plugins = array(
+			array(
 				'memory'  => 40528,
 				'title'   => 'WooCommerce',
 				'version' => '3.5.7',
 				'slug'    => 'woocommerce',
-			],
-		];
+			),
+		);
 
 		Mockery::mock( 'alias:\WooCart\Log\Socket' )
 			->shouldReceive( 'log' )->withArgs(
-				[
-					[
+				array(
+					array(
 						'kind'    => 'opcache_stats',
 						'plugins' => $plugins,
-					],
-				]
+					),
+				)
 			)
 			->andReturn( true );
 

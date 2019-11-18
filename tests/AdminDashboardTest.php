@@ -25,7 +25,7 @@ class AdminDashboardTest extends TestCase {
 	public function testConstructor() {
 		$dashboard = new AdminDashboard();
 
-		\WP_Mock::expectActionAdded( 'admin_init', [ $dashboard, 'init' ] );
+		\WP_Mock::expectActionAdded( 'admin_init', array( $dashboard, 'init' ) );
 
 		$dashboard->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -43,44 +43,44 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'remove_action',
-			[
+			array(
 				'args' =>
-				[
+				array(
 					'welcome_panel',
 					'wp_welcome_panel',
-				],
-			]
+				),
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'esc_url',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'get_admin_url',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'add_thickbox',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
-		\WP_Mock::expectActionAdded( 'welcome_panel', [ $mock, 'welcome_panel' ] );
+		\WP_Mock::expectActionAdded( 'welcome_panel', array( $mock, 'welcome_panel' ) );
 
 		$mock->init();
 		\WP_Mock::assertHooksAdded();
@@ -98,44 +98,44 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'remove_action',
-			[
+			array(
 				'args' =>
-				[
+				array(
 					'welcome_panel',
 					'wp_welcome_panel',
-				],
-			]
+				),
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'esc_url',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'get_admin_url',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'add_thickbox',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
-		\WP_Mock::expectActionAdded( 'welcome_panel', [ $mock, 'proteus_welcome_panel' ] );
+		\WP_Mock::expectActionAdded( 'welcome_panel', array( $mock, 'proteus_welcome_panel' ) );
 
 		$mock->init();
 		\WP_Mock::assertHooksAdded();
@@ -153,9 +153,9 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'wp_get_theme',
-			[
+			array(
 				'return' => $fake,
-			]
+			)
 		);
 
 		$this->assertTrue( $dashboard->is_proteus_active() );
@@ -173,9 +173,9 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'wp_get_theme',
-			[
+			array(
 				'return' => $fake,
-			]
+			)
 		);
 
 		$this->assertFalse( $dashboard->is_proteus_active() );
@@ -190,9 +190,9 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_template',
-			[
+			array(
 				'return' => 'woondershop',
-			]
+			)
 		);
 
 		$this->assertEquals( 'https://proteusthemes.onfastspring.com/woondershop-wp?utm_source=woocart&utm_medium=&utm_campaign=woocart&utm_content=woondershop', $dashboard->purchase_link() );
@@ -207,16 +207,16 @@ class AdminDashboardTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => '-1',
-			]
+			)
 		);
 
 		\WP_Mock::userFunction(
 			'update_option',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$dashboard->created_time();

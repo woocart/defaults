@@ -15,7 +15,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * @param array $data
 		 * @return Value
 		 */
-		public static function fromArray( array $data = [] ) {
+		public static function fromArray( array $data = array() ) {
 			foreach ( get_object_vars( $obj = new self() ) as $property => $default ) {
 				if ( ! array_key_exists( $property, $data ) ) {
 					continue;

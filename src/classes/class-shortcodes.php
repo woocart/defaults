@@ -15,21 +15,21 @@ namespace Niteo\WooCart\Defaults {
 		 * Shortcodes constructor.
 		 */
 		public function __construct() {
-			add_shortcode( 'woo-include', [ &$this, 'page' ] );
-			add_shortcode( 'company-name', [ &$this, 'company_name' ] );
-			add_shortcode( 'company-address', [ &$this, 'company_address' ] );
-			add_shortcode( 'company-city', [ &$this, 'company_city' ] );
-			add_shortcode( 'company-postcode', [ &$this, 'company_postcode' ] );
-			add_shortcode( 'tax-id', [ &$this, 'tax_id' ] );
-			add_shortcode( 'policy-page', [ &$this, 'policy_page' ] );
-			add_shortcode( 'store-url', [ &$this, 'store_url' ] );
-			add_shortcode( 'store-name', [ &$this, 'store_name' ] );
-			add_shortcode( 'woo-permalink', [ &$this, 'woo_permalink' ] );
-			add_shortcode( 'cookie-page', [ &$this, 'cookie_page' ] );
-			add_shortcode( 'returns-page', [ &$this, 'returns_page' ] );
-			add_shortcode( 'terms-page', [ &$this, 'terms_page' ] );
-			add_shortcode( 'contact-page', [ &$this, 'contact_page' ] );
-			add_shortcode( 'woocart', [ &$this, 'woocart' ] );
+			add_shortcode( 'woo-include', array( &$this, 'page' ) );
+			add_shortcode( 'company-name', array( &$this, 'company_name' ) );
+			add_shortcode( 'company-address', array( &$this, 'company_address' ) );
+			add_shortcode( 'company-city', array( &$this, 'company_city' ) );
+			add_shortcode( 'company-postcode', array( &$this, 'company_postcode' ) );
+			add_shortcode( 'tax-id', array( &$this, 'tax_id' ) );
+			add_shortcode( 'policy-page', array( &$this, 'policy_page' ) );
+			add_shortcode( 'store-url', array( &$this, 'store_url' ) );
+			add_shortcode( 'store-name', array( &$this, 'store_name' ) );
+			add_shortcode( 'woo-permalink', array( &$this, 'woo_permalink' ) );
+			add_shortcode( 'cookie-page', array( &$this, 'cookie_page' ) );
+			add_shortcode( 'returns-page', array( &$this, 'returns_page' ) );
+			add_shortcode( 'terms-page', array( &$this, 'terms_page' ) );
+			add_shortcode( 'contact-page', array( &$this, 'contact_page' ) );
+			add_shortcode( 'woocart', array( &$this, 'woocart' ) );
 		}
 
 		/**
@@ -131,7 +131,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function policy_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_privacy_policy' ], $content );
+			return $this->woo_permalink( array( 'option' => 'wp_page_for_privacy_policy' ), $content );
 		}
 
 		/**
@@ -141,7 +141,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function cookie_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_cookies_policy' ], $content );
+			return $this->woo_permalink( array( 'option' => 'wp_page_for_cookies_policy' ), $content );
 		}
 
 		/**
@@ -151,7 +151,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function returns_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'woocommerce_returns_page_id' ], $content );
+			return $this->woo_permalink( array( 'option' => 'woocommerce_returns_page_id' ), $content );
 		}
 
 		/**
@@ -161,7 +161,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function terms_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'woocommerce_terms_page_id' ], $content );
+			return $this->woo_permalink( array( 'option' => 'woocommerce_terms_page_id' ), $content );
 		}
 
 		/**
@@ -171,7 +171,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		function contact_page( $props, $content = null ) {
 
-			return $this->woo_permalink( [ 'option' => 'wp_page_for_contact' ], $content );
+			return $this->woo_permalink( array( 'option' => 'wp_page_for_contact' ), $content );
 		}
 
 		/**

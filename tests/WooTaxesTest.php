@@ -41,7 +41,7 @@ class WooTaxesTest extends TestCase {
 		$wpdb->prefix = 'wp_';
 		$wpdb->shouldReceive( 'replace' )->with(
 			'wp_woocommerce_tax_rates',
-			[
+			array(
 				'tax_rate_id'       => 0,
 				'tax_rate_country'  => 'country',
 				'tax_rate_state'    => 'state',
@@ -52,8 +52,8 @@ class WooTaxesTest extends TestCase {
 				'tax_rate_shipping' => 'shipping',
 				'tax_rate_order'    => 'order',
 				'tax_rate_class'    => 'class',
-			],
-			[
+			),
+			array(
 				0  => '%d',
 				1  => '%s',
 				2  => '%s',
@@ -65,20 +65,20 @@ class WooTaxesTest extends TestCase {
 				8  => '%s',
 				9  => '%s',
 				10 => '%s',
-			]
+			)
 		);
 		$wpdb->shouldReceive( 'replace' )->with(
 			'wp_woocommerce_tax_rate_locations',
-			[
+			array(
 				'tax_rate_id'   => 0,
 				'location_code' => 'location_code',
 				'location_type' => 'location_type',
-			],
-			[
+			),
+			array(
 				0 => '%d',
 				1 => '%s',
 				2 => '%s',
-			]
+			)
 		);
 
 		$tax                = new Tax();
@@ -95,7 +95,7 @@ class WooTaxesTest extends TestCase {
 		$tax->order         = 'order';
 		$tax->rate          = 'rate';
 		$tax->shipping      = 'shipping';
-		$tax->locations     = [ $loc->toArray() ];
+		$tax->locations     = array( $loc->toArray() );
 
 		$value = WooTaxes::toValue( 'test_name/1', $tax->toArray() );
 		$o     = new WooTaxes();
@@ -140,8 +140,8 @@ class WooTaxesTest extends TestCase {
 		$wpdb->prefix = 'wp_';
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' );
 		$wpdb->shouldReceive( 'get_results' )->andReturn(
-			[ $tax, $tax, $tax, $tax ],
-			[ $location, $location ]
+			array( $tax, $tax, $tax, $tax ),
+			array( $location, $location )
 		);
 
 		$o = new WooTaxes();
@@ -151,8 +151,8 @@ class WooTaxesTest extends TestCase {
 		$wpdb->prefix = 'wp_';
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' );
 		$wpdb->shouldReceive( 'get_results' )->andReturn(
-			[ $tax, $tax, $tax, $tax ],
-			[ $location, $location ]
+			array( $tax, $tax, $tax, $tax ),
+			array( $location, $location )
 		);
 		$value = $o->items()->current();
 		$this->assertEquals( '1234', $value->getKey() );

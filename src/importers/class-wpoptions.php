@@ -91,19 +91,19 @@ namespace Niteo\WooCart\Defaults\Importers {
 				fwrite( STDOUT, "Inserting $option: $value" . PHP_EOL );
 				return $wpdb->insert(
 					$wpdb->options,
-					[
+					array(
 						'option_value' => $value,
 						'autoload'     => 'yes',
 						'option_name'  => $option,
-					],
-					[ '%s', '%s', '%s' ]
+					),
+					array( '%s', '%s', '%s' )
 				);
 			}
 			fwrite( STDOUT, "Updating $option: $value" . PHP_EOL );
 			return $wpdb->update(
 				$wpdb->options,
-				[ 'option_value' => $value ],
-				[ 'option_name' => $option ]
+				array( 'option_value' => $value ),
+				array( 'option_name' => $option )
 			);
 
 		}

@@ -23,27 +23,27 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var array
 		 */
-		public $list = [];
+		public $list = array();
 
 		/**
 		 * Holds arrays of plugin details.
 		 *
 		 * @var array
 		 */
-		public $plugins = [];
+		public $plugins = array();
 
 		/**
 		 * Hold paths to plugin main file.
 		 *
 		 * @var array
 		 */
-		public $paths = [];
+		public $paths = array();
 
 		/**
 		 * PluginManager constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', [ &$this, 'init' ] );
+			add_action( 'init', array( &$this, 'init' ) );
 
 			/**
 			 * Check for the plugins list.
@@ -85,10 +85,10 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			// Force activate required plugins.
-			add_action( 'admin_init', [ &$this, 'force_activation' ] );
+			add_action( 'admin_init', array( &$this, 'force_activation' ) );
 
 			// Execute other functions.
-			add_action( 'current_screen', [ &$this, 'plugins_page' ] );
+			add_action( 'current_screen', array( &$this, 'plugins_page' ) );
 		}
 
 		/**
@@ -165,10 +165,10 @@ namespace Niteo\WooCart\Defaults {
 			// Only on plugins page.
 			if ( 'plugins' === $screen->id ) {
 				// Filter out the deactivate link for required plugins.
-				add_filter( 'plugin_action_links', [ &$this, 'remove_deactivation_link' ], PHP_INT_MAX, 4 );
+				add_filter( 'plugin_action_links', array( &$this, 'remove_deactivation_link' ), PHP_INT_MAX, 4 );
 
 				// Add a small text to let the user know that why the plugin cannot be de-activated.
-				add_action( 'after_plugin_row', [ &$this, 'add_required_text' ], PHP_INT_MAX, 3 );
+				add_action( 'after_plugin_row', array( &$this, 'add_required_text' ), PHP_INT_MAX, 3 );
 			}
 		}
 
@@ -186,11 +186,11 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			$defaults = [
+			$defaults = array(
 				'name'      => '',      // String.
 				'slug'      => '',      // String.
 				'file_path' => '',           // String.
-			];
+			);
 
 			// Prepare the received data.
 			$plugin = wp_parse_args( $plugin, $defaults );

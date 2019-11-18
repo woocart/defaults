@@ -36,11 +36,11 @@ class CLI_CommandTest extends TestCase {
 		self::$functions->shouldReceive( 'current_time' )->with( 'timestamp' );
 		$WC_Product = \Mockery::mock( 'overload:WC_Report_Sales_By_Date' );
 		$WC_Product->shouldReceive( 'get_report_data' )->once()->with()->andReturn(
-			[
+			array(
 				'total_sales' => '42',
-			]
+			)
 		);
-		( new CLI_Command() )->sales( [ 'total_sales' ], [] );
+		( new CLI_Command() )->sales( array( 'total_sales' ), array() );
 		$this->expectOutputString( '42' );
 	}
 

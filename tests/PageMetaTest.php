@@ -27,9 +27,9 @@ class PageMetaTest extends TestCase {
 		$p            = new PageMeta();
 		$p->post_name = 'post_name';
 		$this->assertEquals(
-			[
+			array(
 				'post_name' => 'post_name',
-			],
+			),
 			$p->getInsertParams()
 		);
 	}
@@ -42,10 +42,10 @@ class PageMetaTest extends TestCase {
 	public function testGetDefaultsImport() {
 		$p                   = new PageMeta();
 		$p->post_name        = 'post_name';
-		$p->woocart_defaults = [
+		$p->woocart_defaults = array(
 			'wp/key' => '$ID',
-		];
-		$this->assertEquals( [ 'wp/key' => 1234 ], (array) $p->getDefaultsImport( [ 'ID' => 1234 ] ) );
+		);
+		$this->assertEquals( array( 'wp/key' => 1234 ), (array) $p->getDefaultsImport( array( 'ID' => 1234 ) ) );
 	}
 
 	/**
@@ -56,6 +56,6 @@ class PageMetaTest extends TestCase {
 	public function testGetDefaultsImportEmpty() {
 		$p            = new PageMeta();
 		$p->post_name = 'post_name';
-		$this->assertEquals( [], (array) $p->getDefaultsImport( [ 'ID' => 1234 ] ) );
+		$this->assertEquals( array(), (array) $p->getDefaultsImport( array( 'ID' => 1234 ) ) );
 	}
 }

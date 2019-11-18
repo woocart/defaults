@@ -21,10 +21,10 @@ namespace Niteo\WooCart\Defaults {
 
 		public function __construct() {
 			// Plugin activation.
-			add_action( 'activated_plugin', [ &$this, 'activation' ], 10, 2 );
+			add_action( 'activated_plugin', array( &$this, 'activation' ), 10, 2 );
 
 			// Plugin de-activation.
-			add_action( 'deactivated_plugin', [ &$this, 'deactivation' ], 10, 2 );
+			add_action( 'deactivated_plugin', array( &$this, 'deactivation' ), 10, 2 );
 		}
 
 		/**
@@ -56,12 +56,12 @@ namespace Niteo\WooCart\Defaults {
 
 			if ( $plugin_data ) {
 				if ( is_array( $plugin_data ) ) {
-					$emit_data = [
+					$emit_data = array(
 						'kind'    => 'plugin_change',
 						'name'    => $plugin_data['Name'],
 						'version' => $plugin_data['Version'],
 						'action'  => $status,
-					];
+					);
 
 					Socket::log( $emit_data );
 

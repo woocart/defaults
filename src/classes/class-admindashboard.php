@@ -41,9 +41,9 @@ namespace Niteo\WooCart\Defaults {
 
 				// check if the proteus theme is active
 				if ( $this->is_proteus_active() ) {
-					add_action( 'welcome_panel', [ &$this, 'proteus_welcome_panel' ] );
+					add_action( 'welcome_panel', array( &$this, 'proteus_welcome_panel' ) );
 				} else {
-					add_action( 'welcome_panel', [ &$this, 'welcome_panel' ] );
+					add_action( 'welcome_panel', array( &$this, 'welcome_panel' ) );
 				}
 
 				// add thickbox to the dashboard page

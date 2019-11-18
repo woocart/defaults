@@ -27,9 +27,9 @@ class SellingLimitTest extends TestCase {
 		global $wpdb;
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$wpdb         = \Mockery::mock( '\WPDB' );
@@ -45,11 +45,11 @@ class SellingLimitTest extends TestCase {
 			->andReturn( 'query2' );
 		$wpdb->shouldReceive( 'get_results' )
 			->with( 'query2', 'ARRAY_A' )
-			->andReturn( [ [ 'location_code' => 'SI' ], [ 'location_code' => 'US' ] ] );
+			->andReturn( array( array( 'location_code' => 'SI' ), array( 'location_code' => 'US' ) ) );
 
 		$s = new SellingLimit( 'EU' );
 
 		$this->assertEquals( 3, $s->zoneID() );
-		$this->assertEquals( [ 'SI', 'US' ], $s->countries( 3 ) );
+		$this->assertEquals( array( 'SI', 'US' ), $s->countries( 3 ) );
 	}
 }

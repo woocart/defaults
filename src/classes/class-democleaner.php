@@ -31,16 +31,16 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * @var array
 		 */
-		public $response = [
+		public $response = array(
 			'code'    => 'error',
 			'message' => '',
-		];
+		);
 
 		/**
 		 * DemoCleaner constructor.
 		 */
 		public function __construct() {
-			add_action( 'admin_init', [ &$this, 'init' ], PHP_INT_MAX );
+			add_action( 'admin_init', array( &$this, 'init' ), PHP_INT_MAX );
 		}
 
 		/**
@@ -52,12 +52,12 @@ namespace Niteo\WooCart\Defaults {
 
 			// Only if demo content exists.
 			if ( $this->check() ) {
-				add_meta_box( 'wc-demo-cleaner', esc_html__( 'WooCart Turnkey Store', 'woocart-defaults' ), [ &$this, 'widget' ], 'dashboard', 'normal', 'high' );
-				add_action( 'admin_enqueue_scripts', [ &$this, 'scripts' ] );
+				add_meta_box( 'wc-demo-cleaner', esc_html__( 'WooCart Turnkey Store', 'woocart-defaults' ), array( &$this, 'widget' ), 'dashboard', 'normal', 'high' );
+				add_action( 'admin_enqueue_scripts', array( &$this, 'scripts' ) );
 			}
 
 			// Add to notices.
-			add_action( 'admin_notices', [ &$this, 'notices' ] );
+			add_action( 'admin_notices', array( &$this, 'notices' ) );
 		}
 
 		/**
@@ -182,11 +182,11 @@ namespace Niteo\WooCart\Defaults {
 			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 
 			// Enqueue script and add text string for confirm box.
-			wp_enqueue_script( 'woocart-demo-content-js', "{$plugin_dir}assets/js/demo-content.js", [ 'jquery' ], Release::Version, true );
+			wp_enqueue_script( 'woocart-demo-content-js', "{$plugin_dir}assets/js/demo-content.js", array( 'jquery' ), Release::Version, true );
 
-			$localize_data = [
+			$localize_data = array(
 				'confirm_text' => esc_js( 'This will remove all the demo products from the store and cannot be undone. Are you sure you want to continue?', 'woocart-defaults' ),
-			];
+			);
 			wp_localize_script( 'woocart-demo-content-js', 'woocart_defaults', $localize_data );
 		}
 

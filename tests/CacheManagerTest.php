@@ -26,21 +26,21 @@ class CacheManagerTest extends TestCase {
 
 		define( 'FCGI_CACHE_PATH', 'tests/cache' );
 
-		\WP_Mock::expectActionAdded( 'admin_bar_menu', [ $cache, 'admin_button' ], 100 );
-		\WP_Mock::expectActionAdded( 'admin_init', [ $cache, 'check_cache_request' ] );
-		\WP_Mock::expectActionAdded( 'activated_plugin', [ $cache, 'flush_opcache' ] );
-		\WP_Mock::expectActionAdded( 'deactivated_plugin', [ $cache, 'flush_opcache' ] );
-		\WP_Mock::expectActionAdded( 'upgrader_process_complete', [ $cache, 'flush_opcache' ] );
-		\WP_Mock::expectActionAdded( 'check_theme_switched', [ $cache, 'flush_opcache' ] );
-		\WP_Mock::expectActionAdded( 'save_post', [ $cache, 'flush_redis_cache' ] );
-		\WP_Mock::expectActionAdded( 'save_post', [ $cache, 'flush_fcgi_cache' ] );
-		\WP_Mock::expectActionAdded( 'after_delete_post', [ $cache, 'flush_redis_cache' ] );
-		\WP_Mock::expectActionAdded( 'after_delete_post', [ $cache, 'flush_fcgi_cache' ] );
-		\WP_Mock::expectActionAdded( 'customize_save_after', [ $cache, 'flush_redis_cache' ] );
-		\WP_Mock::expectActionAdded( 'customize_save_after', [ $cache, 'flush_fcgi_cache' ] );
-		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', [ $cache, 'flush_redis_cache' ] );
-		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', [ $cache, 'flush_fcgi_cache' ] );
-		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', [ $cache, 'flush_cache' ], PHP_INT_MAX );
+		\WP_Mock::expectActionAdded( 'admin_bar_menu', array( $cache, 'admin_button' ), 100 );
+		\WP_Mock::expectActionAdded( 'admin_init', array( $cache, 'check_cache_request' ) );
+		\WP_Mock::expectActionAdded( 'activated_plugin', array( $cache, 'flush_opcache' ) );
+		\WP_Mock::expectActionAdded( 'deactivated_plugin', array( $cache, 'flush_opcache' ) );
+		\WP_Mock::expectActionAdded( 'upgrader_process_complete', array( $cache, 'flush_opcache' ) );
+		\WP_Mock::expectActionAdded( 'check_theme_switched', array( $cache, 'flush_opcache' ) );
+		\WP_Mock::expectActionAdded( 'save_post', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'save_post', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'after_delete_post', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'after_delete_post', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'customize_save_after', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'customize_save_after', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
 
 		$cache->__construct();
 	}
@@ -54,31 +54,31 @@ class CacheManagerTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'is_admin_bar_showing',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'add_query_arg',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_nonce_url',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$admin_bar = $this->getMockBuilder( FakeMenuClass::class )
-			->setMethods( [ 'add_menu' ] )
+			->setMethods( array( 'add_menu' ) )
 			->getMock();
 		$cache->admin_button( $admin_bar );
 	}
@@ -92,19 +92,19 @@ class CacheManagerTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'is_admin_bar_showing',
-			[
+			array(
 				'return' => false,
-			]
+			)
 		);
 
 		$admin_bar = $this->getMockBuilder( FakeMenuClass::class )
-			->setMethods( [ 'add_menu' ] )
+			->setMethods( array( 'add_menu' ) )
 			->getMock();
 		$cache->admin_button( $admin_bar );
 	}
@@ -119,21 +119,21 @@ class CacheManagerTest extends TestCase {
 		$_REQUEST['wc_cache'] = true;
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => false,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_die',
-			[
+			array(
 				'return' => 'true',
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'sanitize_key',
-			[
+			array(
 				'return' => 'fake',
-			]
+			)
 		);
 
 		$cache->check_cache_request();
@@ -149,17 +149,17 @@ class CacheManagerTest extends TestCase {
 		$_REQUEST['wc_cache'] = true;
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'sanitize_key',
-			[
+			array(
 				'return' => 'done',
-			]
+			)
 		);
-		\WP_Mock::expectActionAdded( 'admin_notices', [ $cache, 'show_notices' ] );
+		\WP_Mock::expectActionAdded( 'admin_notices', array( $cache, 'show_notices' ) );
 
 		$cache->check_cache_request();
 	}
@@ -179,33 +179,33 @@ class CacheManagerTest extends TestCase {
 		$_REQUEST['wc_cache'] = true;
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'sanitize_key',
-			[
+			array(
 				'return' => 'flush',
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'check_admin_referer',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_redirect',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		// One cannot mock protected core functions, so we only patch
@@ -213,9 +213,9 @@ class CacheManagerTest extends TestCase {
 		if ( ! function_exists( 'opcache_reset' ) ) {
 			\WP_Mock::userFunction(
 				'opcache_reset',
-				[
+				array(
 					'return' => true,
-				]
+				)
 			);
 		}
 
@@ -245,47 +245,47 @@ class CacheManagerTest extends TestCase {
 		$_REQUEST['wc_cache'] = true;
 		\WP_Mock::userFunction(
 			'is_admin',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'sanitize_key',
-			[
+			array(
 				'return' => 'flush',
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'check_admin_referer',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_redirect',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		if ( ! function_exists( 'opcache_reset' ) ) {
 			\WP_Mock::userFunction(
 				'opcache_reset',
-				[
+				array(
 					'return' => true,
-				]
+				)
 			);
 		}
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 		\WP_Mock::userFunction(
 			'wp_redirect',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$mock->check_cache_request();
@@ -325,7 +325,7 @@ class CacheManagerTest extends TestCase {
 		$mock->shouldReceive( 'flush_fcgi_cache' )
 			->andReturn( true );
 
-		$method->invokeArgs( $mock, [] );
+		$method->invokeArgs( $mock, array() );
 	}
 
 	/**
@@ -341,7 +341,7 @@ class CacheManagerTest extends TestCase {
 		fwrite( $fp, 'Some text..' );
 		fclose( $fp );
 
-		$this->assertTrue( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
+		$this->assertTrue( $method->invokeArgs( $plugins, array( 'tests/cache' ) ) );
 		$this->assertFalse( file_exists( 'tests/cache/tmp.txt' ) );
 	}
 
@@ -353,7 +353,7 @@ class CacheManagerTest extends TestCase {
 		$method  = self::getMethod( 'flush_fcgi_cache' );
 		$plugins = new CacheManager();
 
-		$this->assertFalse( $method->invokeArgs( $plugins, [ 'tests/cache' ] ) );
+		$this->assertFalse( $method->invokeArgs( $plugins, array( 'tests/cache' ) ) );
 	}
 
 	/**
@@ -364,7 +364,7 @@ class CacheManagerTest extends TestCase {
 		$method  = self::getMethod( 'flush_fcgi_cache' );
 		$plugins = new CacheManager();
 
-		$this->assertEmpty( $method->invokeArgs( $plugins, [ 'non/existent/directory' ] ) );
+		$this->assertEmpty( $method->invokeArgs( $plugins, array( 'non/existent/directory' ) ) );
 	}
 
 	/**
@@ -379,9 +379,9 @@ class CacheManagerTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
-			[
+			array(
 				'return' => true,
-			]
+			)
 		);
 
 		$mock->shouldReceive( 'redis_connect' )
@@ -401,13 +401,13 @@ class CacheManagerTest extends TestCase {
 			->andReturn( $fake );
 
 		$mock->redis->shouldReceive( 'scan' )
-			->withArgs( [ 0, [ 'MATCH' => 'cache%3A*' ] ] )
-			->andReturn( [ 0, [ 'cache%3A1st' ] ] );
+			->withArgs( array( 0, array( 'MATCH' => 'cache%3A*' ) ) )
+			->andReturn( array( 0, array( 'cache%3A1st' ) ) );
 		$mock->redis->shouldReceive( 'del' )
-			->withArgs( [ 'cache%3A1st' ] )
+			->withArgs( array( 'cache%3A1st' ) )
 			->andReturn( true );
 
-		$method->invokeArgs( $mock, [] );
+		$method->invokeArgs( $mock, array() );
 	}
 
 	protected static function getMethod( $name ) {

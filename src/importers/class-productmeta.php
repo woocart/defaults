@@ -42,7 +42,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		/**
 		 * @var array
 		 */
-		public $images = [];
+		public $images = array();
 
 		/**
 		 * @var array
@@ -52,11 +52,11 @@ namespace Niteo\WooCart\Defaults\Importers {
 		/**
 		 * @var array
 		 */
-		private $aliases = [];
+		private $aliases = array();
 		/**
 		 * @var array
 		 */
-		private $category_ids = [];
+		private $category_ids = array();
 
 		/**
 		 * @return array
@@ -83,7 +83,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 * Upload images.
 		 */
 		public function upload_images() {
-			$image_ids = [];
+			$image_ids = array();
 			if ( count( $this->images ) > 0 ) {
 
 				foreach ( $this->images as $image ) {
@@ -159,10 +159,10 @@ namespace Niteo\WooCart\Defaults\Importers {
 			$term = get_term_by( 'name', $this->category, 'product_cat' );
 			if ( $term === false ) {
 				$term               = wp_insert_term( $this->category, 'product_cat' );
-				$this->category_ids = [ (int) $term['term_id'] ];
+				$this->category_ids = array( (int) $term['term_id'] );
 				return true;
 			}
-			$this->category_ids = [ $term->term_id ];
+			$this->category_ids = array( $term->term_id );
 			return true;
 		}
 
@@ -173,7 +173,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 		 */
 		public function save() {
 			$product = new \WC_Product();
-			$props   = [
+			$props   = array(
 				'name'              => $this->title,
 				'description'       => $this->description,
 				'short_description' => $this->short_description,
@@ -188,7 +188,7 @@ namespace Niteo\WooCart\Defaults\Importers {
 				'height'            => mt_rand( 1, 200 ),
 				'featured'          => mt_rand( 0, 1 ),
 				'shipping_class_id' => 0,
-			];
+			);
 			$product->set_props( $props );
 			return $product->save();
 		}

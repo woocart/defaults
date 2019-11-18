@@ -31,15 +31,15 @@ class WOOOptionsTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => true,
-				'args'   => [ 'test_name' ],
-			]
+				'args'   => array( 'test_name' ),
+			)
 		);
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'update' )
-			->with( 'wp_options', [ 'option_value' => 'test_value' ], [ 'option_name' => 'test_name' ] )
+			->with( 'wp_options', array( 'option_value' => 'test_value' ), array( 'option_name' => 'test_name' ) )
 			->andReturn( true );
 
 		$value = WooOptions::toValue( 'test_name', 'test_value' );
@@ -61,26 +61,26 @@ class WOOOptionsTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'get_option',
-			[
+			array(
 				'return' => false,
-				'args'   => [ 'test_name' ],
-			]
+				'args'   => array( 'test_name' ),
+			)
 		);
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'insert' )
 			->with(
 				'wp_options',
-				[
+				array(
 					'option_value' => 'test_value',
 					'autoload'     => 'yes',
 					'option_name'  => 'test_name',
-				],
-				[
+				),
+				array(
 					0 => '%s',
 					1 => '%s',
 					2 => '%s',
-				]
+				)
 			)
 			->andReturn( true );
 
@@ -107,7 +107,7 @@ class WOOOptionsTest extends TestCase {
 		$wpdb          = \Mockery::mock( '\WPDB' );
 		$wpdb->options = 'wp_options';
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' );
-		$wpdb->shouldReceive( 'get_results' )->andReturn( [ $option, $option, $option, $option ] );
+		$wpdb->shouldReceive( 'get_results' )->andReturn( array( $option, $option, $option, $option ) );
 
 		$o = new WooOptions();
 		$this->assertCount( 4, $o->items() );

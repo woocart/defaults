@@ -131,16 +131,16 @@ namespace Niteo\WooCart\Defaults\Extend {
 		public function banner() {
 			$days = $this->date_diff();
 
-			$buttons = [
-				0 => [
+			$buttons = array(
+				0 => array(
 					esc_html__( 'Learn more about WooCart »', 'woocart-defaults' ),
 					'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
-				],
-				1 => [
+				),
+				1 => array(
 					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
 					$this->purchase_link(),
-				],
-			];
+				),
+			);
 
 			// conditional logic
 			if ( $days >= 7 && $days < 10 ) {
@@ -152,16 +152,16 @@ namespace Niteo\WooCart\Defaults\Extend {
 			} elseif ( $days < 4 ) {
 				$header  = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days', $days );
 				$text    = sprintf( '<a href="%1$s">Export the content</a>, <a href="%2$s" target="_blank">buy the theme</a>, install it on your hosting and import the content and continue where you left off!', esc_url( admin_url( 'export.php' ) ), esc_url( $this->purchase_link() ) );
-				$buttons = [
-					0 => [
+				$buttons = array(
+					0 => array(
 						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
 						$this->purchase_link(),
-					],
-					1 => [
+					),
+					1 => array(
 						esc_html__( 'I would like to keep this hosting.', 'woocart-defaults' ),
 						'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
-					],
-				];
+					),
+				);
 			}
 			?>
 			<style>

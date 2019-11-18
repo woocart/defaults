@@ -51,43 +51,43 @@ class WooShippingTest extends TestCase {
 		$wpdb->prefix = 'wp_';
 		$wpdb->shouldReceive( 'insert' )->with(
 			'wp_woocommerce_shipping_zones',
-			[
+			array(
 				'zone_id'    => 0,
 				'zone_name'  => 'name',
 				'zone_order' => 'order',
-			],
-			[
+			),
+			array(
 				0 => '%d',
 				1 => '%s',
 				2 => '%d',
-			]
+			)
 		);
 		$wpdb->shouldReceive( 'insert' )->with(
 			'wp_woocommerce_shipping_zone_locations',
-			[
+			array(
 				'zone_id'       => 0,
 				'location_code' => null,
 				'location_type' => null,
-			],
-			[
+			),
+			array(
 				0 => '%d',
 				1 => '%s',
 				2 => '%s',
-			]
+			)
 		);
 		$wpdb->shouldReceive( 'insert' )->with(
 			'wp_woocommerce_shipping_zone_methods',
-			[
+			array(
 				'zone_id'      => 0,
 				'method_order' => null,
 				'is_enabled'   => null,
-			],
-			[
+			),
+			array(
 				0 => '%d',
 				1 => '%s',
 				2 => '%d',
 				3 => '%d',
-			]
+			)
 		);
 
 		$zone            = new ShippingZone();
@@ -98,8 +98,8 @@ class WooShippingTest extends TestCase {
 
 		$zone->name      = 'name';
 		$zone->order     = 'order';
-		$zone->locations = [ $loc->toArray() ];
-		$zone->methods   = [ $method->toArray() ];
+		$zone->locations = array( $loc->toArray() );
+		$zone->methods   = array( $method->toArray() );
 
 		$value = WooShipping::toValue( 'test_name/1', $zone->toArray() );
 		$o     = new WooShipping();
@@ -143,7 +143,7 @@ class WooShippingTest extends TestCase {
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT * FROM wp_woocommerce_shipping_zones' );
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT location_code, location_type FROM wp_woocommerce_shipping_zone_locations WHERE zone_id = %d', 1234 );
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT method_id, method_order, is_enabled FROM wp_woocommerce_shipping_zone_methods WHERE zone_id = %d', 1234 );
-		$wpdb->shouldReceive( 'get_results' )->andReturn( [ $zone, $zone, $zone, $zone ] );
+		$wpdb->shouldReceive( 'get_results' )->andReturn( array( $zone, $zone, $zone, $zone ) );
 
 		$o = new WooShipping();
 		$this->assertCount( 4, $o->items() );
@@ -153,7 +153,7 @@ class WooShippingTest extends TestCase {
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT * FROM wp_woocommerce_shipping_zones' );
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT location_code, location_type FROM wp_woocommerce_shipping_zone_locations WHERE zone_id = %d', 1234 );
 		$wpdb->shouldReceive( 'prepare' )->andReturn( '' )->with( 'SELECT method_id, method_order, is_enabled FROM wp_woocommerce_shipping_zone_methods WHERE zone_id = %d', 1234 );
-		$wpdb->shouldReceive( 'get_results' )->andReturn( [ $zone, $zone, $zone, $zone ], [ $loc, $loc, $loc ], [ $method, $method ] );
+		$wpdb->shouldReceive( 'get_results' )->andReturn( array( $zone, $zone, $zone, $zone ), array( $loc, $loc, $loc ), array( $method, $method ) );
 
 		$value = $o->items()->current();
 		$this->assertEquals( '1234', $value->getKey() );
