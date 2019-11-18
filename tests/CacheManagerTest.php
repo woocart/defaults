@@ -41,6 +41,8 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', array( $cache, 'flush_redis_cache' ) );
 		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
+		\WP_Mock::expectActionAdded( 'woocommerce_after_add_attribute_fields', array( $cache, 'flush_cache' ) );
+		\WP_Mock::expectActionAdded( 'woocommerce_after_edit_attribute_fields', array( $cache, 'flush_cache' ) );
 
 		$cache->__construct();
 	}
