@@ -150,7 +150,12 @@ namespace Niteo\WooCart\Defaults\Extend {
 				$header = esc_html__( 'Continue using WoonderShop for free with WooCart hosting', 'woocart-defaults' );
 				$text   = esc_html__( 'Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free!', 'woocart-defaults' );
 			} elseif ( $days < 4 ) {
-				$header  = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days', $days );
+				$header = sprintf( 'Your sandbox for WoonderShop will expire anytime now', $days );
+
+				if ( $days > 0 ) {
+					$header = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days', $days );
+				}
+
 				$text    = sprintf( '<a href="%1$s">Export the content</a>, <a href="%2$s" target="_blank">buy the theme</a>, install it on your hosting and import the content and continue where you left off!', esc_url( admin_url( 'export.php' ) ), esc_url( $this->purchase_link() ) );
 				$buttons = array(
 					0 => array(
