@@ -233,7 +233,7 @@ class AdminDashboardTest extends TestCase {
 
 		define( 'DAY_IN_SECONDS', 100 );
 
-		$this->assertEquals( 701, $mock->expiry_time() );
+		$this->assertEquals( 1001, $mock->expiry_time() );
 	}
 
 	/**
