@@ -30,6 +30,10 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 * @codeCoverageIgnore
 		 */
 		public function proteus_welcome_panel() {
+			if ( ! isset( $_SERVER['STORE_ID'] ) ) {
+				$_SERVER['STORE_ID'] = '';
+			}
+
 			?>
 		  <style>
 				.welcome-panel {
@@ -62,7 +66,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
 							<!-- Install theme demo content -->
-							<h3><?php esc_html_e( 'Install the theme demo content', 'woocart-defaults' ); ?></h3>
+							<h3>1. <?php esc_html_e( 'Install the theme demo content', 'woocart-defaults' ); ?></h3>
 							<p><?php esc_html_e( 'Woohoo! You successfully created your demo website. This quick setup process is powered by our One Click Demo Import, which is included in every theme.', 'woocart-defaults' ); ?></p>
 						</div>
 					</div>
@@ -70,7 +74,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
 							<!-- Upload logo -->
-							<h3><?php esc_html_e( 'Upload your logo', 'woocart-defaults' ); ?></h3>
+							<h3>2. <?php esc_html_e( 'Upload your logo', 'woocart-defaults' ); ?></h3>
 							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Appearance > Customize > Theme options > <a href="%1$s">Logo</a></span>. Don\'t forget to click on <em>Save & Publish</em>.', admin_url( 'customize.php?autofocus[control]=logo_img' ) ); ?></p>
 						</div>
 					</div>
@@ -78,7 +82,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					<div class="welcome-panel-column welcome-panel-last">
 						<div class="welcome-panel-inner">
 							<!-- Pick colors -->
-							<h3><?php esc_html_e( 'Pick your primary colors', 'woocart-defaults' ); ?></h3>
+							<h3>3. <?php esc_html_e( 'Pick your primary colors', 'woocart-defaults' ); ?></h3>
 							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Appearance > Customize > Theme options > <a href="%1$s">Theme Layout & Colors</a></span>. We recommend using the same colors as your logo. Don\'t forget to click on <em>Save & Publish</em>.', admin_url( 'customize.php?autofocus[control]=primary_color' ) ); ?></p>
 						</div>
 					</div>
@@ -88,7 +92,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					<div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
 							<!-- Change menu -->
-							<h3><?php esc_html_e( 'Change the main menu', 'woocart-defaults' ); ?></h3>
+							<h3>4. <?php esc_html_e( 'Change the main menu', 'woocart-defaults' ); ?></h3>
 							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Appearance > <a href="%1$s">Menus</a></span>. Select the <em>Main Menu</em> from the dropdown at the top and click on the <em>Select</em> button. You will be able to add or remove menu items to fit your wishes. Don\'t forget to click on the <em>Save Menu</em> button. <br>(if you remove a page from the menu, you can still find it in <em>Pages > All Pages</em>)', admin_url( 'nav-menus.php' ) ); ?></p>
 						</div>
 					</div>
@@ -96,7 +100,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 				  <div class="welcome-panel-column">
 						<div class="welcome-panel-inner">
 							<!-- Edit content -->
-							<h3><?php esc_html_e( 'Edit website content', 'woocart-defaults' ); ?></h3>
+							<h3>5. <?php esc_html_e( 'Edit website content', 'woocart-defaults' ); ?></h3>
 							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Pages > <a href="%1$s">All Pages</a></span> and edit one of the pages (example: Home page). To edit text and images, hover the mouse over widgets and select <em>edit</em>. Don\'t forget to click on the <em>Update</em> button to save your changes. You can also copy & paste widgets by right clicking on them (works from page to page as well). To make it even easier, select the <em>Live Editor</em> in the small menu above the page.', admin_url( 'edit.php?post_type=page' ) ); ?></p>
 						</div>
 					</div>
@@ -104,8 +108,8 @@ namespace Niteo\WooCart\Defaults\Extend {
 					<div class="welcome-panel-column welcome-panel-last">
 						<div class="welcome-panel-inner">
 							<!-- Export content -->
-							<h3><?php esc_html_e( 'Export your website content', 'woocart-defaults' ); ?></h3>
-							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Tools > <a href="%1$s">Export Content</a></span>. There you can export this website content with all the changes you made, so that you will be able to import it on your own WordPress site (on your domain). All you have to do is to <a href="%2$s" target="_blank">purchase the %3$s theme</a> and follow the steps on the <a href="%1$s">Export content</a> page.', admin_url( 'tools.php?page=pt-sandbox-ocde' ), $this->purchase_link( 'wp-steps' ), explode( ' ', ( wp_get_theme() )->get( 'Name' ), 2 )[0] ); ?></p>
+							<h3>6. <?php esc_html_e( 'Export your website content', 'woocart-defaults' ); ?></h3>
+							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Tools > <a href="%1$s">Export Content</a></span>. There you can export this website content with all the changes you made, so that you will be able to import it on your own WordPress site (on your domain). All you have to do is to <a href="%2$s" target="_blank">purchase the %3$s theme</a> and follow the steps on the <a href="%1$s">Export content</a> page. Or just continue hosting with <a href="" target="_blank">WooCart!</a>', admin_url( 'tools.php?page=pt-sandbox-ocde' ), $this->purchase_link( 'wp-steps' ), explode( ' ', ( wp_get_theme() )->get( 'Name' ), 2 )[0], 'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'] ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -131,40 +135,48 @@ namespace Niteo\WooCart\Defaults\Extend {
 		public function banner() {
 			$days = $this->date_diff();
 
+			// Default header and text
+			$header = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days!', $days );
+			$text   = esc_html__( 'Once you\'re finished with testing, you can export the changes and import them to a store on your own hosting. Or, you can continue with WooCart by subscribing to the 7-day free trial below. WoonderShop theme is included for free!', 'woocart-defaults' );
+
 			$buttons = array(
 				0 => array(
-					esc_html__( 'Learn more about WooCart »', 'woocart-defaults' ),
-					'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
-				),
-				1 => array(
 					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
 					$this->purchase_link(),
+				),
+				1 => array(
+					esc_html__( 'Keep hosting on WooCart', 'woocart-defaults' ),
+					'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
 				),
 			);
 
 			// conditional logic
-			if ( $days >= 7 && $days < 10 ) {
-				$header = sprintf( 'Your store will be deleted in %1$s days', $days );
-				$text   = esc_html__( 'Don\'t let your store get deleted! Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free.', 'woocart-defaults' );
-			} elseif ( $days >= 4 && $days < 7 ) {
+			if ( $days >= 4 && $days < 7 ) {
 				$header = esc_html__( 'Continue using WoonderShop for free with WooCart hosting', 'woocart-defaults' );
 				$text   = esc_html__( 'Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free!', 'woocart-defaults' );
-			} elseif ( $days < 4 ) {
-				$header = sprintf( 'Your sandbox for WoonderShop will expire anytime now', $days );
 
-				if ( $days > 0 ) {
-					$header = sprintf( 'Your sandbox for WoonderShop is expiring in %1$s days', $days );
-				}
-
-				$text    = sprintf( '<a href="%1$s">Export the content</a>, <a href="%2$s" target="_blank">buy the theme</a>, install it on your hosting and import the content and continue where you left off!', esc_url( admin_url( 'export.php' ) ), esc_url( $this->purchase_link() ) );
 				$buttons = array(
 					0 => array(
+						esc_html__( 'Learn more about WooCart', 'woocart-defaults' ),
+						'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
+					),
+					1 => array(
 						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
 						$this->purchase_link(),
 					),
-					1 => array(
-						esc_html__( 'I would like to keep this hosting.', 'woocart-defaults' ),
+				);
+			} elseif ( $days < 4 ) {
+				$header = esc_html__( 'Your store will be deleted very soon', 'woocart-defaults' );
+				$text   = esc_html__( 'Don\'t let your store get deleted! Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free.', 'woocart-defaults' );
+
+				$buttons = array(
+					0 => array(
+						esc_html__( 'Start WooCart FREE trial', 'woocart-defaults' ),
 						'https://woocart.com/pricing?plan=trial&store_id=' . $_SERVER['STORE_ID'],
+					),
+					1 => array(
+						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
+						$this->purchase_link(),
 					),
 				);
 			}
@@ -202,7 +214,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 				<p>
 					<a href="<?php echo $buttons[0][1]; ?>" class="button button-primary button-hero" target="_blank"><?php echo $buttons[0][0]; ?></a>
 					<a href="<?php echo $buttons[1][1]; ?>" class="button button-secondary button-hero" target="_blank"><?php echo $buttons[1][0]; ?></a><br/>
-					<small>If you have any questions, <a href="https://help.woocart.com/en/" target="_blank">contact us</a>.</small>
+					<small>Questions? <a href="https://www.proteusthemes.com/help/" target="_blank">Contact ProteusThemes!</a></small>
 				</p>
 			</div>
 			<?php
@@ -234,7 +246,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 		public function expiry_time() {
 			$created_time = $this->created_time();
 
-			return $created_time + ( DAY_IN_SECONDS * 7 );
+			return $created_time + ( DAY_IN_SECONDS * 10 );
 		}
 
 		/**
