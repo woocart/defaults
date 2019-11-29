@@ -109,7 +109,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 						<div class="welcome-panel-inner">
 							<!-- Export content -->
 							<h3>6. <?php esc_html_e( 'Export your website content', 'woocart-defaults' ); ?></h3>
-							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Tools > <a href="%1$s">Export Content</a></span>. There you can export this website content with all the changes you made, so that you will be able to import it on your own WordPress site (on your domain). All you have to do is to <a href="%2$s" target="_blank">purchase the %3$s theme</a> and follow the steps on the <a href="%1$s">Export content</a> page. Or just continue hosting with <a href="%4$s" target="_blank">WooCart!</a>', admin_url( 'tools.php?page=pt-sandbox-ocde' ), $this->purchase_link( 'wp-steps' ), explode( ' ', ( wp_get_theme() )->get( 'Name' ), 2 )[0], 'https://woocart.com/paddle/proteus?store_id=' . $_SERVER['STORE_ID'] ); ?></p>
+							<p><?php echo sprintf( 'Go to <span class="sandbox-setting-path">Tools > <a href="%1$s">Export Content</a></span>. There you can export this website content with all the changes you made, so that you will be able to import it on your own WordPress site (on your domain). All you have to do is to <a href="%2$s" target="_blank">purchase the %3$s theme</a> and follow the steps on the <a href="%1$s">Export content</a> page. Or just continue hosting with <a href="%4$s" target="_blank">WooCart!</a>', admin_url( 'tools.php?page=pt-sandbox-ocde' ), $this->purchase_link( 'wp-steps' ), explode( ' ', ( wp_get_theme() )->get( 'Name' ), 2 )[0], 'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'] ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -146,7 +146,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 				),
 				1 => array(
 					esc_html__( 'Keep hosting on WooCart', 'woocart-defaults' ),
-					'https://woocart.com/paddle/proteus?store_id=' . $_SERVER['STORE_ID'],
+					'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 				),
 			);
 
@@ -158,7 +158,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 				$buttons = array(
 					0 => array(
 						esc_html__( 'Learn more about WooCart', 'woocart-defaults' ),
-						'https://woocart.com/paddle/proteus?store_id=' . $_SERVER['STORE_ID'],
+						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 					),
 					1 => array(
 						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
@@ -172,7 +172,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 				$buttons = array(
 					0 => array(
 						esc_html__( 'Start WooCart FREE trial', 'woocart-defaults' ),
-						'https://woocart.com/paddle/proteus?store_id=' . $_SERVER['STORE_ID'],
+						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 					),
 					1 => array(
 						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
