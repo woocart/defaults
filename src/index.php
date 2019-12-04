@@ -15,17 +15,18 @@ namespace Niteo\WooCart {
 
 	require_once __DIR__ . '/vendor/autoload.php';
 
-	use Niteo\WooCart\Defaults\Filters;
-	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
-	use Niteo\WooCart\Defaults\Shortcodes;
-	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\AdminDashboard;
 	use Niteo\WooCart\Defaults\AutoLogin;
-	use Niteo\WooCart\Defaults\DenyList;
-	use Niteo\WooCart\Defaults\PluginManager;
-	use Niteo\WooCart\Defaults\PluginLogger;
 	use Niteo\WooCart\Defaults\CacheManager;
 	use Niteo\WooCart\Defaults\DemoCleaner;
+	use Niteo\WooCart\Defaults\DenyList;
+	use Niteo\WooCart\Defaults\Filters;
+	use Niteo\WooCart\Defaults\GDPR;
+	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
+	use Niteo\WooCart\Defaults\Optimizations;
+	use Niteo\WooCart\Defaults\PluginLogger;
+	use Niteo\WooCart\Defaults\PluginManager;
+	use Niteo\WooCart\Defaults\Shortcodes;
 	use Niteo\WooCart\Defaults\WooCommerce;
 
 	if ( class_exists( 'WP_CLI' ) ) {
@@ -45,15 +46,16 @@ namespace Niteo\WooCart {
 		 * 3. Support auto login from url with jwt token.
 		 */
 		if ( function_exists( 'add_action' ) ) {
-			new GDPR();
 			new AdminDashboard();
 			new AutoLogin();
-			new DenyList();
-			new PluginManager();
-			new PluginLogger();
 			new CacheManager();
-			new Reporter();
 			new DemoCleaner();
+			new DenyList();
+			new GDPR();
+			new Optimizations();
+			new PluginLogger();
+			new PluginManager();
+			new Reporter();
 			new WooCommerce();
 		}
 	}
