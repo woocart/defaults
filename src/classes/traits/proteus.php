@@ -145,7 +145,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 					$this->purchase_link(),
 				),
 				1 => array(
-					esc_html__( 'Keep hosting on WooCart', 'woocart-defaults' ),
+					esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
 					'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 				),
 			);
@@ -157,7 +157,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 
 				$buttons = array(
 					0 => array(
-						esc_html__( 'Learn more about WooCart', 'woocart-defaults' ),
+						esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
 						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 					),
 					1 => array(
@@ -171,7 +171,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 
 				$buttons = array(
 					0 => array(
-						esc_html__( 'Start WooCart FREE trial', 'woocart-defaults' ),
+						esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
 						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
 					),
 					1 => array(
