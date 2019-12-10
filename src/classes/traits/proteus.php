@@ -141,12 +141,12 @@ namespace Niteo\WooCart\Defaults\Extend {
 
 			$buttons = array(
 				0 => array(
-					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
-					$this->purchase_link(),
-				),
-				1 => array(
 					esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
 					'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
+				),
+				1 => array(
+					esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
+					$this->purchase_link(),
 				),
 			);
 
@@ -154,31 +154,9 @@ namespace Niteo\WooCart\Defaults\Extend {
 			if ( $days >= 4 && $days < 7 ) {
 				$header = esc_html__( 'Continue using WoonderShop for free with WooCart hosting', 'woocart-defaults' );
 				$text   = esc_html__( 'Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free!', 'woocart-defaults' );
-
-				$buttons = array(
-					0 => array(
-						esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
-						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
-					),
-					1 => array(
-						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
-						$this->purchase_link(),
-					),
-				);
 			} elseif ( $days < 4 ) {
 				$header = esc_html__( 'Your store will be deleted very soon', 'woocart-defaults' );
 				$text   = esc_html__( 'Don\'t let your store get deleted! Sign up for a free trial of WooCommerce managed hosting, WooCart, and continue using WoonderShop for free.', 'woocart-defaults' );
-
-				$buttons = array(
-					0 => array(
-						esc_html__( 'Learn more about WooCart hosting', 'woocart-defaults' ),
-						'https://woocart.com/special/woondershop?store_id=' . $_SERVER['STORE_ID'],
-					),
-					1 => array(
-						esc_html__( 'Buy the theme for $79', 'woocart-defaults' ),
-						$this->purchase_link(),
-					),
-				);
 			}
 			?>
 			<style>
