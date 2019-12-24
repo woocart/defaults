@@ -106,10 +106,10 @@ namespace Niteo\WooCart\Defaults {
 					// Set cookie with one year expiry
 					@setcookie(
 						'woocart_wp_user',
-						$_SERVER['HTTP_HOST'],
+						$_SERVER['store_id'],
 						time() + 60 * 60 * 24 * 365,
 						'/',
-						$_SERVER['SERVER_NAME'],
+						$_SERVER['HTTP_HOST'],
 						true
 					);
 				}
