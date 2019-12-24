@@ -81,39 +81,39 @@ namespace Niteo\WooCart\Defaults {
 					}
 				}
 			}
-        }
+		}
 
-        /**
-         * Set cookie for the admin which will be used by the backend to show appropriate message
-         * to the admin if the store goes down.
-         */
-        public function set_admin_cookie( $username ) {
-            global $wpdb;
+		/**
+		 * Set cookie for the admin which will be used by the backend to show appropriate message
+		 * to the admin if the store goes down.
+		 */
+		public function set_admin_cookie( $username ) {
+			global $wpdb;
 
-            if ( ! username_exists( $username ) ) {
-                return;
-            }
+			if ( ! username_exists( $username ) ) {
+				return;
+			}
 
-            // Get user info
-            $user = get_user_by( 'login', $username );
-            $role = $wpdb->prefix . 'capabilities';
+			// Get user info
+			$user = get_user_by( 'login', $username );
+			$role = $wpdb->prefix . 'capabilities';
 
-            // Get roles for the user and check if "administrator" role exists
-            $capabilities = $user->$role;
+			// Get roles for the user and check if "administrator" role exists
+			$capabilities = $user->$role;
 
-            foreach ( $capabilities as $role ) {
-                if ( 'administrator' == $role ) {
-                    // Set cookie with one year expiry
-                    setcookie(
-                        'woocart_wp_user',
-                        $_SERVER['HTTP_HOST'],
-                        time() + 60 * 60 * 24 * 365,
-                        '/',
-                        $_SERVER['SERVER_NAME'],
-                        true
-                    );
-                }
-            }
-        }
-    }
+			foreach ( $capabilities as $role ) {
+				if ( 'administrator' == $role ) {
+					// Set cookie with one year expiry
+					setcookie(
+						'woocart_wp_user',
+						$_SERVER['HTTP_HOST'],
+						time() + 60 * 60 * 24 * 365,
+						'/',
+						$_SERVER['SERVER_NAME'],
+						true
+					);
+				}
+			}
+		}
+	}
 }
