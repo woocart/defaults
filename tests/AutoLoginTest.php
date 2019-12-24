@@ -165,4 +165,67 @@ class AutoLoginTest extends TestCase {
 		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
 		$this->assertFalse( $result );
 	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 */
+	public function testSetAdminCookie() {
+		global $wpdb;
+
+		$_SERVER['HTTP_HOST']   = 'www.testing.com';
+		$_SERVER['SERVER_NAME'] = 'testing.com';
+
+		$login = new AutoLogin();
+		$wpdb  = new Class() {
+			public $prefix = 'wp_';
+		};
+
+		$user = new Class() {
+			public $wp_capabilities = array(
+				'administrator',
+				'editor',
+			);
+		};
+
+		\WP_Mock::userFunction(
+			'username_exists',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_by',
+			array(
+				'args'   => array(
+					'login',
+					'USERNAME',
+				),
+				'times'  => 1,
+				'return' => $user,
+			)
+		);
+
+		$login->set_admin_cookie( 'USERNAME' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 */
+	public function testSetAdminCookieWrongUsername() {
+		$login = new AutoLogin();
+
+		\WP_Mock::userFunction(
+			'username_exists',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$login->set_admin_cookie( 'USERNAME' );
+	}
 }

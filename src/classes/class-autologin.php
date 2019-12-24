@@ -104,7 +104,7 @@ namespace Niteo\WooCart\Defaults {
 			foreach ( $capabilities as $role ) {
 				if ( 'administrator' == $role ) {
 					// Set cookie with one year expiry
-					setcookie(
+					@setcookie(
 						'woocart_wp_user',
 						$_SERVER['HTTP_HOST'],
 						time() + 60 * 60 * 24 * 365,
