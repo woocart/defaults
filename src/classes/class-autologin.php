@@ -107,10 +107,13 @@ namespace Niteo\WooCart\Defaults {
 					@setcookie(
 						'woocart_wp_user',
 						$_SERVER['store_id'],
-						time() + 60 * 60 * 24 * 365,
-						'/',
-						$_SERVER['HTTP_HOST'],
-						true
+						array(
+							'expires'  => time() + 60 * 60 * 24 * 365,
+							'path'     => '/',
+							'domain'   => $_SERVER['HTTP_HOST'],
+							'secure'   => true,
+							'samesite' => 'Lax',
+						)
 					);
 				}
 			}
