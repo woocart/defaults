@@ -110,7 +110,7 @@ class AutoLoginTest extends TestCase {
 		$user->ID = 1;
 		$user->shouldReceive( 'get' )
 			->with( 'user_login' )
-			->once()
+			->times( 2 )
 			->andReturn( 'user' );
 		\WP_Mock::userFunction(
 			'get_users',
@@ -137,6 +137,7 @@ class AutoLoginTest extends TestCase {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
 		$mock->shouldAllowMockingProtectedMethods();
 		$mock->shouldReceive( 'set_cookie' )
+				 ->with( 'user' )
 				 ->andReturn( true );
 		$mock->auto_login();
 	}
@@ -181,6 +182,7 @@ class AutoLoginTest extends TestCase {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
 		$mock->shouldAllowMockingProtectedMethods();
 		$mock->shouldReceive( 'set_cookie' )
+				 ->with( 'USERNAME' )
 				 ->andReturn( true );
 
 		$wpdb = new Class() {
