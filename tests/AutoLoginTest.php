@@ -103,6 +103,7 @@ class AutoLoginTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::auto_login
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
 	public function testAuto_login() {
 		$user     = \Mockery::mock();
@@ -133,8 +134,11 @@ class AutoLoginTest extends TestCase {
 		);
 		\WP_Mock::expectAction( 'wp_login', 'user', $user );
 
-		$login = new AutoLogin();
-		$login->auto_login();
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
+		$mock->shouldAllowMockingProtectedMethods();
+		$mock->shouldReceive( 'set_cookie' )
+				 ->andReturn( true );
+		$mock->auto_login();
 	}
 
 	/**
@@ -168,16 +172,18 @@ class AutoLoginTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
-	public function testSetAdminCookie() {
+	public function testSetLoginCookie() {
 		global $wpdb;
 
-		$_SERVER['HTTP_HOST']   = 'www.testing.com';
-		$_SERVER['SERVER_NAME'] = 'testing.com';
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
+		$mock->shouldAllowMockingProtectedMethods();
+		$mock->shouldReceive( 'set_cookie' )
+				 ->andReturn( true );
 
-		$login = new AutoLogin();
-		$wpdb  = new Class() {
+		$wpdb = new Class() {
 			public $prefix = 'wp_';
 		};
 
@@ -208,14 +214,15 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 
-		$login->set_admin_cookie( 'USERNAME' );
+		$mock->set_login_cookie( 'USERNAME' );
 	}
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
-	public function testSetAdminCookieWrongUsername() {
+	public function testSetLoginCookieWrongUsername() {
 		$login = new AutoLogin();
 
 		\WP_Mock::userFunction(
@@ -226,6 +233,6 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 
-		$login->set_admin_cookie( 'USERNAME' );
+		$login->set_login_cookie( 'USERNAME' );
 	}
 }
