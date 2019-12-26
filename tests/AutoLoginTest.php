@@ -1,12 +1,25 @@
 <?php
 
+namespace Niteo\WooCart\Defaults;
+
 use Niteo\WooCart\Defaults\AutoLogin;
 use PHPUnit\Framework\TestCase;
 
+function setcookie( $name, $value, $options ) {
+	return AutoLoginTest::$functions->setcookie( $name, $value, $options );
+}
+function time() {
+	return 100;
+}
+
 class AutoLoginTest extends TestCase {
+
+	public static $functions;
 
 	function setUp() {
 		\WP_Mock::setUp();
+		self::$functions = \Mockery::mock();
+
 		\WP_Mock::userFunction(
 			'is_blog_installed',
 			array(
@@ -103,6 +116,7 @@ class AutoLoginTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::auto_login
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
 	public function testAuto_login() {
 		$user     = \Mockery::mock();
@@ -133,8 +147,11 @@ class AutoLoginTest extends TestCase {
 		);
 		\WP_Mock::expectAction( 'wp_login', 'user', $user );
 
-		$login = new AutoLogin();
-		$login->auto_login();
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
+		$mock->shouldAllowMockingProtectedMethods();
+		$mock->shouldReceive( 'set_cookie' )
+				 ->andReturn( true );
+		$mock->auto_login();
 	}
 
 	/**
@@ -168,13 +185,14 @@ class AutoLoginTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
-	public function testSetAdminCookie() {
+	public function testSetLoginCookie() {
 		global $wpdb;
 
-		$_SERVER['HTTP_HOST']   = 'www.testing.com';
-		$_SERVER['SERVER_NAME'] = 'testing.com';
+		$_SERVER['HTTP_HOST'] = 'HOST';
+		$_SERVER['STORE_ID']  = 'STORE_ID';
 
 		$login = new AutoLogin();
 		$wpdb  = new Class() {
@@ -208,14 +226,26 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 
-		$login->set_admin_cookie( 'USERNAME' );
+		self::$functions->shouldReceive( 'setcookie' )->with(
+			'woocart_wp_user',
+			'STORE_ID',
+			array(
+				'expires'  => 31536100,
+				'path'     => '/',
+				'domain'   => 'HOST',
+				'secure'   => true,
+				'samesite' => 'Lax',
+			)
+		);
+		$login->set_login_cookie( 'USERNAME' );
 	}
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_admin_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
+	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
 	 */
-	public function testSetAdminCookieWrongUsername() {
+	public function testSetLoginCookieWrongUsername() {
 		$login = new AutoLogin();
 
 		\WP_Mock::userFunction(
@@ -226,6 +256,6 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 
-		$login->set_admin_cookie( 'USERNAME' );
+		$login->set_login_cookie( 'USERNAME' );
 	}
 }
