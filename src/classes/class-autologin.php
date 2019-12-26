@@ -39,7 +39,7 @@ namespace Niteo\WooCart\Defaults {
 				wp_set_auth_cookie( $user->ID, true, '' );
 
 				// Set cookie for admin
-				$this->set_cookie( $user->get( 'user_login' ) );
+				$this->set_cookie();
 
 				do_action( 'wp_login', $user->get( 'user_login' ), $user );
 			}
@@ -92,7 +92,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @codeCoverageIgnore
 		 */
-		protected function set_cookie( $username ) {
+		protected function set_cookie() {
 			setcookie(
 				'woocart_wp_user',
 				$_SERVER['STORE_ID'],
@@ -127,7 +127,7 @@ namespace Niteo\WooCart\Defaults {
 			foreach ( $capabilities as $role ) {
 				if ( 'administrator' == $role ) {
 					// Set cookie with one year expiry
-					$this->set_cookie( $username );
+					$this->set_cookie();
 				}
 			}
 		}

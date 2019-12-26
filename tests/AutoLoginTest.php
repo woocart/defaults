@@ -1,12 +1,25 @@
 <?php
 
+namespace Niteo\WooCart\Defaults;
+
 use Niteo\WooCart\Defaults\AutoLogin;
 use PHPUnit\Framework\TestCase;
 
+function setcookie( $name, $value, $options ) {
+	return AutoLoginTest::$functions->setcookie( $name, $value, $options );
+}
+function time() {
+	return 100;
+}
+
 class AutoLoginTest extends TestCase {
+
+	public static $functions;
 
 	function setUp() {
 		\WP_Mock::setUp();
+		self::$functions = \Mockery::mock();
+
 		\WP_Mock::userFunction(
 			'is_blog_installed',
 			array(
@@ -110,7 +123,7 @@ class AutoLoginTest extends TestCase {
 		$user->ID = 1;
 		$user->shouldReceive( 'get' )
 			->with( 'user_login' )
-			->times( 2 )
+			->once()
 			->andReturn( 'user' );
 		\WP_Mock::userFunction(
 			'get_users',
@@ -137,7 +150,6 @@ class AutoLoginTest extends TestCase {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
 		$mock->shouldAllowMockingProtectedMethods();
 		$mock->shouldReceive( 'set_cookie' )
-				 ->with( 'user' )
 				 ->andReturn( true );
 		$mock->auto_login();
 	}
@@ -179,13 +191,11 @@ class AutoLoginTest extends TestCase {
 	public function testSetLoginCookie() {
 		global $wpdb;
 
-		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
-		$mock->shouldAllowMockingProtectedMethods();
-		$mock->shouldReceive( 'set_cookie' )
-				 ->with( 'USERNAME' )
-				 ->andReturn( true );
+		$_SERVER['HTTP_HOST'] = 'HOST';
+		$_SERVER['STORE_ID']  = 'STORE_ID';
 
-		$wpdb = new Class() {
+		$login = new AutoLogin();
+		$wpdb  = new Class() {
 			public $prefix = 'wp_';
 		};
 
@@ -216,7 +226,18 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 
-		$mock->set_login_cookie( 'USERNAME' );
+		self::$functions->shouldReceive( 'setcookie' )->with(
+			'woocart_wp_user',
+			'STORE_ID',
+			array(
+				'expires'  => 31536100,
+				'path'     => '/',
+				'domain'   => 'HOST',
+				'secure'   => true,
+				'samesite' => 'Lax',
+			)
+		);
+		$login->set_login_cookie( 'USERNAME' );
 	}
 
 	/**
