@@ -15,9 +15,10 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 */
 		public function is_proteus_active() {
 			$theme = wp_get_theme();
+			$plan  = $_SERVER['STORE_PLAN'];
 
 			// Looking for "WoonderShop" name for the theme or parent theme
-			if ( 'woondershop-pt' === $theme->template ) {
+			if ( 'woondershop-pt' === $theme->template && 'lead' === $plan ) {
 				return true;
 			}
 
