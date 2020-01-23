@@ -43,6 +43,7 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'woocommerce_after_add_attribute_fields', array( $cache, 'flush_redis_cache' ) );
 		\WP_Mock::expectActionAdded( 'woocommerce_after_edit_attribute_fields', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'updated_option', array( $cache, 'check_updated_option' ), 10, 3 );
 
 		$cache->__construct();
 	}
@@ -410,6 +411,22 @@ class CacheManagerTest extends TestCase {
 			->andReturn( true );
 
 		$method->invokeArgs( $mock, array() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::check_updated_option
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+	 */
+	public function testCheckUpdatedOption() {
+		$mock = $this->getMockBuilder( 'Niteo\WooCart\Defaults\CacheManager' )
+								 ->setMethods( array( 'flush_redis_cache' ) )
+								 ->getMock();
+		$mock->expects( $this->once() )
+					->method( 'flush_redis_cache' );
+
+		// $mock->shouldReceive('flush_redis_cache')->andReturn(true);
+		$mock->check_updated_option( 'widget_', 'old_value', 'new_value' );
 	}
 
 	protected static function getMethod( $name ) {
