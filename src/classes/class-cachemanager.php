@@ -93,6 +93,9 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'woocommerce_after_add_attribute_fields', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_redis_cache' ) );
 
+			// Fires before option is updated.
+			add_action( 'updated_option', array( &$this, 'check_updated_option' ), 10, 3 );
+
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
 			 */
@@ -292,6 +295,17 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $this->connected;
+		}
+
+		/**
+		 * Check for updated option to determine if cache needs to be flushed.
+		 */
+		public function check_updated_option( $key, $old_value, $value ) {
+			// Check if the updated option is an widget.
+			if ( strpos( $key, 'widget_' ) !== false ) {
+				// Flush redis cache for the widget option.
+				$this->flush_redis_cache();
+			}
 		}
 
 	}

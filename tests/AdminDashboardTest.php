@@ -146,7 +146,8 @@ class AdminDashboardTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
 	 */
 	public function testIsProteusActive() {
-		$dashboard = new AdminDashboard();
+		$dashboard             = new AdminDashboard();
+		$_SERVER['STORE_PLAN'] = 'lead';
 
 		$fake           = new stdClass();
 		$fake->template = 'woondershop-pt';
@@ -166,7 +167,8 @@ class AdminDashboardTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
 	 */
 	public function testIsProteusInactive() {
-		$dashboard = new AdminDashboard();
+		$dashboard             = new AdminDashboard();
+		$_SERVER['STORE_PLAN'] = 'cart';
 
 		$fake           = new stdClass();
 		$fake->template = 'astra';
