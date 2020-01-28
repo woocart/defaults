@@ -194,6 +194,9 @@ namespace Niteo\WooCart\Defaults {
 
 			// Flush FCGI cache.
 			$this->flush_fcgi_cache( $this->fcgi_path );
+
+			// Flush Beaver Builder cache.
+			$this->flush_bb_cache();
 		}
 
 		/**
@@ -276,6 +279,21 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $deleted;
+		}
+
+		/**
+		 * Flush cache for Beaver builder.
+		 */
+		public function flush_bb_cache() {
+			// Clear builder cache.
+			if ( class_exists( 'FLBuilderModel' ) && method_exists( 'FLBuilderModel', 'delete_asset_cache_for_all_posts' ) ) {
+				FLBuilderModel::delete_asset_cache_for_all_posts();
+			}
+
+			// Clear theme cache.
+			if ( class_exists( 'FLCustomizer' ) && method_exists( 'FLCustomizer', 'clear_all_css_cache' ) ) {
+				FLCustomizer::clear_all_css_cache();
+			}
 		}
 
 		/**
