@@ -128,7 +128,7 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Set static class for the Beaver Builder plugin (FlBuilderModel).
+		 * Set static class for the Beaver Builder plugin (FLCustomizer).
 		 */
 		public function setFlcustomizer( \FLCustomizer $fl_customizer ) {
 			$this->flcustomizer = $fl_customizer;
