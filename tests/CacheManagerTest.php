@@ -175,6 +175,7 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
 	 */
 	public function testCheckCacheRequestFlushException() {
 		$cache = new CacheManager();
@@ -314,6 +315,7 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
 	 */
 	public function testFlushCache() {
 		$method = self::getMethod( 'flush_cache' );
@@ -326,6 +328,8 @@ class CacheManagerTest extends TestCase {
 		$mock->shouldReceive( 'flush_redis_cache' )
 			->andReturn( true );
 		$mock->shouldReceive( 'flush_fcgi_cache' )
+			->andReturn( true );
+		$mock->shouldReceive( 'flush_bb_cache' )
 			->andReturn( true );
 
 		$method->invokeArgs( $mock, array() );
@@ -411,6 +415,26 @@ class CacheManagerTest extends TestCase {
 			->andReturn( true );
 
 		$method->invokeArgs( $mock, array() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::setFlbuilder
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::setFlcustomizer
+	 */
+	public function testFlushBbCache() {
+		$cache = new CacheManager();
+
+		$fl_builder = \Mockery::mock( '\FLBuilderModel' );
+		$fl_builder->shouldReceive( 'delete_asset_cache_for_all_posts' )->once();
+
+		$fl_customizer = \Mockery::mock( '\FLCustomizer' );
+		$fl_customizer->shouldReceive( 'clear_all_css_cache' )->once();
+
+		$cache->setFlbuilder( $fl_builder );
+		$cache->setFlcustomizer( $fl_customizer );
+		$cache->flush_bb_cache();
 	}
 
 	/**
