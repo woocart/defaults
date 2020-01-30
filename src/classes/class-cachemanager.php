@@ -51,8 +51,8 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Beaver Builder credentials
 		 */
-		protected $flbuilder;
-		protected $flcustomizer;
+		protected $fl_builder;
+		protected $fl_customizer;
 
 		/**
 		 * CacheManager constructor.
@@ -124,14 +124,14 @@ namespace Niteo\WooCart\Defaults {
 		 * Set static class for the Beaver Builder plugin (FlBuilderModel).
 		 */
 		public function setFlbuilder( \FLBuilderModel $fl_builder ) {
-			$this->flbuilder = $fl_builder;
+			$this->fl_builder = $fl_builder;
 		}
 
 		/**
 		 * Set static class for the Beaver Builder plugin (FLCustomizer).
 		 */
 		public function setFlcustomizer( \FLCustomizer $fl_customizer ) {
-			$this->flcustomizer = $fl_customizer;
+			$this->fl_customizer = $fl_customizer;
 		}
 
 		/**
@@ -307,12 +307,14 @@ namespace Niteo\WooCart\Defaults {
 		public function flush_bb_cache() {
 			// Clear builder cache.
 			if ( class_exists( 'FLBuilderModel' ) ) {
-				$this->flbuilder::delete_asset_cache_for_all_posts();
+				$this->setFlbuilder( new \FLBuilderModel() );
+				$this->fl_builder::delete_asset_cache_for_all_posts();
 			}
 
 			// Clear theme cache.
 			if ( class_exists( 'FLCustomizer' ) ) {
-				$this->flcustomizer::clear_all_css_cache();
+				$this->setFlcustomizer( new \FLCustomizer() );
+				$this->fl_customizer::clear_all_css_cache();
 			}
 		}
 
