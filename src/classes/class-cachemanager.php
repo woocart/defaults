@@ -49,12 +49,6 @@ namespace Niteo\WooCart\Defaults {
 		public $redis_credentials = array();
 
 		/**
-		 * Beaver Builder credentials
-		 */
-		protected $fl_builder;
-		protected $fl_customizer;
-
-		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
@@ -118,20 +112,6 @@ namespace Niteo\WooCart\Defaults {
 					'path'   => WP_REDIS_PATH,
 				);
 			}
-		}
-
-		/**
-		 * Set static class for the Beaver Builder plugin (FlBuilderModel).
-		 */
-		public function setFlbuilder( \FLBuilderModel $fl_builder ) {
-			$this->fl_builder = $fl_builder;
-		}
-
-		/**
-		 * Set static class for the Beaver Builder plugin (FLCustomizer).
-		 */
-		public function setFlcustomizer( \FLCustomizer $fl_customizer ) {
-			$this->fl_customizer = $fl_customizer;
 		}
 
 		/**
@@ -306,15 +286,13 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function flush_bb_cache() {
 			// Clear builder cache.
-			if ( class_exists( 'FLBuilderModel' ) ) {
-				$this->setFlbuilder( new \FLBuilderModel() );
-				$this->fl_builder::delete_asset_cache_for_all_posts();
+			if ( class_exists( 'FLBuilderModel' ) && method_exists( 'FLBuilderModel', 'delete_asset_cache_for_all_posts' ) ) {
+				\FLBuilderModel::delete_asset_cache_for_all_posts();
 			}
 
 			// Clear theme cache.
-			if ( class_exists( 'FLCustomizer' ) ) {
-				$this->setFlcustomizer( new \FLCustomizer() );
-				$this->fl_customizer::clear_all_css_cache();
+			if ( class_exists( 'FLCustomizer' ) && method_exists( 'FLCustomizer', 'clear_all_css_cache' ) ) {
+				\FLCustomizer::clear_all_css_cache();
 			}
 		}
 

@@ -420,19 +420,17 @@ class CacheManagerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::setFlbuilder
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::setFlcustomizer
 	 */
 	public function testFlushBbCache() {
-		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\CacheManager' )->makePartial();
+		$cache = new CacheManager();
 
-		$fl_builder    = \Mockery::mock( 'alias:\FLBuilderModel' )->shouldReceive( 'delete_asset_cache_for_all_posts' );
-		$fl_customizer = \Mockery::mock( 'alias:\FLCustomizer' )->shouldReceive( 'clear_all_css_cache' );
+		$builder = \Mockery::mock( 'alias:\FLBuilderModel' )
+							->shouldReceive( 'delete_asset_cache_for_all_posts' );
 
-		$mock->shouldReceive( 'setFlbuilder' )->with( $fl_builder )->andReturn( true );
-		$mock->shouldReceive( 'setFlcustomizer' )->with( $fl_customizer )->andReturn( true );
+		$customizer = \Mockery::mock( 'alias:\FLCustomizer' )
+							->shouldReceive( 'clear_all_css_cache' );
 
-		$mock->flush_bb_cache();
+		$cache->flush_bb_cache();
 	}
 
 	/**
