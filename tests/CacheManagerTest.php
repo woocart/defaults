@@ -45,6 +45,12 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'woocommerce_after_edit_attribute_fields', array( $cache, 'flush_redis_cache' ) );
 		\WP_Mock::expectActionAdded( 'updated_option', array( $cache, 'check_updated_option' ), 10, 3 );
 
+		\WP_Mock::expectActionAdded( 'elementor/editor/after_save', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'elementor/editor/after_save', array( $cache, 'flush_fcgi_cache' ) );
+
+		\WP_Mock::expectActionAdded( 'fl_builder_after_save_layout', array( $cache, 'flush_redis_cache' ) );
+		\WP_Mock::expectActionAdded( 'fl_builder_after_save_layout', array( $cache, 'flush_fcgi_cache' ) );
+
 		$cache->__construct();
 	}
 

@@ -85,6 +85,14 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache' ) );
 
+			// On Elementor save flush caches
+			add_action( 'elementor/editor/after_save', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'elementor/editor/after_save', array( &$this, 'flush_fcgi_cache' ) );
+
+			// On Beaver Builder save flush caches
+			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_redis_cache' ) );
+			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_fcgi_cache' ) );
+
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
@@ -193,7 +201,7 @@ namespace Niteo\WooCart\Defaults {
 			$this->flush_redis_cache();
 
 			// Flush FCGI cache.
-			$this->flush_fcgi_cache( $this->fcgi_path );
+			$this->flush_fcgi_cache();
 
 			// Flush Beaver Builder cache.
 			$this->flush_bb_cache();
@@ -252,14 +260,15 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush FCGI cache.
 		 */
-		public function flush_fcgi_cache( $directory ) {
+		public function flush_fcgi_cache() {
+
 			// Check for cache folder.
-			if ( ! is_dir( $directory ) || ! file_exists( $directory ) ) {
+			if ( ! is_dir( $this->fcgi_path ) || ! file_exists( $this->fcgi_path ) ) {
 				return;
 			}
 
 			// Cache location.
-			$scan = new \RecursiveDirectoryIterator( $directory, \RecursiveDirectoryIterator::SKIP_DOTS );
+			$scan = new \RecursiveDirectoryIterator( $this->fcgi_path, \RecursiveDirectoryIterator::SKIP_DOTS );
 
 			// Scan directory for files.
 			$files = new \RecursiveIteratorIterator( $scan, \RecursiveIteratorIterator::CHILD_FIRST );
