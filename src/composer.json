@@ -7,13 +7,12 @@
   ],
   "type": "wordpress-plugin",
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.3.0",
     "symfony/yaml": "^3.3",
     "ext-json": "*",
     "ext-gd": "*",
-    "krakjoe/pthreads-polyfill": "^1.1",
+    "ext-redis": "*",
     "lcobucci/jwt": "^3.3",
-    "predis/predis": "^1.1",
     "ext-zend-opcache": "*"
   },
   "autoload": {

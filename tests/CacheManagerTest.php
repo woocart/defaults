@@ -179,7 +179,6 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
 	 */
@@ -218,6 +217,13 @@ class CacheManagerTest extends TestCase {
 			)
 		);
 
+		\WP_Mock::userFunction(
+			'add_query_arg',
+			array(
+				'return' => true,
+			)
+		);
+
 		// One cannot mock protected core functions, so we only patch
 		// when opcache is not enabled
 		if ( ! function_exists( 'opcache_reset' ) ) {
@@ -229,10 +235,8 @@ class CacheManagerTest extends TestCase {
 			);
 		}
 
-		define( 'WP_REDIS_SCHEME', 'unix' );
 		define( 'WP_REDIS_PATH', '/path/to/fake/redis.sock' );
 
-		$this->expectException( \Predis\Connection\ConnectionException::class );
 		$cache->check_cache_request();
 	}
 
@@ -242,7 +246,6 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testCheckCacheRequestFlushComplete() {
@@ -297,22 +300,14 @@ class CacheManagerTest extends TestCase {
 				'return' => true,
 			)
 		);
+		\WP_Mock::userFunction(
+			'add_query_arg',
+			array(
+				'return' => true,
+			)
+		);
 
 		$mock->check_cache_request();
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::redis_connect
-	 */
-	public function testRedisConnect() {
-		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-			->shouldAllowMockingProtectedMethods()
-			->makePartial();
-		$mock->shouldReceive( 'redis_connect' )
-			->andReturn( true );
-
-		$this->assertTrue( $mock->redis_connect() );
 	}
 
 	/**
@@ -346,16 +341,22 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheTrue() {
-		$method  = self::getMethod( 'flush_fcgi_cache' );
 		$plugins = new CacheManager();
 
 		// FIX: for failing test
-		$fp = fopen( 'tests/cache/tmp.txt', 'wb' );
-		fwrite( $fp, 'Some text..' );
-		fclose( $fp );
+		@mkdir( 'tests/cache' );
+		@mkdir( 'tests/cache/a' );
+		@mkdir( 'tests/cache/f' );
+		@mkdir( 'tests/cache/d' );
+		file_put_contents( 'tests/cache/a/aaa', 'data' );
+		file_put_contents( 'tests/cache/f/aaa', 'data' );
+		file_put_contents( 'tests/cache/d/aaa', 'data' );
+		$plugins->fcgi_path = 'tests/cache';
 
-		$this->assertTrue( $method->invokeArgs( $plugins, array( 'tests/cache' ) ) );
-		$this->assertFalse( file_exists( 'tests/cache/tmp.txt' ) );
+		$this->assertTrue( $plugins->flush_fcgi_cache() );
+		$this->assertFalse( file_exists( 'tests/cache/a/aaa' ) );
+		$this->assertFalse( file_exists( 'tests/cache/f/aaa' ) );
+		$this->assertFalse( file_exists( 'tests/cache/d/aaa' ) );
 	}
 
 	/**
@@ -363,10 +364,8 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheFalse() {
-		$method  = self::getMethod( 'flush_fcgi_cache' );
 		$plugins = new CacheManager();
-
-		$this->assertFalse( $method->invokeArgs( $plugins, array( 'tests/cache' ) ) );
+		$this->assertFalse( $plugins->flush_fcgi_cache() );
 	}
 
 	/**
@@ -374,10 +373,10 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheNoDirectory() {
-		$method  = self::getMethod( 'flush_fcgi_cache' );
-		$plugins = new CacheManager();
+		$plugins            = new CacheManager();
+		$plugins->fcgi_path = 'foo/tests/cache';
 
-		$this->assertEmpty( $method->invokeArgs( $plugins, array( 'non/existent/directory' ) ) );
+		$this->assertFalse( $plugins->flush_fcgi_cache() );
 	}
 
 	/**
@@ -385,10 +384,6 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
 	 */
 	public function testFlushRedisCache() {
-		$method = self::getMethod( 'flush_redis_cache' );
-		$mock   = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
-			->shouldAllowMockingProtectedMethods()
-			->makePartial();
 
 		\WP_Mock::userFunction(
 			'wp_cache_flush',
@@ -397,30 +392,11 @@ class CacheManagerTest extends TestCase {
 			)
 		);
 
-		$mock->shouldReceive( 'redis_connect' )
+		$redis = \Mockery::mock( '\Redis' );
+		$redis->shouldReceive( 'flushAll' )
 			->andReturn( true );
-		$mock->connected = true;
-
-		// Fake class with the required method for mocking.
-		$fake = new class()
-		{
-			public function supportsCommand( $arg ) {
-				return true;
-			}
-		};
-
-		$mock->redis = \Mockery::mock( 'Predis\ClientInterface' );
-		$mock->redis->shouldReceive( 'getProfile' )
-			->andReturn( $fake );
-
-		$mock->redis->shouldReceive( 'scan' )
-			->withArgs( array( 0, array( 'MATCH' => 'cache%3A*' ) ) )
-			->andReturn( array( 0, array( 'cache%3A1st' ) ) );
-		$mock->redis->shouldReceive( 'del' )
-			->withArgs( array( 'cache%3A1st' ) )
-			->andReturn( true );
-
-		$method->invokeArgs( $mock, array() );
+		$cache = new CacheManager();
+		$cache->flush_redis_cache();
 	}
 
 	/**

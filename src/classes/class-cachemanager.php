@@ -10,9 +10,6 @@
 
 namespace Niteo\WooCart\Defaults {
 
-	use Predis\Client;
-	use Predis\Collection\Iterator\Keyspace;
-
 	/**
 	 * Class CacheManager
 	 *
@@ -20,19 +17,6 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class CacheManager {
 
-		/**
-		 * The Redis client.
-		 *
-		 * @var mixed
-		 */
-		public $redis;
-
-		/**
-		 * Track if Redis is available.
-		 *
-		 * @var bool
-		 */
-		public $connected = false;
 
 		/**
 		 * FCGI Cache path.
@@ -46,7 +30,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var array
 		 */
-		public $redis_credentials = array();
+		public $redis_credentials = '/var/www/cache/redis.sock';
 
 		/**
 		 * CacheManager constructor.
@@ -114,11 +98,8 @@ namespace Niteo\WooCart\Defaults {
 			/**
 			 * If the connection constants are defined, we use them.
 			 */
-			if ( defined( 'WP_REDIS_SCHEME' ) && defined( 'WP_REDIS_PATH' ) ) {
-				$this->redis_credentials = array(
-					'scheme' => WP_REDIS_SCHEME,
-					'path'   => WP_REDIS_PATH,
-				);
+			if ( defined( 'WP_REDIS_PATH' ) ) {
+				$this->redis_credentials = WP_REDIS_PATH;
 			}
 		}
 
@@ -238,23 +219,15 @@ namespace Niteo\WooCart\Defaults {
 			// Flush WordPress cache object.
 			wp_cache_flush();
 
-			// To access whether cache was flushed or not.
-			$deleted = false;
+			try {
+				// Make connection.
+				$redis = new \Redis();
+				$redis->connect( $this->redis_credentials );
+				$redis->flushAll();
+			} catch ( \Exception $e ) {
 
-			// Purge redis keys.
-			// Connect to Redis instance.
-			$this->redis_connect();
-
-			// Continue if the connection was successful.
-			if ( $this->connected ) {
-				// Find keys matching - cache:*
-				// It has been URI encoded to cache%3A*
-				$pattern = 'cache%3A*';
-
-				foreach ( new Keyspace( $this->redis, $pattern ) as $key ) {
-					$this->redis->del( $key );
-				}
 			}
+
 		}
 
 		/**
@@ -264,7 +237,7 @@ namespace Niteo\WooCart\Defaults {
 
 			// Check for cache folder.
 			if ( ! is_dir( $this->fcgi_path ) || ! file_exists( $this->fcgi_path ) ) {
-				return;
+				return false;
 			}
 
 			// Cache location.
@@ -283,6 +256,9 @@ namespace Niteo\WooCart\Defaults {
 					unlink( $file->getRealPath() );
 
 					// Set it to true since we deleted a file.
+					$deleted = true;
+				} else {
+					rmdir( $file->getRealPath() );
 					$deleted = true;
 				}
 			}
@@ -305,24 +281,6 @@ namespace Niteo\WooCart\Defaults {
 			}
 		}
 
-		/**
-		 * Attempting connection with Redis.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		protected function redis_connect() {
-			// Make connection.
-			$this->redis = new Client( $this->redis_credentials );
-			$this->redis->connect();
-
-			// Throws exception if Redis is unavailable.
-			if ( $this->redis->isConnected() ) {
-				// Connection set to true.
-				$this->connected = true;
-			}
-
-			return $this->connected;
-		}
 
 		/**
 		 * Check for updated option to determine if cache needs to be flushed.
