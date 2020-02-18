@@ -69,7 +69,6 @@ namespace Niteo\WooCart\Defaults {
 			'duplicator',
 			'easy-404-redirect',
 			'easy-digital-downloads-htaccess-editor',
-			'easy-theme-and-plugin-upgrades',
 			'email-subscribers',
 			'eps-301-redirects',
 			'eu-cookie-law',
