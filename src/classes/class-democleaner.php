@@ -124,6 +124,8 @@ namespace Niteo\WooCart\Defaults {
 								if ( $result ) {
 									++$this->products_count;
 								}
+							} else {
+								++$this->products_count;
 							}
 						}
 
