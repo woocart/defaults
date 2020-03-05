@@ -52,29 +52,16 @@ namespace Niteo\WooCart\Defaults {
 			// On theme switch.
 			add_action( 'check_theme_switched', array( &$this, 'flush_opcache' ) );
 
-			// Hooks for Redis & FCGI cache.
-			// Runs after a post is saved (after the database process is complete).
-			add_action( 'save_post', array( &$this, 'flush_redis_cache' ) );
-			add_action( 'save_post', array( &$this, 'flush_fcgi_cache' ) );
-
-			// Post delete.
-			add_action( 'after_delete_post', array( &$this, 'flush_redis_cache' ) );
-			add_action( 'after_delete_post', array( &$this, 'flush_fcgi_cache' ) );
-
 			// Runs after Customizer settings have been saved.
-			add_action( 'customize_save_after', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
 
 			// On product shipping (inventory decreases).
-			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache' ) );
 
 			// On Elementor save flush caches
-			add_action( 'elementor/editor/after_save', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'elementor/editor/after_save', array( &$this, 'flush_fcgi_cache' ) );
 
 			// On Beaver Builder save flush caches
-			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_redis_cache' ) );
 			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_fcgi_cache' ) );
 
 			// Hook to the theme & plugin editor AJAX function.
@@ -82,11 +69,7 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
 
 			// WooCommerce attributes
-			add_action( 'woocommerce_after_add_attribute_fields', array( &$this, 'flush_redis_cache' ) );
-			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_redis_cache' ) );
-
-			// Fires before option is updated.
-			add_action( 'updated_option', array( &$this, 'check_updated_option' ), 10, 3 );
+			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_fcgi_cache' ) );
 
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
@@ -216,8 +199,6 @@ namespace Niteo\WooCart\Defaults {
 		 * Flush Redis cache.
 		 */
 		public function flush_redis_cache() {
-			// Flush WordPress cache object.
-			wp_cache_flush();
 
 			try {
 				// Make connection.
@@ -280,18 +261,5 @@ namespace Niteo\WooCart\Defaults {
 				\FLCustomizer::clear_all_css_cache();
 			}
 		}
-
-
-		/**
-		 * Check for updated option to determine if cache needs to be flushed.
-		 */
-		public function check_updated_option( $key, $old_value, $value ) {
-			// Check if the updated option is an widget.
-			if ( strpos( $key, 'widget_' ) !== false ) {
-				// Flush redis cache for the widget option.
-				$this->flush_redis_cache();
-			}
-		}
-
 	}
 }
