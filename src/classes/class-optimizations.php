@@ -24,6 +24,9 @@ class Optimizations {
 		add_action( 'action_scheduler_queue_runner_time_limit', array( &$this, 'ashp_increase_time_limit' ) );
 		add_filter( 'action_scheduler_timeout_period', array( &$this, 'ashp_increase_timeout' ) );
 		add_filter( 'action_scheduler_failure_period', array( &$this, 'ashp_increase_timeout' ) );
+
+		// Stop woocommerce background image regeneration
+		add_filter( 'woocommerce_background_image_regeneration', '__return_false' );
 	}
 
 	/**
