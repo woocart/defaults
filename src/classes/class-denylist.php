@@ -102,6 +102,7 @@ namespace Niteo\WooCart\Defaults {
 			'multi-plugin-installer',
 			'one-click-ssl',
 			'p3-profiler',
+			'perfmatters',
 			'peters-login-redirect',
 			'portable-phpmyadmin',
 			'post-views-counter',
