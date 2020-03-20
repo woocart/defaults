@@ -11,6 +11,9 @@ namespace Niteo\WooCart\Defaults {
 
 		public function __construct() {
 			add_filter( 'woocommerce_general_settings', array( &$this, 'general_settings' ) );
+
+			// Disable WooCommerce admin plugin
+			add_filter( 'woocommerce_admin_disabled', '__return_true' );
 		}
 
 		/**
