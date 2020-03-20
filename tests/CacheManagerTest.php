@@ -403,4 +403,173 @@ class CacheManagerTest extends TestCase {
 		return $method;
 	}
 
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_save
+	 */
+	public function testFlushOnSaveSelectively() {
+
+		\WP_Mock::userFunction(
+			'wp_is_post_revision',
+			array(
+				'return' => false,
+			)
+		);
+		$post = new Class() {
+			public $post_type = 'post';
+		};
+
+		$page = new Class() {
+			public $post_type = 'page';
+		};
+
+		$product = new Class() {
+			public $post_type = 'product';
+		};
+
+		$postmethod    = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$pagemethod    = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$productmethod = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		$mock->shouldReceive( 'flush_fcgi_cache' )
+			->andReturn( true );
+
+		$postmethod->invokeArgs( $mock, array( 1, $post, false ) );
+		$pagemethod->invokeArgs( $mock, array( 1, $page, false ) );
+		$productmethod->invokeArgs( $mock, array( 1, $product, false ) );
+	}
+
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_save
+	 */
+	public function testFlushOnSaveSelectivelySkipRevision() {
+
+		\WP_Mock::userFunction(
+			'wp_is_post_revision',
+			array(
+				'return' => true,
+			)
+		);
+		$post = new Class() {
+			public $post_type = 'post';
+		};
+
+		$page = new Class() {
+			public $post_type = 'page';
+		};
+
+		$product = new Class() {
+			public $post_type = 'product';
+		};
+
+		$postmethod    = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$pagemethod    = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$productmethod = self::getMethod( 'flush_fcgi_cache_selectively_on_save' );
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		$mock->shouldNotReceive( 'flush_fcgi_cache' );
+
+		$postmethod->invokeArgs( $mock, array( 1, $post, false ) );
+		$pagemethod->invokeArgs( $mock, array( 1, $page, false ) );
+		$productmethod->invokeArgs( $mock, array( 1, $product, false ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 */
+	public function testFlushOnDeleteSelectivelyPost() {
+
+		$post = new Class() {
+			public $post_type = 'post';
+		};
+
+		\WP_Mock::userFunction(
+			'get_post_type',
+			array(
+				'return' => array( $post ),
+			)
+		);
+
+		$postmethod = self::getMethod( 'flush_fcgi_cache_selectively_on_delete' );
+
+		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		$mock->shouldReceive( 'flush_fcgi_cache' )
+			->andReturn( true );
+
+		$postmethod->invokeArgs( $mock, array( 1 ) );
+
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 */
+	public function testFlushOnDeleteSelectivelyPage() {
+
+		$page = new Class() {
+			public $post_type = 'page';
+		};
+
+		\WP_Mock::userFunction(
+			'get_post_type',
+			array(
+				'return' => array( $page ),
+			)
+		);
+
+		$pagemethod = self::getMethod( 'flush_fcgi_cache_selectively_on_delete' );
+		$mock       = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		$mock->shouldReceive( 'flush_fcgi_cache' )
+			->andReturn( true );
+
+		$pagemethod->invokeArgs( $mock, array( 1 ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 */
+	public function testFlushOnDeleteSelectivelyProduct() {
+
+		$product = new Class() {
+			public $post_type = 'product';
+		};
+
+		\WP_Mock::userFunction(
+			'get_post_type',
+			array(
+				'return' => array( $product ),
+			)
+		);
+
+		$productmethod = self::getMethod( 'flush_fcgi_cache_selectively_on_delete' );
+		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		$mock->shouldReceive( 'flush_fcgi_cache' )
+			->andReturn( true );
+
+		$productmethod->invokeArgs( $mock, array( 1 ) );
+	}
 }

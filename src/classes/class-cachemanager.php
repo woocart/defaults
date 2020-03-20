@@ -55,6 +55,13 @@ namespace Niteo\WooCart\Defaults {
 			// Runs after Customizer settings have been saved.
 			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
 
+			// Runs after post,page,product have benn updated
+			add_action( 'save_post_page', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_post', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_product', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+
+			add_action( 'delete_post', array( &$this, 'flush_fcgi_cache_selectively_on_delete' ) );
+
 			// On product shipping (inventory decreases).
 			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache' ) );
 
@@ -178,12 +185,12 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function show_notices() {
 			?>
-	  <div class="notice notice-success is-dismissible">
-		<p><strong><?php esc_html_e( 'Cache has been flushed successfully.', 'woocart-defaults' ); ?></strong></p>
-		<button type="button" class="notice-dismiss">
-		  <span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'woocart-defaults' ); ?></span>
-		</button>
-	  </div>
+			<div class="notice notice-success is-dismissible">
+				<p><strong><?php esc_html_e( 'Cache has been flushed successfully.', 'woocart-defaults' ); ?></strong></p>
+				<button type="button" class="notice-dismiss">
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'woocart-defaults' ); ?></span>
+				</button>
+			</div>
 			<?php
 		}
 
@@ -247,6 +254,39 @@ namespace Niteo\WooCart\Defaults {
 			return $deleted;
 		}
 
+		/**
+		 * Flush FCGI cache for posts pages and orders.
+		 */
+		public function flush_fcgi_cache_selectively_on_save( $post_id ) {
+
+			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_save", "post"=>$post_id] );
+			if ( wp_is_post_revision( $post_id ) ) {
+				return;
+			}
+			$this->flush_fcgi_cache();
+
+		}
+
+		/**
+		 * Flush FCGI cache for posts pages and orders.
+		 */
+		public function flush_fcgi_cache_selectively_on_delete( $post_id ) {
+
+			$post_type = get_post_type( $post_id );
+			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_delete", "post"=>$post_type] );
+			if ( 'post' === $post_type ) {
+				$this->flush_fcgi_cache();
+			}
+
+			if ( 'page' === $post_type ) {
+				$this->flush_fcgi_cache();
+			}
+
+			if ( 'product' === $post_type ) {
+				$this->flush_fcgi_cache();
+			}
+
+		}
 		/**
 		 * Flush cache for Beaver builder.
 		 */
