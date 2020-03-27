@@ -236,19 +236,22 @@ namespace Niteo\WooCart\Defaults {
 
 			// Check if any files deleted.
 			$deleted = false;
+			try {
+				// Loop over the object.
+				foreach ( $files as $file ) {
+					// Remove file from the directory.
+					if ( ! $file->isDir() ) {
+						unlink( $file->getRealPath() );
 
-			// Loop over the object.
-			foreach ( $files as $file ) {
-				// Remove file from the directory.
-				if ( ! $file->isDir() ) {
-					unlink( $file->getRealPath() );
-
-					// Set it to true since we deleted a file.
-					$deleted = true;
-				} else {
-					rmdir( $file->getRealPath() );
-					$deleted = true;
+						// Set it to true since we deleted a file.
+						$deleted = true;
+					} else {
+						rmdir( $file->getRealPath() );
+						$deleted = true;
+					}
 				}
+			} catch ( \Exception $e ) {
+				return false;
 			}
 
 			return $deleted;
