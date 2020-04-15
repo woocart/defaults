@@ -33,6 +33,13 @@ namespace Niteo\WooCart\Defaults {
 		public $redis_credentials = '/var/www/cache/redis.sock';
 
 		/**
+		 * Run real flush of FCGI cache on the end of request
+		 *
+		 * @var array
+		 */
+		public $do_flush_fcgi_cache = false;
+
+		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
@@ -53,7 +60,7 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'check_theme_switched', array( &$this, 'flush_opcache' ) );
 
 			// Runs after Customizer settings have been saved.
-			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
+			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache_shutdown' ) );
 
 			// Runs after post,page,product have benn updated
 			add_action( 'save_post_page', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
@@ -63,20 +70,20 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'delete_post', array( &$this, 'flush_fcgi_cache_selectively_on_delete' ) );
 
 			// On product shipping (inventory decreases).
-			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache' ) );
+			add_action( 'woocommerce_reduce_order_stock', array( &$this, 'flush_fcgi_cache_shutdown' ) );
 
 			// On Elementor save flush caches
-			add_action( 'elementor/editor/after_save', array( &$this, 'flush_fcgi_cache' ) );
+			add_action( 'elementor/editor/after_save', array( &$this, 'flush_fcgi_cache_shutdown' ) );
 
 			// On Beaver Builder save flush caches
-			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_fcgi_cache' ) );
+			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_fcgi_cache_shutdown' ) );
 
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
 
 			// WooCommerce attributes
-			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_fcgi_cache' ) );
+			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_fcgi_cache_shutdown' ) );
 
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
@@ -91,6 +98,8 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WP_REDIS_PATH' ) ) {
 				$this->redis_credentials = WP_REDIS_PATH;
 			}
+
+			register_shutdown_function( array( &$this, 'flush_fcgi_cache' ) );
 		}
 
 		/**
@@ -221,7 +230,19 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Flush FCGI cache.
 		 */
+		public function flush_fcgi_cache_shutdown() {
+			$this->do_flush_fcgi_cache = true;
+		}
+
+		/**
+		 * Flush FCGI cache.
+		 */
 		public function flush_fcgi_cache() {
+
+			// only flush cache on the end of request if it was requested by hooks
+			if ( ! $this->do_flush_fcgi_cache ) {
+				return;
+			}
 
 			// Check for cache folder.
 			if ( ! is_dir( $this->fcgi_path ) || ! file_exists( $this->fcgi_path ) ) {
@@ -266,7 +287,7 @@ namespace Niteo\WooCart\Defaults {
 			if ( wp_is_post_revision( $post_id ) ) {
 				return;
 			}
-			$this->flush_fcgi_cache();
+			$this->flush_fcgi_cache_shutdown();
 
 		}
 
