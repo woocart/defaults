@@ -12,7 +12,9 @@ namespace Niteo\WooCart\Defaults {
 
 	class Dashboard {
 
+
 		use Extend\Proteus;
+		use Extend\Dashboard;
 
 		public function __construct() {
 			add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
@@ -24,13 +26,7 @@ namespace Niteo\WooCart\Defaults {
 		public function plugins_loaded() {
 
 			$this->handle_dashboard_toggle();
-			// Check if customization is disabled
-			if ( 'yes' === get_option( '_hide_woocart_dashboard', 'no' ) ) {
-				return;
-			}
-
-			// Check for WooCommerce
-			if ( ! defined( 'WC_VERSION' ) ) {
+			if ( ! $this->is_dashboard_active() ) {
 				return;
 			}
 
@@ -45,7 +41,6 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_before_admin_bar_render', array( $this, 'reorder_admin_bar' ) );
 			add_action( 'woocommerce_dashboard_status_widget_top_seller_query', array( $this, 'top_seller_query' ) );
 		}
-
 
 		/**
 		 * Custom handler for dashboard switcher.
@@ -293,7 +288,6 @@ namespace Niteo\WooCart\Defaults {
 			// Return the `parent_file`.
 			return $parent_file;
 		}
-
 
 		/**
 		 * Register menu handler.

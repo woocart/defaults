@@ -61,5 +61,12 @@
 				<p><?php echo sprintf( 'Ready to publish and stop using <em>mywoocart.com</em> subdomain? <a href="%1$s" target="_blank">Go to WooCart</a> and set your domain under Settings.', 'https://woocart.com' ); ?></p>
 			</div>
 		</div>
+		<div class="welcome-panel-column welcome-panel-last">
+			<div class="welcome-panel-inner">
+				<!-- Set domain -->
+				<h3><?php esc_html_e( 'Use New Dashboard', 'woocart-defaults' ); ?></h3>
+				<p><?php echo sprintf( 'Switch to new optimized and faster dashboard? <a href="%1$s">Use WooCart WooCommerce Dashboard</a>.', admin_url( 'index.php?woocart-dashboard=0' ) ); ?></p>
+			</div>
+		</div>
 	</div>
 </div>

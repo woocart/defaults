@@ -3,9 +3,8 @@
 namespace Niteo\WooCart\Defaults {
 
 	use Lcobucci\JWT\Parser;
-	use Lcobucci\JWT\ValidationData;
 	use Lcobucci\JWT\Signer\Hmac\Sha256;
-
+	use Lcobucci\JWT\ValidationData;
 
 	/**
 	 * Class AutoLogin
@@ -14,10 +13,12 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class AutoLogin {
 
+
+		use Extend\Dashboard;
 		/**
 		 * AutoLogin constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			if ( is_blog_installed() ) { // only run login functions on installed blog
 				add_action( 'login_header', array( &$this, 'test_for_auto_login' ) );
 				add_action( 'wp_authenticate', array( &$this, 'set_login_cookie' ) );
@@ -27,7 +28,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Auto login as administrator without knowing username and password.
 		 */
-		function auto_login(): void {
+		public function auto_login(): void {
 			$users = get_users(
 				array(
 					'role'    => 'administrator',
@@ -68,17 +69,25 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Auto login to WP if auth token is valid.
 		 */
-		function test_for_auto_login(): void {
+		public function test_for_auto_login(): void {
 			if ( isset( $_GET['auth'] ) ) {
 				if ( is_user_logged_in() ) {
-					wp_redirect( get_admin_url() . '?reloggedin=' . microtime() ); // always redirect to public page
+					if ( $this->is_dashboard_active() ) {
+						wp_safe_redirect( add_query_arg( array( 'reloggedin' => microtime() ), admin_url( 'index.php?page=woocart-dashboard' ) ) ); // always redirect to public page
+						return;
+					}
+					wp_safe_redirect( add_query_arg( array( 'reloggedin' => microtime() ), admin_url() ) ); // always redirect to public page
 					return;
 				} elseif ( defined( 'WOOCART_LOGIN_SHARED_SECRET_PATH' ) ) {
 					$auth   = $_GET['auth'];
 					$secret = trim( file_get_contents( WOOCART_LOGIN_SHARED_SECRET_PATH ) );
 					if ( $this->validate_jwt_token( $auth, $secret ) ) { // used by dashboard login
 						$this->auto_login();
-						wp_redirect( get_admin_url() . '?limited=' . microtime() ); // always redirect to admin page
+						if ( $this->is_dashboard_active() ) {
+							wp_safe_redirect( add_query_arg( array( 'autologin' => microtime() ), admin_url( 'index.php?page=woocart-dashboard' ) ) ); // always redirect to admin page
+							return;
+						}
+						wp_safe_redirect( add_query_arg( array( 'autologin' => microtime() ), admin_url() ) ); // always redirect to admin page
 						return;
 					} else {
 						return;
