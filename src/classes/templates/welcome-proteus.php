@@ -47,7 +47,7 @@ $expires    = $this->date_diff();
 			<iframe
 				width="100%"
 				height="315"
-				src="https://www.youtube-nocookie.com/embed/tv6G4Z_RTak"
+				src="https://www.youtube-nocookie.com/embed/DDopwoLlk-g"
 				frameborder="0"
 				allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 				allowfullscreen

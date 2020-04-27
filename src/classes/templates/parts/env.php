@@ -11,7 +11,7 @@
 			?>
 			<div class="col-xs-12 woocart-sandbox">
 				<span class="woocart-sandbox-staging">STAGING</span>
-				<p>This is your staging store. All changes made to this store will not affect the live store. To publish changes go back to WooCart dashboard and click Publish to Live..</p>
+				<p>This is your staging store. All changes made to this store will not affect the live store. To publish changes go back to WooCart dashboard and click Publish to Live.</p>
 			</div>
 			<?php
 		} else {
