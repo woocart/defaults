@@ -16,6 +16,7 @@ namespace Niteo\WooCart {
 	require_once __DIR__ . '/vendor/autoload.php';
 
 	use Niteo\WooCart\Defaults\AdminDashboard;
+	use Niteo\WooCart\Defaults\Dashboard;
 	use Niteo\WooCart\Defaults\AutoLogin;
 	use Niteo\WooCart\Defaults\CacheManager;
 	use Niteo\WooCart\Defaults\DemoCleaner;
@@ -47,6 +48,7 @@ namespace Niteo\WooCart {
 		 */
 		if ( function_exists( 'add_action' ) ) {
 			new AdminDashboard();
+			new Dashboard();
 			new AutoLogin();
 			new CacheManager();
 			new DemoCleaner();
