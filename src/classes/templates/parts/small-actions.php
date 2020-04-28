@@ -23,9 +23,9 @@
                 Products
             </h2>
         </div>
-        <div class="col-xs-12 row">
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <a href="/wp-admin/edit.php?post_type=product">
+        <div class="row">
+            <a href="/wp-admin/edit.php?post_type=product" class="col-lg-6 col-xs-12 woocart-small-action">
+
                     <svg
                         width="13"
                         height="13"
@@ -47,30 +47,31 @@
                             fill="#512089"
                         />
                     </svg>
-                    &nbsp;Edit Products</a
-                >
-            </div>
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <svg
-                    width="13"
-                    height="9"
-                    viewBox="0 0 13 9"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M0.809453 4.9424C0.699803 4.76297 0.616103 4.61133 0.55774 4.5C0.616103 4.38867 0.699803 4.23703 0.809453 4.0576C1.05388 3.65763 1.42413 3.12471 1.92601 2.59331C2.93061 1.52961 4.43302 0.5 6.5 0.5C8.56698 0.5 10.0694 1.52961 11.074 2.59331C11.5759 3.12471 11.9461 3.65763 12.1905 4.0576C12.3002 4.23703 12.3839 4.38867 12.4423 4.5C12.3839 4.61134 12.3002 4.76297 12.1905 4.9424C11.9461 5.34237 11.5759 5.87529 11.074 6.40669C10.0694 7.47039 8.56698 8.5 6.5 8.5C4.43302 8.5 2.93061 7.47039 1.92601 6.40669C1.42413 5.87529 1.05388 5.34237 0.809453 4.9424Z"
-                        stroke="#512089"
-                    />
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M4.5 4C5.32843 4 6 3.32843 6 2.5C6 2.34835 5.97749 2.20195 5.93564 2.06396C6.11701 2.02212 6.30592 2 6.5 2C7.88071 2 9 3.11929 9 4.5C9 5.88071 7.88071 7 6.5 7C5.11929 7 4 5.88071 4 4.5C4 4.30592 4.02212 4.11701 4.06396 3.93564C4.20195 3.97749 4.34835 4 4.5 4Z"
-                        fill="#512089"
-                    />
-                </svg>
-                &nbsp;<a href="/wp-admin/admin.php?page=wc-reports&tab=stock">View Stock</a>
-            </div>
+                    &nbsp;Edit Products
+            </a>
+            <a href="/wp-admin/admin.php?page=wc-reports&tab=stock" class="col-lg-6 col-xs-12 woocart-small-action">
+
+
+                    <svg
+                        width="13"
+                        height="9"
+                        viewBox="0 0 13 9"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M0.809453 4.9424C0.699803 4.76297 0.616103 4.61133 0.55774 4.5C0.616103 4.38867 0.699803 4.23703 0.809453 4.0576C1.05388 3.65763 1.42413 3.12471 1.92601 2.59331C2.93061 1.52961 4.43302 0.5 6.5 0.5C8.56698 0.5 10.0694 1.52961 11.074 2.59331C11.5759 3.12471 11.9461 3.65763 12.1905 4.0576C12.3002 4.23703 12.3839 4.38867 12.4423 4.5C12.3839 4.61134 12.3002 4.76297 12.1905 4.9424C11.9461 5.34237 11.5759 5.87529 11.074 6.40669C10.0694 7.47039 8.56698 8.5 6.5 8.5C4.43302 8.5 2.93061 7.47039 1.92601 6.40669C1.42413 5.87529 1.05388 5.34237 0.809453 4.9424Z"
+                            stroke="#512089"
+                        />
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M4.5 4C5.32843 4 6 3.32843 6 2.5C6 2.34835 5.97749 2.20195 5.93564 2.06396C6.11701 2.02212 6.30592 2 6.5 2C7.88071 2 9 3.11929 9 4.5C9 5.88071 7.88071 7 6.5 7C5.11929 7 4 5.88071 4 4.5C4 4.30592 4.02212 4.11701 4.06396 3.93564C4.20195 3.97749 4.34835 4 4.5 4Z"
+                            fill="#512089"
+                        />
+                    </svg>
+                    View Stock
+            </a>
         </div>
     </div>
 </div>
@@ -92,13 +93,12 @@
         </div>
         <div class="col-xs-12">
             <h2 class="box-title">
-                Orders
+                Store
             </h2>
         </div>
-        <div class="col-xs-12 row">
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <a href="/wp-admin/edit.php?post_type=shop_order"
-                >
+        <div class="row">
+            <a href="/wp-admin/edit.php?post_type=shop_order" class="col-lg-6 col-xs-12 woocart-small-action">
+
                     <svg
                         width="12"
                         height="13"
@@ -115,12 +115,11 @@
                             fill="#512089"
                         />
                     </svg>
-                    &nbsp;Manage Orders</a
-                >
-            </div>
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <a href="/wp-admin/users.php?role=customer"
-                >
+                    &nbsp;Orders
+
+            </a>
+            <a href="/wp-admin/users.php?role=customer"class="col-lg-6 col-xs-12 woocart-small-action">
+
                     <svg
                         width="12"
                         height="13"
@@ -137,9 +136,9 @@
                             fill="#512089"
                         />
                     </svg>
-                    &nbsp;Manage Customers</a
-                >
-            </div>
+                    &nbsp;Customers
+
+            </a>
         </div>
     </div>
 </div>
@@ -167,13 +166,13 @@
         </div>
         <div class="col-xs-12">
             <h2 class="box-title">
-                Pages
+                Content
             </h2>
         </div>
-        <div class="col-xs-12 row">
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <a href="/wp-admin/edit.php"
-                >
+        <div class="row">
+
+            <a href="/wp-admin/edit.php" class="col-lg-6 col-xs-12 woocart-small-action">
+
                     <svg
                         width="11"
                         height="13"
@@ -184,12 +183,12 @@
                         <rect x="3" width="8" height="10" fill="#512089"/>
                         <path d="M2 3H0V13H8V11H2V3Z" fill="#512089"/>
                     </svg>
-                    &nbsp;Manage Posts</a
-                >
-            </div>
-            <div class="col-lg-6 col-xs-12 woocart-small-action">
-                <a href="/wp-admin/edit.php?post_type=page"
-                >
+                    &nbsp;Posts
+
+            </a>
+
+            <a  href="/wp-admin/edit.php?post_type=page" class="col-lg-6 col-xs-12 woocart-small-action">
+
                     <svg
                         width="13"
                         height="13"
@@ -201,9 +200,9 @@
                         <path d="M6 13V10H0V13H6Z" fill="#512089"/>
                         <path d="M13 13V10H7V13H13Z" fill="#512089"/>
                     </svg>
-                    &nbsp;Manage Pages</a
-                >
-            </div>
+                    &nbsp;Pages
+
+            </a>
         </div>
     </div>
 </div>

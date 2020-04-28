@@ -30,6 +30,11 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
+			// Check if user can access these methods
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				return;
+			}
+
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
 			add_action( 'admin_menu', array( $this, 'remove_original_page' ), 999 );
 			add_filter( 'custom_menu_order', array( $this, 'reorder_submenu_pages' ) );
@@ -40,6 +45,13 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_before_admin_bar_render', array( $this, 'add_dashboard_admin_bar_menu_item' ) );
 			add_action( 'wp_before_admin_bar_render', array( $this, 'reorder_admin_bar' ) );
 			add_action( 'woocommerce_dashboard_status_widget_top_seller_query', array( $this, 'top_seller_query' ) );
+			add_action( 'admin_bar_menu', array( &$this, 'admin_bar_menu' ), 99 );
+
+			// Enable simple tracing if cookie wc_tracing is present
+			if ( isset( $_COOKIE['wc_tracing'] ) ) {
+				add_action( 'admin_bar_menu', array( &$this, 'special_admin_bar_menu' ), 1000 );
+			}
+
 		}
 
 		/**
@@ -54,6 +66,74 @@ namespace Niteo\WooCart\Defaults {
 			}
 		}
 
+		/**
+		 * Custom handler for dashboard switcher.
+		 */
+		public function admin_bar_menu( $admin_bar ) {
+			$admin_bar->add_menu(
+				array(
+					'id'    => 'wc_manage_button',
+					'title' => esc_html__( 'WooCart App', 'woocart-defaults' ),
+					'meta'  => array(
+						'title' => esc_html__( 'WooCart App', 'woocart-defaults' ),
+					),
+					'href'  => 'https://app.woocart.com/stores/' . $_SERVER['STORE_ID'],
+				)
+			);
+
+		}
+		public function special_admin_bar_menu( $admin_bar ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+			$title = '<span style="background: #45bb8a; border-radius: 5px;  color: white;  padding: 0.3em;">LIVE</span>';
+			if ( $this->is_proteus_active() ) {
+				$title = '<span style="background: #364252;  border-radius: 5px;  color: white;  padding: 0.3em;">SANDBOX</span>';
+			}
+			if ( $this->is_staging() ) {
+				$title = '<span style="  background: #c83da9;  border-radius: 5px;  color: white;  padding: 0.3em;">STAGING</span>';
+			}
+			// Add button to the bar.
+			$admin_bar->add_menu(
+				array(
+					'parent' => '',
+					'id'     => 'wc_root',
+					'title'  => $title,
+					'meta'   => array(
+						'title' => esc_html__( 'WooCart', 'woocart-defaults' ),
+					),
+				)
+			);
+			$admin_bar->add_menu(
+				array(
+					'id'    => 'php_memory',
+					'title' => sprintf( "<span style='background-color: #d54e21;color: #fff; border-radius: 5px; padding: 0.3em;'>%s/%s</span> <span style='background-color: #d54e21;color: #fff; border-radius: 5px; padding: 0.3em;'>%ss</span>", $this->memory_used(), $this->memory_limit(), $this->req_time() ),
+					'href'  => '#php_memory',
+					'meta'  => array(
+						'title' => __( 'Memory usage and response time' ),
+					),
+				)
+			);
+		}
+
+		function req_time() {
+			return number_format( microtime( true ) - $_SERVER['REQUEST_TIME_FLOAT'], 2, '.', '' );
+		}
+		function memory_used() {
+			return $this->nice_size( memory_get_peak_usage() );
+		}
+
+		function memory_limit() {
+			return $this->nice_size( ini_get( 'memory_limit' ) * 1024 * 1024 );
+		}
+
+		function nice_size( $bytes ) {
+			$unit = array( 'B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB' );
+			if ( $bytes == 0 ) {
+				return '0 ' . $unit[0];
+			}
+			return @round( $bytes / pow( 1024, ( $i = floor( log( $bytes, 1024 ) ) ) ), 2 ) . ' ' . ( isset( $unit[ $i ] ) ? $unit[ $i ] : 'B' );
+		}
 		/**
 		 * Optimize WooCart widget query.
 		 *

@@ -58,6 +58,7 @@ class AutoLoginTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::test_for_auto_login
+	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_dashboard_active
 	 */
 	public function testTest_for_auto_login() {
 		\WP_Mock::userFunction(
@@ -68,13 +69,20 @@ class AutoLoginTest extends TestCase {
 			)
 		);
 		\WP_Mock::userFunction(
-			'wp_redirect',
+			'wp_safe_redirect',
 			array(
 				'times' => 2,
 			)
 		);
 		\WP_Mock::userFunction(
-			'get_admin_url',
+			'add_query_arg',
+			array(
+				'times'  => 2,
+				'return' => 'store.com/wp-admin',
+			)
+		);
+		\WP_Mock::userFunction(
+			'admin_url',
 			array(
 				'return' => 'store.com/wp-admin',
 				'times'  => 2,

@@ -14,7 +14,8 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 *
 		 * @return boolean
 		 */
-		public function is_dashboard_active() {
+		public function is_dashboard_active(): bool {
+
 			// Check if customization is disabled
 			if ( 'yes' === get_option( '_hide_woocart_dashboard', 'no' ) ) {
 				return false;
@@ -26,6 +27,26 @@ namespace Niteo\WooCart\Defaults\Extend {
 			}
 			return true;
 		}
+		/**
+		 * Checks if this is staging env.
+		 *
+		 * @return boolean
+		 */
+		public function is_staging(): bool {
+			// Check if customization is disabled
+			return $_SERVER['STORE_STAGING'] === 'yes';
+		}
+
+		/**
+		 * Checks if this is live env.
+		 *
+		 * @return boolean
+		 */
+		public function is_live(): bool {
+			// Check if customization is disabled
+			return $_SERVER['STORE_STAGING'] === 'no';
+		}
+
 
 	}
 

@@ -36,10 +36,18 @@ class DashboardTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\Dashboard::plugins_loaded
 	 * @covers \Niteo\WooCart\Defaults\Dashboard::__construct
 	 * @covers \Niteo\WooCart\Defaults\Dashboard::handle_dashboard_toggle
+	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_dashboard_active
 	 */
 	public function testplugins_loaded() {
 		$dashboard = new Dashboard();
 		define( 'WC_VERSION', 1 );
+		\WP_Mock::userFunction(
+			'current_user_can',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
 		\WP_Mock::userFunction(
 			'get_option',
 			array(
