@@ -16,9 +16,12 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 */
 		public function is_dashboard_active(): bool {
 
-			// Check if customization is disabled
-			if ( 'yes' === get_option( '_hide_woocart_dashboard', 'no' ) ) {
-				return false;
+			// don't allow toggle for staging
+			if ( ! $this->is_staging() ) {
+				// Check if customization is disabled
+				if ( 'yes' === get_option( '_hide_woocart_dashboard', 'no' ) ) {
+					return false;
+				}
 			}
 
 			// Check for WooCommerce

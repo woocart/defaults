@@ -1,4 +1,4 @@
-VERSION := 3.16.5
+VERSION := 3.16.6
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
@@ -63,7 +63,7 @@ i18n:
 	msgfmt -o src/i18n/woocart-defaults-ro_RO.mo src/i18n/woocart-defaults-ro_RO.po
 
 cover: clover.xml
-	bin/coverage-check clover.xml 85
+	bin/coverage-check clover.xml 80
 
 clean:
 	rm -rf vendor/ bin src/vendor/

@@ -14,17 +14,3 @@
 		</div>
 	</div>
 </div>
-<div class="woocart-item col-xs-12 col-lg-4">
-	<div class="woocart-box-widget">
-		<div class="col-xs-12">
-			<h2 class="box-title">
-				WooCommerce Recent Reviews
-			</h2>
-		</div>
-		<div class="col-xs-12">
-			<div id="woocommerce_dashboard_status">
-				<?php $wc_admin_dashboard->recent_reviews(); ?>
-			</div>
-		</div>
-	</div>
-</div>

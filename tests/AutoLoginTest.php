@@ -59,8 +59,10 @@ class AutoLoginTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
 	 * @covers \Niteo\WooCart\Defaults\AutoLogin::test_for_auto_login
 	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_dashboard_active
+	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_staging
 	 */
 	public function testTest_for_auto_login() {
+		$_SERVER['STORE_STAGING'] = 'no';
 		\WP_Mock::userFunction(
 			'is_user_logged_in',
 			array(

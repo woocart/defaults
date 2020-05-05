@@ -10,7 +10,7 @@
 		?>
 		<div class="col-xs-12 woocart-sandbox">
 			<span class="woocart-sandbox-staging">STAGING</span>
-			<span class="woocart-sandbox-desc">This is your staging store. All changes made to this store will not affect the live store. To publish changes go back to <a href="https://app.woocart.com/stores/<?php echo $_SERVER['STORE_ID']; ?>">WooCart dashboard</a> and click Publish to Live.</span>
+			<span class="woocart-sandbox-desc">This is your staging store. Do not edit products, orders, customers, or comments on staging. To publish changes go back to <a href="https://app.woocart.com/stores/<?php echo $_SERVER['STORE_ID']; ?>">WooCart dashboard</a> and click Publish to Live.</span>
 		</div>
 		<?php
 	} else {

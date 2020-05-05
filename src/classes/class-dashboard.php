@@ -46,12 +46,46 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_before_admin_bar_render', array( $this, 'reorder_admin_bar' ) );
 			add_action( 'woocommerce_dashboard_status_widget_top_seller_query', array( $this, 'top_seller_query' ) );
 			add_action( 'admin_bar_menu', array( &$this, 'admin_bar_menu' ), 99 );
+			add_action( 'get_user_option_admin_color', array( &$this, 'staging_admin_color' ), PHP_INT_MAX, 3 );
+			add_action( 'admin_notices', array( &$this, 'admin_notices' ), 99 );
 
 			// Enable simple tracing if cookie wc_tracing is present
 			if ( isset( $_COOKIE['wc_tracing'] ) ) {
 				add_action( 'admin_bar_menu', array( &$this, 'special_admin_bar_menu' ), 1000 );
 			}
 
+		}
+
+		/**
+		 * Show specific warning on specific pages.
+		 */
+		public function admin_notices() {
+			$current_screen = \get_current_screen();
+			$message        = __( 'Do not edit products, orders, customers, or comments on staging as they might get overwritten  with <b>Download Data</b> or <b>Publish to Live</b>.', 'woocart' );
+			$show           = array( 'edit-shop_order', 'users', 'edit-comments', 'edit-product' );
+			if ( $this->is_staging() && in_array( $current_screen->id, $show ) ) {
+				printf(
+					'<div class="notice" style="background: #e3d9f0;
+                border-radius: 8px;
+                border: none;
+                padding: 1em;"><span style="background: orange;
+                border-radius: 5px;
+                color: white;
+                padding: 0.3em;">WARNING</span> <span style="line-height: 22px;
+                font-size: 1.07em;">%1$s</span></div>',
+					$message
+				);
+			}
+		}
+
+		/**
+		 * Change color of dashboard if in staging.
+		 */
+		public function staging_admin_color( $result, $option, $user ) {
+			if ( $this->is_staging() ) {
+				return 'ectoplasm';
+			}
+			return $result;
 		}
 
 		/**
@@ -116,18 +150,18 @@ namespace Niteo\WooCart\Defaults {
 			);
 		}
 
-		function req_time() {
+		public function req_time() {
 			return number_format( microtime( true ) - $_SERVER['REQUEST_TIME_FLOAT'], 2, '.', '' );
 		}
-		function memory_used() {
+		public function memory_used() {
 			return $this->nice_size( memory_get_peak_usage() );
 		}
 
-		function memory_limit() {
+		public function memory_limit() {
 			return $this->nice_size( ini_get( 'memory_limit' ) * 1024 * 1024 );
 		}
 
-		function nice_size( $bytes ) {
+		public function nice_size( $bytes ) {
 			$unit = array( 'B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB' );
 			if ( $bytes == 0 ) {
 				return '0 ' . $unit[0];
