@@ -8,6 +8,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 
 	trait Proteus {
 
+
 		/**
 		 * Checks for the active theme to see if it's the proteus one or not.
 		 *
@@ -52,7 +53,26 @@ namespace Niteo\WooCart\Defaults\Extend {
 				$created_time = time();
 
 				// update option in the database
-				update_option( 'wc_instance_created', $created_time );
+				\update_option( 'wc_instance_created', $created_time );
+
+				\wp_remote_post(
+					'https://app.woocart.com/api/v1/lead/track/',
+					array(
+						'method'      => 'POST',
+						'timeout'     => 30,
+						'blocking'    => false,
+						'headers'     => array(
+							'Content-Type' => 'application/json',
+						),
+						'body'        => \wp_json_encode(
+							array(
+								'storeId' => $_SERVER['STORE_ID'],
+							)
+						),
+						'data_format' => 'body',
+					)
+				);
+
 			}
 
 			return $created_time;

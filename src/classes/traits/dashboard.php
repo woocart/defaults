@@ -41,6 +41,15 @@ namespace Niteo\WooCart\Defaults\Extend {
 		}
 
 		/**
+		 * Checks if this is dev env.
+		 *
+		 * @return boolean
+		 */
+		public function is_dev(): bool {
+			return 'dev' === $_SERVER['STORE_PLAN'];
+		}
+
+		/**
 		 * Checks if this is live env.
 		 *
 		 * @return boolean

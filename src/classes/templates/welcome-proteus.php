@@ -79,7 +79,7 @@ $expires    = $this->date_diff();
 				<div class="action-right col-xs-4">
 					<div class="row">
 						<div class="col-xs-12 center-xs" style="font-size: x-large;line-height: normal;">Hosting
-							Signup
+							+ Free Theme
 						</div>
 						<div class="col-xs-12 center-xs" style="padding-top: 2em;">Price: $9/month</div>
 					</div>

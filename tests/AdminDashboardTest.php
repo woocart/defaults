@@ -205,8 +205,8 @@ class AdminDashboardTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::created_time
 	 */
 	public function testCreatedTime() {
-		$dashboard = new AdminDashboard();
-
+		$dashboard           = new AdminDashboard();
+		$_SERVER['STORE_ID'] = 'uuid-42';
 		\WP_Mock::userFunction(
 			'get_option',
 			array(
@@ -218,6 +218,18 @@ class AdminDashboardTest extends TestCase {
 			'update_option',
 			array(
 				'return' => true,
+			)
+		);
+		\WP_Mock::userFunction(
+			'wp_remote_post',
+			array(
+				'return' => true,
+			)
+		);
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'return' => 'encoded',
 			)
 		);
 

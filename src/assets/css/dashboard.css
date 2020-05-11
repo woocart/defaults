@@ -970,7 +970,6 @@
 }
 
 .proteus h1 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 30px;
@@ -981,7 +980,6 @@
 }
 
 .proteus h5 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -1008,7 +1006,6 @@
 }
 
 .proteus h6 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -1026,8 +1023,6 @@
   padding: 1.2em;
   background: #512089;
   /* Purchase Theme Price: $79 */
-
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -1035,7 +1030,6 @@
   text-align: center;
   text-decoration: none;
   display: inline-flex;
-
   color: #ffffff;
 }
 
@@ -1043,7 +1037,6 @@
   /* Rectangle 23 */
 
   padding: 1.2em;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
