@@ -24,23 +24,23 @@ $expires    = $this->date_diff();
 
 			<h5>
 				Upload logo</br>
-				<span>Appearance ‣ Customize ‣ Theme options ‣ <a>Logo</a></span>
+				<span>Appearance ‣ Customize ‣ Theme options ‣ <a href="/wp-admin/customize.php?autofocus[control]=logo_img">Logo</a></span>
 			</h5>
 			<h5>
 				Pick your primary colors</br>
-				<span>Appearance ‣ Customize ‣ Theme options ‣ <a>Theme Layout & Colors</a></span>
+				<span>Appearance ‣ Customize ‣ Theme options ‣ <a href="/wp-admin/customize.php?autofocus[control]=primary_color">Theme Layout & Colors</a></span>
 			</h5>
 			<h5>
 				Change the main menu</br>
-				<span>Appearance ‣ <a>Menus</a></span>
+				<span>Appearance ‣ <a href="/wp-admin/nav-menus.php">Menus</a></span>
 			</h5>
 			<h5>
 				Edit website content</br>
-				<span>Pages ‣ <a>All Pages</a></span>
+				<span>Pages ‣ <a href="/wp-admin/edit.php?post_type=page">All Pages</a></span>
 			</h5>
 			<h5>
 				Export your WoonderShop sandbox</br>
-				<span>Tools ‣ <a>Export Content</a></span>
+				<span>Tools ‣ <a href="/wp-admin/tools.php?page=pt-sandbox-ocde">Export Content</a></span>
 			</h5>
 		</div>
 		<div class="col-xs-12 col-md-6">
