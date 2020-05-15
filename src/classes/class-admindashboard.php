@@ -25,7 +25,8 @@ namespace Niteo\WooCart\Defaults {
 		 * AdminDashboard constructor.
 		 */
 		public function __construct() {
-			add_action( 'admin_init', array( &$this, 'init' ) );
+			add_action( 'admin_init', array( $this, 'init' ) );
+			add_action( 'wp_login', array( $this, 'track' ) );
 		}
 
 		/**
@@ -45,6 +46,36 @@ namespace Niteo\WooCart\Defaults {
 				// add thickbox to the dashboard page
 				add_thickbox();
 			}
+		}
+
+
+		/**
+		 * Track user login to store.
+		 *
+		 * @codeCoverageIgnore
+		 */
+		public function track(): bool {
+			if ( ! $this->is_proteus_active() ) {
+				return false;
+			}
+
+			wp_remote_post(
+				'https://app.woocart.com/api/v1/lead/track/',
+				array(
+					'method'      => 'POST',
+					'timeout'     => 30,
+					'headers'     => array(
+						'Content-Type' => 'application/json',
+					),
+					'body'        => wp_json_encode(
+						array(
+							'storeId' => $_SERVER['STORE_ID'],
+						)
+					),
+					'data_format' => 'body',
+				)
+			);
+			return true;
 		}
 
 

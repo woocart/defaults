@@ -26,6 +26,7 @@ class AdminDashboardTest extends TestCase {
 		$dashboard = new AdminDashboard();
 
 		\WP_Mock::expectActionAdded( 'admin_init', array( $dashboard, 'init' ) );
+		\WP_Mock::expectActionAdded( 'wp_login', array( $dashboard, 'track' ) );
 
 		$dashboard->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -165,6 +166,51 @@ class AdminDashboardTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
 	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::track
+	 */
+	public function testTrackProteusLogin() {
+		$dashboard             = new AdminDashboard();
+		$_SERVER['STORE_PLAN'] = 'lead';
+		$_SERVER['STORE_ID']   = '1';
+
+		$fake           = new stdClass();
+		$fake->template = 'woondershop-pt';
+
+		\WP_Mock::userFunction(
+			'wp_remote_post',
+			array(
+				'return' => true,
+			)
+		);
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'return' => 'encoded',
+			)
+		);
+
+		$this->assertTrue( $dashboard->track() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::track
+	 */
+	public function testTrackProteusLoginSkip() {
+		$dashboard             = new AdminDashboard();
+		$_SERVER['STORE_PLAN'] = 'dev';
+		$_SERVER['STORE_ID']   = '1';
+
+		$fake           = new stdClass();
+		$fake->template = 'woondershop-pt';
+
+		$this->assertFalse( $dashboard->track() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
+	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
 	 */
 	public function testIsProteusInactive() {
 		$dashboard             = new AdminDashboard();
@@ -218,18 +264,6 @@ class AdminDashboardTest extends TestCase {
 			'update_option',
 			array(
 				'return' => true,
-			)
-		);
-		\WP_Mock::userFunction(
-			'wp_remote_post',
-			array(
-				'return' => true,
-			)
-		);
-		\WP_Mock::userFunction(
-			'wp_json_encode',
-			array(
-				'return' => 'encoded',
 			)
 		);
 
