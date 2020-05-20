@@ -24,7 +24,7 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Initializes the maintenance page.
 		 */
-		public function init() {
+		public function init() : void {
 			add_action( 'init', array( $this, 'maintenance_mode' ) );
 		}
 
@@ -110,7 +110,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @return boolean
 		 */
-		private function check_referrer() : bool {
+		public function check_referrer() : bool {
 			// Crawlers
 			$crawlers = array(
 				'Abacho'          => 'AbachoBOT',
@@ -155,15 +155,17 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @return boolean
 		 */
-		private function array_to_string( string $str, array $crawlers ) : bool {
+		public function array_to_string( string $str, array $crawlers ) : bool {
 			$regexp = '~(' . implode( '|', array_values( $crawlers ) ) . ')~i';
 			return (bool) preg_match( $regexp, $str );
 		}
 
 		/**
 		 * Renders the frontend template for the plugin.
+		 *
+		 * @codeCoverageIgnore
 		 */
-		private function render() : void {
+		public function render() : void {
 			/**
 			 * Using the nocache_headers() to ensure that no browser caches the
 			 * maintenance page.
