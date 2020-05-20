@@ -98,29 +98,29 @@
 	}
 	@media (max-width: 767px) {
 	  h2 {
-		font-size: 2em;
+		  font-size: 2em;
 	  }
 	  .header {
-		border: 4px solid #e5e5e5;
-		border-top-style: dashed;
-		border-left-style: dashed;
+	  border: 4px solid #e5e5e5;
+	  border-top-style: dashed;
+	  border-left-style: dashed;
 	  }
 	  .header .header-left {
-		display: none;
+		  display: none;
 	  }
 	  .header .header-right {
-		width: 100%;
+		  width: 100%;
 	  }
 	}
 	@media (max-width: 496px) {
 	  h2 {
-		font-size: 1.750em;
+		  font-size: 1.750em;
 	  }
 	  #page {
-		padding: 0 0.625rem;
+		  padding: 0 0.625rem;
 	  }
 	  .footer {
-		margin: 3.4375rem auto 0 auto;
+		  margin: 3.4375rem auto 0 auto;
 	  }
 	}
   </style>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles modifications made to the core process.
+ * Handles maintenance page for the store.
  *
  * @category   Plugins
  * @package    WordPress
@@ -11,78 +11,97 @@
 namespace Niteo\WooCart\Defaults {
 
 	/**
-	 * Class WordPress
+	 * Class MaintenanceMode
 	 *
 	 * @package Niteo\WooCart\Defaults
 	 */
-	class WordPress {
+	class MaintenanceMode {
+
+		public function __construct() {
+			add_action( 'plugins_loaded', array( $this, 'init' ) );
+		}
 
 		/**
-		 * Maintenance mode is initialized via this function.
+		 * Initializes the maintenance page.
+		 */
+		public function init() {
+			add_action( 'init', array( $this, 'maintenance_mode' ) );
+		}
+
+		/**
+		 * Perform checks to determine if the maintenance page needs to be
+		 * rendered instead of regular store.
 		 */
 		public function maintenance_mode() {
-			// Login URL for the admin
-			$login_url = wp_login_url();
+			// Check option to determine the status
+			if ( get_option( 'woocart_maintenance_mode', false ) ) {
+				// Login URL for the admin
+				$login_url = wp_login_url();
 
-			// Address of the current page
-			$server_url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+				// Address of the current page
+				$url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-			// Do nothing if on admin view
-			if ( ! is_admin() ) {
-				/**
-				 * We are checking for admin role, crawler status, and important
-				 * WP pages to bypass.
-				 */
+				if ( ! is_admin() ) {
+					/**
+					 * We are checking for admin role, crawler status, and important
+					 * WP pages to bypass.
+					 */
 
-				 // WP login
-				if ( false === strpos( $server_url, '/wp-login.php' ) ) {
-					return;
-				}
-
-				// WP admin
-				if ( false === strpos( $server_url, '/wp-admin/' ) ) {
-					return;
-				}
-
-				// Media uploads
-				if ( false === strpos( $server_url, '/async-upload.php' ) ) {
-					return;
-				}
-
-				// WP upgrade file
-				if ( false === strpos( $server_url, '/upgrade.php' ) ) {
-					return;
-				}
-
-				// Plugins folder
-				if ( false === strpos( $server_url, '/plugins/' ) ) {
-					return;
-				}
-
-				// XML-RPC
-				if ( false === strpos( $server_url, '/xmlrpc.php' ) ) {
-					return;
-				}
-
-				// Custom login URL
-				if ( false === strpos( $server_url, $login_url ) ) {
-					return;
-				}
-
-				// Checking for crawlers
-				if ( $this->check_referrer() ) {
-					return;
-				}
-
-				// Logged-in as admin
-				if ( is_user_logged_in() ) {
-					if ( current_user_can( 'manage_options' ) ) {
+					// WP login
+					if ( false !== strpos( $url, '/wp-login.php' ) ) {
 						return;
 					}
-				}
 
-				// Render the maintenance mode template
-				$this->render_template();
+					// WP admin
+					if ( false !== strpos( $url, '/wp-admin/' ) ) {
+						return;
+					}
+
+					// Media uploads
+					if ( false !== strpos( $url, '/async-upload.php' ) ) {
+						return;
+					}
+
+					// WP upgrade file
+					if ( false !== strpos( $url, '/upgrade.php' ) ) {
+						return;
+					}
+
+					// Plugins folder
+					if ( false !== strpos( $url, '/plugins/' ) ) {
+						return;
+					}
+
+					// XML-RPC
+					if ( false !== strpos( $url, '/xmlrpc.php' ) ) {
+						return;
+					}
+
+					// Custom login URL
+					if ( false !== strpos( $url, $login_url ) ) {
+						return;
+					}
+
+					// CLI
+					if ( defined( 'WP_CLI' ) && WP_CLI ) {
+						return;
+					}
+
+					// Checking for crawlers
+					if ( $this->check_referrer() ) {
+						return;
+					}
+
+					// Logged-in as admin
+					if ( is_user_logged_in() ) {
+						if ( current_user_can( 'manage_options' ) ) {
+							return;
+						}
+					}
+
+					// Render the maintenance mode template
+					$this->render();
+				}
 			}
 		}
 

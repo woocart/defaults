@@ -23,6 +23,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\DenyList;
 	use Niteo\WooCart\Defaults\Filters;
 	use Niteo\WooCart\Defaults\GDPR;
+	use Niteo\WooCart\Defaults\MaintenanceMode;
 	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
 	use Niteo\WooCart\Defaults\Optimizations;
 	use Niteo\WooCart\Defaults\PluginLogger;
@@ -32,7 +33,7 @@ namespace Niteo\WooCart {
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
-	} else {
+		// } else {
 		if ( function_exists( 'add_shortcode' ) ) {
 			new Shortcodes();
 		}
@@ -54,6 +55,7 @@ namespace Niteo\WooCart {
 			new DemoCleaner();
 			new DenyList();
 			new GDPR();
+			new MaintenanceMode();
 			new Optimizations();
 			new PluginLogger();
 			new PluginManager();
