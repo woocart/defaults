@@ -31,31 +31,25 @@ namespace Niteo\WooCart\Defaults {
 				// Address of the current page
 				$url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-				if ( ! is_admin() ) {
-					/**
-					 * We are checking for admin role and WP pages to bypass.
-					 */
+				// WooCommerce Forgot Password
+				if ( false !== strpos( $url, '/my-account/lost-password' ) ) {
+					return;
+				}
 
-					// WooCommerce Forgot Password
-					if ( false !== strpos( $url, '/my-account/lost-password' ) ) {
+				// Logged-in as admin
+				if ( is_user_logged_in() ) {
+					if ( current_user_can( 'manage_options' ) ) {
 						return;
 					}
-
-					// Logged-in as admin
-					if ( is_user_logged_in() ) {
-						if ( current_user_can( 'manage_options' ) ) {
-							return;
-						}
-					}
-
-					/**
-					 * Throw 503 error code which is handled by `woocart-default-backend`
-					 *
-					 * @see https://github.com/niteoweb/woocart-default-backend/blob/master/html/index.html
-					 */
-					status_header( 503 );
-					$this->terminate();
 				}
+
+				/**
+				 * Throw 503 error code which is handled by `woocart-default-backend`
+				 *
+				 * @see https://github.com/niteoweb/woocart-default-backend/blob/master/html/index.html
+				 */
+				status_header( 503 );
+				$this->terminate();
 			}
 		}
 

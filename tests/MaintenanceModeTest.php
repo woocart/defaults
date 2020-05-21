@@ -49,44 +49,6 @@ class MaintenanceModeTest extends TestCase {
 			)
 		);
 
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 */
-	public function testMaintenanceAdminTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'wp-admin/';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
 		$maintenance->maintenance_mode();
 	}
 
@@ -106,14 +68,6 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
 			)
 		);
 
@@ -156,14 +110,6 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
 			)
 		);
 
