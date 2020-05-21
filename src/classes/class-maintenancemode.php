@@ -98,7 +98,7 @@ namespace Niteo\WooCart\Defaults {
 					 * @see https://github.com/niteoweb/woocart-default-backend/blob/master/html/index.html
 					 */
 					status_header( 418 );
-					exit;
+					$this->terminate();
 				}
 			}
 		}
@@ -156,6 +156,15 @@ namespace Niteo\WooCart\Defaults {
 		public function array_to_string( string $str, array $crawlers ) : bool {
 			$regexp = '~(' . implode( '|', array_values( $crawlers ) ) . ')~i';
 			return (bool) preg_match( $regexp, $str );
+		}
+
+		/**
+		 * Wrapper around the exit() function.
+		 *
+		 * @codeCoverageIgnore
+		 */
+		protected function terminate() {
+			exit;
 		}
 
 	}

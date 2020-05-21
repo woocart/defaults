@@ -25,23 +25,9 @@ class MaintenanceModeTest extends TestCase {
 	public function testConstructor() {
 		$maintenance = new MaintenanceMode();
 
-		\WP_Mock::expectActionAdded( 'plugins_loaded', array( $maintenance, 'init' ) );
+		\WP_Mock::expectActionAdded( 'template_redirect', array( $maintenance, 'maintenance_mode' ) );
 
 		$maintenance->__construct();
-		\WP_Mock::assertHooksAdded();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::init
-	 */
-	public function testInit() {
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::expectActionAdded( 'init', array( $maintenance, 'maintenance_mode' ) );
-
-		$maintenance->init();
 		\WP_Mock::assertHooksAdded();
 	}
 
@@ -506,8 +492,9 @@ class MaintenanceModeTest extends TestCase {
 		$_SERVER['REQUEST_URI']     = 'something-random-post';
 
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\MaintenanceMode' )
+			->shouldAllowMockingProtectedMethods()
 			->makePartial();
-		$mock->shouldReceive( 'render' )
+		$mock->shouldReceive( 'terminate' )
 			->andReturn( true );
 
 		\WP_Mock::userFunction(
@@ -539,6 +526,14 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => false,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'status_header',
+			array(
+				'times'  => 1,
+				'return' => true,
 			)
 		);
 
