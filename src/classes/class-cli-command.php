@@ -330,5 +330,43 @@ namespace Niteo\WooCart\Defaults {
 				WP_CLI::error( $e );
 			}
 		}
+
+		/**
+		 * Toggle maintenance mode for the store.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <status>
+		 * : Maintenance mode status.
+		 * ---
+		 * options:
+		 *   - activate
+		 *   - deactivate
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd soft_maintenance activate
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function soft_maintenance( $args, $assoc_args ) {
+			try {
+				list($status) = $args;
+
+				if ( 'activate' === $status ) {
+					update_option( 'woocart_maintenance_mode', true );
+				} elseif ( 'deactivate' === $status ) {
+					update_option( 'woocart_maintenance_mode', false );
+				}
+
+				WP_CLI::log( sprintf( 'Maintenance mode has been %sd.', $status ) );
+			} catch ( \Exception $e ) {
+				WP_CLI::log( 'There was an error processing your request.' );
+				WP_CLI::error( $e );
+			}
+		}
 	}
 }
