@@ -31,42 +31,13 @@ class MaintenanceModeTest extends TestCase {
 		\WP_Mock::assertHooksAdded();
 	}
 
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testCheckReferrerFalse() {
-		$_SERVER['HTTP_USER_AGENT'] = 'fake';
-
-		$maintenance = new MaintenanceMode();
-		$this->assertFalse( $maintenance->check_referrer() );
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testCheckReferrerTrue() {
-		$_SERVER['HTTP_USER_AGENT'] = 'Googlebot';
-
-		$maintenance = new MaintenanceMode();
-		$this->assertTrue( $maintenance->check_referrer() );
-	}
-
-
 	/**
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
 	 */
-	public function testMaintenanceModeLoginTrue() {
+	public function testMaintenanceModeWCLostPassword() {
 		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'wp-login.php';
+		$_SERVER['REQUEST_URI'] = 'my-account/lost-password';
 
 		$maintenance = new MaintenanceMode();
 
@@ -75,14 +46,6 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
 			)
 		);
 
@@ -101,8 +64,6 @@ class MaintenanceModeTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
 	 */
 	public function testMaintenanceAdminTrue() {
 		$_SERVER['HTTP_HOST']   = 'woocart.com/';
@@ -119,61 +80,13 @@ class MaintenanceModeTest extends TestCase {
 		);
 
 		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
 			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceAsyncTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'async-upload.php';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
 			array(
 				'times'  => 1,
 				'return' => true,
 			)
 		);
 
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
 		$maintenance->maintenance_mode();
 	}
 
@@ -181,258 +94,10 @@ class MaintenanceModeTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceUpgradeTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'upgrade.php';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenancePluginsTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'plugins/';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceXmlRpcTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'xmlrpc.php';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceCustomLoginTrue() {
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'something-else.php';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'something-else.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceCliTrue() {
-		define( 'WP_CLI', true );
-
-		$_SERVER['HTTP_HOST']   = 'woocart.com/';
-		$_SERVER['REQUEST_URI'] = 'some-random-post';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'wp-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
-	 */
-	public function testMaintenanceReferrerTrue() {
-		$_SERVER['HTTP_USER_AGENT'] = 'Googlebot';
-		$_SERVER['HTTP_HOST']       = 'woocart.com/';
-		$_SERVER['REQUEST_URI']     = 'something-random-post';
-
-		$maintenance = new MaintenanceMode();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'custom-login.php',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'is_admin',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
-
-		$maintenance->maintenance_mode();
-	}
-
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
 	 */
 	public function testMaintenanceLoggedIn() {
-		$_SERVER['HTTP_USER_AGENT'] = 'fake';
-		$_SERVER['HTTP_HOST']       = 'woocart.com/';
-		$_SERVER['REQUEST_URI']     = 'something-random-post';
+		$_SERVER['HTTP_HOST']   = 'woocart.com/';
+		$_SERVER['REQUEST_URI'] = 'something-random-post';
 
 		$maintenance = new MaintenanceMode();
 
@@ -441,14 +106,6 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'custom-login.php',
 			)
 		);
 
@@ -483,13 +140,10 @@ class MaintenanceModeTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
 	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::check_referrer
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::array_to_string
 	 */
-	public function testMaintenanceRenderMode() {
-		$_SERVER['HTTP_USER_AGENT'] = 'fake';
-		$_SERVER['HTTP_HOST']       = 'woocart.com/';
-		$_SERVER['REQUEST_URI']     = 'something-random-post';
+	public function testMaintenanceStatusHeader() {
+		$_SERVER['HTTP_HOST']   = 'woocart.com/';
+		$_SERVER['REQUEST_URI'] = 'something-random-post';
 
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\MaintenanceMode' )
 			->shouldAllowMockingProtectedMethods()
@@ -502,14 +156,6 @@ class MaintenanceModeTest extends TestCase {
 			array(
 				'times'  => 1,
 				'return' => true,
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_login_url',
-			array(
-				'times'  => 1,
-				'return' => 'custom-login.php',
 			)
 		);
 
