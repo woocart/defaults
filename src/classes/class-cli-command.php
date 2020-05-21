@@ -345,7 +345,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * ## EXAMPLES
 		 *
-		 *     wp wcd soft_maintenance enable
+		 *     wp wcd soft_maintenance activate
 		 *
 		 * @codeCoverageIgnore
 		 * @param $args array list of command line arguments.

@@ -18,14 +18,7 @@ namespace Niteo\WooCart\Defaults {
 	class MaintenanceMode {
 
 		public function __construct() {
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
-		}
-
-		/**
-		 * Initializes the maintenance page.
-		 */
-		public function init() : void {
-			add_action( 'init', array( $this, 'maintenance_mode' ) );
+			add_action( 'template_redirect', array( $this, 'maintenance_mode' ) );
 		}
 
 		/**
@@ -99,8 +92,13 @@ namespace Niteo\WooCart\Defaults {
 						}
 					}
 
-					// Render the maintenance mode template
-					$this->render();
+					/**
+					 * Throw 418 error code which is handled by `woocart-default-backend`
+					 *
+					 * @see https://github.com/niteoweb/woocart-default-backend/blob/master/html/index.html
+					 */
+					status_header( 418 );
+					exit;
 				}
 			}
 		}
@@ -158,26 +156,6 @@ namespace Niteo\WooCart\Defaults {
 		public function array_to_string( string $str, array $crawlers ) : bool {
 			$regexp = '~(' . implode( '|', array_values( $crawlers ) ) . ')~i';
 			return (bool) preg_match( $regexp, $str );
-		}
-
-		/**
-		 * Renders the frontend template for the plugin.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		public function render() : void {
-			/**
-			 * Using the nocache_headers() to ensure that no browser caches the
-			 * maintenance page.
-			 */
-			nocache_headers();
-			ob_start();
-
-			// Template
-			require_once __DIR__ . '/templates/maintenance-mode.php';
-
-			ob_flush();
-			exit;
 		}
 
 	}
