@@ -10,16 +10,22 @@ namespace Niteo\WooCart\Defaults\Extend {
 
 		/**
 		 * Search for keywords in the plugin search query.
+		 *
+		 * @param object $args Plugin API arguments
+		 * @param string $action The type of information being requested from the Plugin Installation API
+		 *
+		 * @return void
 		 */
-		public function search_notification( $action, $args ) {
-			if ( isset( $action->search ) ) {
+		public function search_notification( object $args, string $action ) : void {
+			if ( isset( $args->search ) ) {
 				// Plugin search query
-				$this->notification['term'] = strip_tags( $action->search );
+				$this->notification['term'] = strip_tags( $args->search );
 
 				// Check for keywords
 				$filter = array_filter(
 					array(
 						'backup',
+						'backwpup',
 						'duplicate',
 						'restore',
 						'security',
@@ -35,17 +41,17 @@ namespace Niteo\WooCart\Defaults\Extend {
 				);
 
 				if ( $this->notification['matches'] ) {
-					  // Add the right notification message
+					// Add the right notification message
 					if ( 'backup' === $this->notification['matches'] ) {
 						$this->notification['message'] = esc_html__( 'Warning! You are searching for backup plugins. WooCart strongly advises against installing this type of plugins because it may significantly impact staging creation. Use the Backups tab in the WooCart dashboard instead. Contact support for more information.', 'woocart-defaults' );
 					}
 
 					if ( 'security' === $this->notification['matches'] ) {
-						  $this->notification['message'] = esc_html__( 'Warning! You are searching for security plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing security configuration. Contact support for more information.', 'woocart-defaults' );
+						$this->notification['message'] = esc_html__( 'Warning! You are searching for security plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing security configuration. Contact support for more information.', 'woocart-defaults' );
 					}
 
 					if ( 'performance' === $this->notification['matches'] ) {
-							  $this->notification['message'] = esc_html__( 'Warning! You are searching for performance plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing configuration and cause performance issues. Contact support for more information.', 'woocart-defaults' );
+							 $this->notification['message'] = esc_html__( 'Warning! You are searching for performance plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing configuration and cause performance issues. Contact support for more information.', 'woocart-defaults' );
 					}
 
 					add_action( 'install_plugins_table_header', array( $this, 'add_text' ) );
@@ -69,7 +75,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 		/**
 		 * Function to match array of keywords with the search query.
 		 *
-		 * @param array $keyword Keyword array items to look for in the query
+		 * @param string $keyword Keyword to match against
 		 * @return bool
 		 */
 		private function array_match( string $keyword ) : bool {

@@ -26,6 +26,7 @@ class PluginManagerTest extends TestCase {
 		$plugins = new PluginManager();
 
 		\WP_Mock::expectActionAdded( 'init', array( $plugins, 'init' ) );
+		\WP_Mock::expectFilterAdded( 'plugins_api_args', array( $plugins, 'search_notification' ), 10, 2 );
 		define(
 			'WOOCART_REQUIRED',
 			array(
@@ -458,6 +459,66 @@ class PluginManagerTest extends TestCase {
 		$this->assertEmpty( $mock->force_activation() );
 	}
 
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationBackup() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'backup',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationSecurity() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'wordfence',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationPerformance() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'smush',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationNoMatch() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'random',
+		);
+
+		\WP_Mock::expectActionNotAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
 	protected static function getMethod( $name ) {
 		$class  = new ReflectionClass( 'Niteo\WooCart\Defaults\PluginManager' );
 		$method = $class->getMethod( $name );
@@ -465,5 +526,7 @@ class PluginManagerTest extends TestCase {
 
 		return $method;
 	}
+
+
 
 }
