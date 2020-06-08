@@ -18,6 +18,8 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class PluginManager {
 
+		use Extend\Notifications;
+
 		/**
 		 * List of plugins.
 		 *
@@ -38,6 +40,15 @@ namespace Niteo\WooCart\Defaults {
 		 * @var array
 		 */
 		public $paths = array();
+
+		/**
+		 * @var array
+		 */
+		private $notification = array(
+			'term'    => '',
+			'matches' => false,
+			'message' => '',
+		);
 
 		/**
 		 * PluginManager constructor.
@@ -63,6 +74,9 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WOOCART_REQUIRED' ) ) {
 				$this->list = WOOCART_REQUIRED;
 			}
+
+			// Show notification on plugin search for specific keywords
+			add_filter( 'plugins_api_args', array( $this, 'search_notification' ), 10, 2 );
 		}
 
 		/**
