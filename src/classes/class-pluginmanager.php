@@ -77,6 +77,10 @@ namespace Niteo\WooCart\Defaults {
 
 			// Show notification on plugin search for specific keywords
 			add_filter( 'plugins_api_args', array( $this, 'search_notification' ), 10, 2 );
+
+			// Remove redis-cache settings link for menu & plugins page
+			add_action( 'admin_menu', array( $this, 'remove_redis_menu' ), PHP_INT_MAX );
+			add_filter( 'plugin_action_links_redis-cache/redis-cache.php', array( &$this, 'remove_redis_plugin_links' ), PHP_INT_MAX );
 		}
 
 		/**
@@ -254,6 +258,28 @@ namespace Niteo\WooCart\Defaults {
 			if ( in_array( $plugin_file, $this->paths ) ) {
 				echo '<tr><td colspan="3" style="background:#fcd670"><strong>' . $plugin_data['Name'] . '</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>';
 			}
+		}
+
+		/**
+		 * Removes reds-cache submenu page under the settings menu.
+		 */
+		public function remove_redis_menu() {
+			remove_submenu_page( 'options-general.php', 'redis-cache' );
+		}
+
+		/**
+		 * Remove `Settings` link for the redis cache plugin.
+		 *
+		 * @param array  $links Array of links for the plugins
+		 * @param string $file  Name of the main plugin file
+		 *
+		 * @return array
+		 */
+		public function remove_redis_plugin_links( $links ) {
+			// Remove the first link (which is the `Settings` link)
+			unset( $links[0] );
+
+			return $links;
 		}
 
 		/**
