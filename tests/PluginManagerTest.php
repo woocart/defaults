@@ -26,6 +26,9 @@ class PluginManagerTest extends TestCase {
 		$plugins = new PluginManager();
 
 		\WP_Mock::expectActionAdded( 'init', array( $plugins, 'init' ) );
+		\WP_Mock::expectFilterAdded( 'plugins_api_args', array( $plugins, 'search_notification' ), 10, 2 );
+		\WP_Mock::expectActionAdded( 'admin_menu', array( $plugins, 'remove_redis_menu' ), PHP_INT_MAX );
+		\WP_Mock::expectFilterAdded( 'plugin_action_links_redis-cache/redis-cache.php', array( $plugins, 'remove_redis_plugin_links' ), PHP_INT_MAX );
 		define(
 			'WOOCART_REQUIRED',
 			array(
@@ -458,6 +461,101 @@ class PluginManagerTest extends TestCase {
 		$this->assertEmpty( $mock->force_activation() );
 	}
 
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationBackup() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'backup',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationSecurity() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'wordfence',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationPerformance() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'smush',
+		);
+
+		\WP_Mock::expectActionAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 */
+	public function testSeachNotificationNoMatch() {
+		$plugins = new PluginManager();
+		$object  = (object) array(
+			'search' => 'random',
+		);
+
+		\WP_Mock::expectActionNotAdded( 'install_plugins_table_header', array( $plugins, 'add_text' ) );
+		$plugins->search_notification( $object, 'query_api' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_redis_menu
+	 */
+	public function testRemoveRedisMenu() {
+		$plugins = new PluginManager();
+
+		\WP_Mock::userFunction(
+			'remove_submenu_page',
+			array(
+				'args'   => array(
+					'options-general.php',
+					'redis-cache',
+				),
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$plugins->remove_redis_menu();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_redis_plugin_links
+	 */
+	public function testRemoveRedisPluginLinks() {
+		$plugins = new PluginManager();
+
+		$this->assertEquals(
+			array( 1 => 'deactivate.php' ),
+			$plugins->remove_redis_plugin_links( array( 'settings.php', 'deactivate.php' ) )
+		);
+	}
+
 	protected static function getMethod( $name ) {
 		$class  = new ReflectionClass( 'Niteo\WooCart\Defaults\PluginManager' );
 		$method = $class->getMethod( $name );
@@ -465,5 +563,7 @@ class PluginManagerTest extends TestCase {
 
 		return $method;
 	}
+
+
 
 }
