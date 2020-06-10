@@ -14,9 +14,9 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 * @param object $args Plugin API arguments
 		 * @param string $action The type of information being requested from the Plugin Installation API
 		 *
-		 * @return void
+		 * @return object
 		 */
-		public function search_notification( object $args, string $action ) : void {
+		public function search_notification( object $args, string $action ) : object {
 			if ( isset( $args->search ) ) {
 				// Plugin search query
 				$this->notification['term'] = strip_tags( $args->search );
@@ -63,6 +63,8 @@ namespace Niteo\WooCart\Defaults\Extend {
 					add_action( 'install_plugins_table_header', array( $this, 'add_text' ) );
 				}
 			}
+
+			return $args;
 		}
 
 		/**
