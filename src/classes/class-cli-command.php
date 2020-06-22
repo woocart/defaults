@@ -368,5 +368,43 @@ namespace Niteo\WooCart\Defaults {
 				WP_CLI::error( $e );
 			}
 		}
+
+		/**
+		 * Toggle blocking HTTP calls for the store.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <status>
+		 * : Block mode status.
+		 * ---
+		 * options:
+		 *   - activate
+		 *   - deactivate
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd block_http_calls activate
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function block_http_calls( $args, $assoc_args ) {
+			try {
+				list($status) = $args;
+
+				if ( 'activate' === $status ) {
+					update_option( 'woocart_http_status', true );
+				} elseif ( 'deactivate' === $status ) {
+					update_option( 'woocart_http_status', false );
+				}
+
+				WP_CLI::log( sprintf( 'HTTP calls block mode has been %sd.', $status ) );
+			} catch ( \Exception $e ) {
+				WP_CLI::log( 'There was an error processing your request.' );
+				WP_CLI::error( $e );
+			}
+		}
 	}
 }
