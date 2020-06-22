@@ -32,7 +32,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @param string               $url The request URL
 		 */
 		public function http_requests( $preempt, array $args, string $url ) : bool {
-			if ( false !== strpos( $url, 'api.wordpress.org' ) ) {
+			if ( false !== strpos( $url, apply_filters( 'woocart_whitelist_http_url', 'api.wordpress.org' ) ) ) {
 				return false;
 			}
 
