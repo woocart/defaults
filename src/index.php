@@ -30,6 +30,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\PluginManager;
 	use Niteo\WooCart\Defaults\Shortcodes;
 	use Niteo\WooCart\Defaults\WooCommerce;
+	use Niteo\WooCart\Defaults\WordPress;
 
 	if ( class_exists( 'WP_CLI' ) ) {
 		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
@@ -61,6 +62,7 @@ namespace Niteo\WooCart {
 			new PluginManager();
 			new Reporter();
 			new WooCommerce();
+			new WordPress();
 		}
 	}
 }
