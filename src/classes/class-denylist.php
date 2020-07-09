@@ -108,6 +108,7 @@ namespace Niteo\WooCart\Defaults {
 			'peters-login-redirect',
 			'portable-phpmyadmin',
 			'post-views-counter',
+			'powered-cache',
 			'quick-cache',
 			'quick-pagepost-redirect-plugin',
 			'rapid-ranker',
