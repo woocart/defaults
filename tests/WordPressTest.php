@@ -24,6 +24,7 @@ class WordPressTest extends TestCase {
 	public function testConstructor() {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
+		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'control_cronjobs' ), PHP_INT_MAX );
 
 		$wordpress->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -67,6 +68,63 @@ class WordPressTest extends TestCase {
 		$wordpress = new WordPress();
 
 		$this->assertFalse( $wordpress->http_requests( false, array(), 'https://api.wordpress.org/plugins/woocommerce' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::control_cronjobs
+	 */
+	public function testControlCronjobsEmpty() {
+		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
+		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '03:30' ) );
+
+		$mock->start_time = '03:00';
+		$mock->end_time   = '04:00';
+
+		$this->assertEmpty( $mock->control_cronjobs() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::control_cronjobs
+	 */
+	public function testControlCronjobsNotEmpty() {
+		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
+		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '05:30' ) );
+
+		$mock->start_time = '03:00';
+		$mock->end_time   = '04:00';
+
+		\WP_Mock::expectFilterAdded( 'pre_get_ready_cron_jobs', array( $mock, 'empty_cronjobs' ) );
+
+		$mock->control_cronjobs();
+		\WP_Mock::assertHooksAdded();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::empty_cronjobs
+	 */
+	public function testEmptyCronjobs() {
+		$wordpress = new WordPress();
+
+		$this->assertEquals(
+			array(),
+			$wordpress->empty_cronjobs()
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::time_now
+	 */
+	public function testTimeNow() {
+		$wordpress = new WordPress();
+
+		$this->assertInstanceOf(
+			'\DateTime',
+			$wordpress->time_now()
+		);
 	}
 
 }
