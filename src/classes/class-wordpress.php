@@ -3,6 +3,7 @@
 namespace Niteo\WooCart\Defaults {
 
 	use DateTime;
+	use DateTimeZone;
 
 	/**
 	 * Class WooCommerce
@@ -61,9 +62,11 @@ namespace Niteo\WooCart\Defaults {
 		 * @return void
 		 */
 		public function control_cronjobs() : void {
-			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time );
-			$cron_end   = DateTime::createFromFormat( 'H:i', $this->end_time );
-			$time_now   = $this->time_now();
+			$timezone = $this->get_store_timezone();
+
+			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time, new DateTimeZone( $timezone ) );
+			$cron_end   = DateTime::createFromFormat( 'H:i', $this->end_time, new DateTimeZone( $timezone ) );
+			$time_now   = $this->time_now( $timezone );
 
 			if ( $time_now >= $cron_start && $time_now <= $cron_end ) {
 				return;
@@ -71,6 +74,18 @@ namespace Niteo\WooCart\Defaults {
 
 			// Remove cronjobs via filter
 			add_filter( 'pre_get_ready_cron_jobs', array( $this, 'empty_cronjobs' ) );
+		}
+
+		/**
+		 * Get store's timezone'.
+		 *
+		 * @return string
+		 */
+		public function get_store_timezone() : string {
+			$store_country = get_option( 'woocommerce_default_country', false );
+
+			// Take first value from the array as few countries have more than one timezone
+			return DateTimeZone::listIdentifiers( DateTimeZone::PER_COUNTRY, $store_country )[0];
 		}
 
 		/**
@@ -85,10 +100,11 @@ namespace Niteo\WooCart\Defaults {
 		/**
 		 * Returns DateTime object for current time.
 		 *
+		 * @param string $timezone Store timezone to fetch the local time
 		 * @return object
 		 */
-		public function time_now() : object {
-			return new DateTime();
+		public function time_now( string $timezone ) : object {
+			return new DateTime( 'now', new DateTimeZone( $timezone ) );
 		}
 
 	}
