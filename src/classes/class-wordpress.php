@@ -62,7 +62,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @return void
 		 */
 		public function control_cronjobs() : void {
-			$timezone = $this->get_store_timezone();
+			$timezone = wp_timezone_string();
 
 			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time, new DateTimeZone( $timezone ) );
 			$cron_end   = DateTime::createFromFormat( 'H:i', $this->end_time, new DateTimeZone( $timezone ) );
@@ -74,18 +74,6 @@ namespace Niteo\WooCart\Defaults {
 
 			// Remove cronjobs via filter
 			add_filter( 'pre_get_ready_cron_jobs', array( $this, 'empty_cronjobs' ) );
-		}
-
-		/**
-		 * Get store's timezone'.
-		 *
-		 * @return string
-		 */
-		public function get_store_timezone() : string {
-			$store_country = get_option( 'woocommerce_default_country', false );
-
-			// Take first value from the array as few countries have more than one timezone
-			return DateTimeZone::listIdentifiers( DateTimeZone::PER_COUNTRY, $store_country )[0];
 		}
 
 		/**

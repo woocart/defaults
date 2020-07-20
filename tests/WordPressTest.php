@@ -77,7 +77,14 @@ class WordPressTest extends TestCase {
 	public function testControlCronjobsEmpty() {
 		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
 		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '03:30', new \DateTimeZone( 'Europe/Madrid' ) ) );
-		$mock->shouldReceive( 'get_store_timezone' )->andReturn( 'Europe/Madrid' );
+
+		\WP_Mock::userFunction(
+			'wp_timezone_string',
+			array(
+				'times'  => 1,
+				'return' => 'Europe/Madrid',
+			)
+		);
 
 		$mock->start_time = '03:00';
 		$mock->end_time   = '04:00';
@@ -88,12 +95,18 @@ class WordPressTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
 	 * @covers \Niteo\WooCart\Defaults\WordPress::control_cronjobs
-	 * @covers \Niteo\WooCart\Defaults\WordPress::get_store_timezone
 	 */
 	public function testControlCronjobsNotEmpty() {
 		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
 		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '05:30', new \DateTimeZone( 'Europe/Madrid' ) ) );
-		$mock->shouldReceive( 'get_store_timezone' )->andReturn( 'Europe/Madrid' );
+
+		\WP_Mock::userFunction(
+			'wp_timezone_string',
+			array(
+				'times'  => 1,
+				'return' => 'Europe/Madrid',
+			)
+		);
 
 		$mock->start_time = '03:00';
 		$mock->end_time   = '04:00';
@@ -106,29 +119,7 @@ class WordPressTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::get_store_timezone
-	 */
-	public function testGetStoreTimezone() {
-		$wordpress = new WordPress();
-
-		\WP_Mock::userFunction(
-			'get_option',
-			array(
-				'times'  => 1,
-				'return' => 'IN',
-			)
-		);
-
-		$this->assertEquals(
-			'Asia/Kolkata',
-			$wordpress->get_store_timezone()
-		);
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
 	 * @covers \Niteo\WooCart\Defaults\WordPress::empty_cronjobs
-	 * @covers \Niteo\WooCart\Defaults\WordPress::get_store_timezone
 	 */
 	public function testEmptyCronjobs() {
 		$wordpress = new WordPress();
