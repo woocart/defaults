@@ -2,6 +2,9 @@
 
 namespace Niteo\WooCart\Defaults {
 
+	use DateTime;
+	use DateTimeZone;
+
 	/**
 	 * Class WooCommerce
 	 *
@@ -9,8 +12,22 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class WordPress {
 
+		/**
+		 * @var string
+		 */
+		public $start_time = '03:00';
+
+		/**
+		 * @var string
+		 */
+		public $end_time = '04:00';
+
+		/**
+		 * Class constructor.
+		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'http_block_status' ) );
+			add_action( 'init', array( $this, 'control_cronjobs' ), PHP_INT_MAX );
 		}
 
 		/**
@@ -37,6 +54,45 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return true;
+		}
+
+		/**
+		 * Control cronjobs to run at a specific time during a day for the store.
+		 *
+		 * @return void
+		 */
+		public function control_cronjobs() : void {
+			$timezone = wp_timezone_string();
+
+			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time, new DateTimeZone( $timezone ) );
+			$cron_end   = DateTime::createFromFormat( 'H:i', $this->end_time, new DateTimeZone( $timezone ) );
+			$time_now   = $this->time_now( $timezone );
+
+			if ( $time_now >= $cron_start && $time_now <= $cron_end ) {
+				return;
+			}
+
+			// Remove cronjobs via filter
+			add_filter( 'pre_get_ready_cron_jobs', array( $this, 'empty_cronjobs' ) );
+		}
+
+		/**
+		 * Returns empty array for cronjobs.
+		 *
+		 * @return array
+		 */
+		public function empty_cronjobs() : array {
+			return array();
+		}
+
+		/**
+		 * Returns DateTime object for current time.
+		 *
+		 * @param string $timezone Store timezone to fetch the local time
+		 * @return object
+		 */
+		public function time_now( string $timezone ) : object {
+			return new DateTime( 'now', new DateTimeZone( $timezone ) );
 		}
 
 	}
