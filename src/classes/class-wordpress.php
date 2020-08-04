@@ -101,13 +101,11 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @param bool   $file_mod_allowed Whether file modifications are allowed.
 		 * @param string $context The usage context.
+		 *
+		 * @return bool
 		 */
-		public function read_only_filesystem( $file_mod_allowed, $context ) {
-			if ( ! get_option( 'woocart_readonly_filesystem', false ) ) {
-				return true;
-			}
-
-			return false;
+		public function read_only_filesystem( bool $file_mod_allowed, string $context ) : bool {
+			return ! get_option( 'woocart_readonly_filesystem', false );
 		}
 
 	}
