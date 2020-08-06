@@ -406,5 +406,43 @@ namespace Niteo\WooCart\Defaults {
 				WP_CLI::error( $e );
 			}
 		}
+
+		/**
+		 * Toggle modifying files on disk.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <status>
+		 * : Files mod status.
+		 * ---
+		 * options:
+		 *   - activate
+		 *   - deactivate
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd filesystem_lock activate
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function filesystem_lock( $args, $assoc_args ) {
+			try {
+				list($status) = $args;
+
+				if ( 'activate' === $status ) {
+					update_option( 'woocart_readonly_filesystem', true );
+				} elseif ( 'deactivate' === $status ) {
+					update_option( 'woocart_readonly_filesystem', false );
+				}
+
+				WP_CLI::log( sprintf( 'Read-only filesystem has been %sd.', $status ) );
+			} catch ( \Exception $e ) {
+				WP_CLI::log( 'There was an error processing your request.' );
+				WP_CLI::error( $e );
+			}
+		}
 	}
 }

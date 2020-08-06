@@ -25,6 +25,7 @@ class WordPressTest extends TestCase {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'control_cronjobs' ), PHP_INT_MAX );
+		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 
 		$wordpress->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -141,6 +142,42 @@ class WordPressTest extends TestCase {
 			'\DateTime',
 			$wordpress->time_now( 'Europe/Madrid' )
 		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::read_only_filesystem
+	 */
+	public function testReadOnlyFilesystemTrue() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertTrue( $wordpress->read_only_filesystem( false, 'testing' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::read_only_filesystem
+	 */
+	public function testReadOnlyFilesystemFalse() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertFalse( $wordpress->read_only_filesystem( true, 'testing' ) );
 	}
 
 }

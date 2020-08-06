@@ -28,6 +28,7 @@ namespace Niteo\WooCart\Defaults {
 		public function __construct() {
 			add_action( 'init', array( $this, 'http_block_status' ) );
 			add_action( 'init', array( $this, 'control_cronjobs' ), PHP_INT_MAX );
+			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 		}
 
 		/**
@@ -93,6 +94,18 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function time_now( string $timezone ) : object {
 			return new DateTime( 'now', new DateTimeZone( $timezone ) );
+		}
+
+		/**
+		 * Makes the filesystem read-only.
+		 *
+		 * @param bool   $file_mod_allowed Whether file modifications are allowed.
+		 * @param string $context The usage context.
+		 *
+		 * @return bool
+		 */
+		public function read_only_filesystem( bool $file_mod_allowed, string $context ) : bool {
+			return ! get_option( 'woocart_readonly_filesystem', false );
 		}
 
 	}
