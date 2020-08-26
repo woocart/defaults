@@ -180,4 +180,14 @@ class WordPressTest extends TestCase {
 		$this->assertFalse( $wordpress->read_only_filesystem( true, 'testing' ) );
 	}
 
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::wpcf7_cache
+	 */
+	public function testWpcf7Cache() {
+		$wordpress = new WordPress();
+
+		$this->expectOutputString( '<script>wpcf7.cached = 0;</script>', $wordpress->wpcf7_cache() );
+	}
+
 }
