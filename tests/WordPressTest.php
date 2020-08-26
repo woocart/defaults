@@ -187,7 +187,7 @@ class WordPressTest extends TestCase {
 	public function testWpcf7Cache() {
 		$wordpress = new WordPress();
 
-		$this->expectOutputString( '<script>wpcf7.cached = 0;</script>', $wordpress->wpcf7_cache() );
+		$this->expectOutputString( '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>', $wordpress->wpcf7_cache() );
 	}
 
 }

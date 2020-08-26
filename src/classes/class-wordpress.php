@@ -113,7 +113,7 @@ namespace Niteo\WooCart\Defaults {
 		 * Disables loading of refill script for Contact Form 7.
 		 */
 		public function wpcf7_cache() : void {
-			echo '<script>wpcf7.cached = 0;</script>';
+			echo '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>';
 		}
 
 	}
