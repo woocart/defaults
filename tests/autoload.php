@@ -2,6 +2,7 @@
 
 $root_dir = dirname( dirname( __FILE__ ) );
 define( 'WP_PLUGIN_DIR', "$root_dir/tests/fixtures/" );
+define( 'WPCF7_PLUGIN', 'YES_MOCKED' );
 
 require_once "$root_dir/vendor/autoload.php";
 require_once "$root_dir/src/index.php";

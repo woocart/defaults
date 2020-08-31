@@ -25,6 +25,7 @@ class WordPressTest extends TestCase {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'control_cronjobs' ), PHP_INT_MAX );
+		\WP_Mock::expectActionAdded( 'wp_footer', array( $wordpress, 'wpcf7_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 
 		$wordpress->__construct();
@@ -178,6 +179,16 @@ class WordPressTest extends TestCase {
 		);
 
 		$this->assertFalse( $wordpress->read_only_filesystem( true, 'testing' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::wpcf7_cache
+	 */
+	public function testWpcf7Cache() {
+		$wordpress = new WordPress();
+
+		$this->expectOutputString( '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>', $wordpress->wpcf7_cache() );
 	}
 
 }
