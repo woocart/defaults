@@ -25,6 +25,7 @@ class WordPressTest extends TestCase {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'control_cronjobs' ), PHP_INT_MAX );
+		\WP_Mock::expectActionAdded( 'wp_footer', array( $wordpress, 'wpcf7_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 
 		$wordpress->__construct();

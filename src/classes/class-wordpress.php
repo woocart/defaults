@@ -28,7 +28,9 @@ namespace Niteo\WooCart\Defaults {
 		public function __construct() {
 			add_action( 'init', array( $this, 'http_block_status' ) );
 			add_action( 'init', array( $this, 'control_cronjobs' ), PHP_INT_MAX );
-			add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
+			if ( defined( 'WPCF7_PLUGIN' ) ) {
+				add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
+			}
 			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 		}
 
