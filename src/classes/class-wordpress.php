@@ -23,15 +23,24 @@ namespace Niteo\WooCart\Defaults {
 		public $end_time = '04:00';
 
 		/**
+		 * @var array
+		 */
+		private $_blacklisted_hooks = array(
+			'wc_facebook_generate_product_catalog_feed', // facebook-for-woocommerce
+			'woosea_cron_hook', // woo-product-feed-pro
+			'couponwheel_cron', // wp-optin-wheel
+		);
+
+		/**
 		 * Class constructor.
 		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'http_block_status' ) );
-			add_action( 'init', array( $this, 'control_cronjobs' ), PHP_INT_MAX );
 			if ( defined( 'WPCF7_PLUGIN' ) ) {
 				add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
 			}
 			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
+			add_filter( 'pre_reschedule_event', array( $this, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
 		}
 
 		/**
@@ -61,32 +70,41 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Control cronjobs to run at a specific time during a day for the store.
+		 * Delay certain cronjobs to run only once during the day instead of its
+		 * regular schedule.
 		 *
-		 * @return void
+		 * @param null|bool $pre Value to return instead. Default null to continue adding the event
+		 * @param stdClass  $event {
+		 *      An object containing an event's data.
+		 *
+		 *      @type string       $hook      Action hook to execute when the event is run.
+		 *      @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+		 *      @type string|false $schedule  How often the event should subsequently recur.
+		 *      @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+		 *      @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+		 * }
+		 *
+		 * @return object
 		 */
-		public function control_cronjobs() : void {
+		public function delay_cronjobs( $pre, $event ) {
 			$timezone = wp_timezone_string();
 
-			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time, new DateTimeZone( $timezone ) );
-			$cron_end   = DateTime::createFromFormat( 'H:i', $this->end_time, new DateTimeZone( $timezone ) );
-			$time_now   = $this->time_now( $timezone );
+			$cron_start = DateTime::createFromFormat( 'H:i', $this->start_time, new DateTimeZone( $timezone ) )->getTimestamp();
+			$time_now   = $this->time_now( $timezone )->getTimestamp();
 
-			if ( $time_now >= $cron_start && $time_now <= $cron_end ) {
-				return;
+			// If the start time has already passed, schedule it for the next day
+			if ( $time_now >= $cron_start ) {
+				$cron_start = strtotime( '+1 day', $cron_start );
 			}
 
-			// Remove cronjobs via filter
-			add_filter( 'pre_get_ready_cron_jobs', array( $this, 'empty_cronjobs' ) );
-		}
+			// Check for the desired hooks
+			if ( in_array( $event->hook, $this->_blacklisted_hooks ) ) {
+				$event->timestamp = $cron_start;
 
-		/**
-		 * Returns empty array for cronjobs.
-		 *
-		 * @return array
-		 */
-		public function empty_cronjobs() : array {
-			return array();
+				return $event;
+			}
+
+			return $pre;
 		}
 
 		/**

@@ -24,9 +24,9 @@ class WordPressTest extends TestCase {
 	public function testConstructor() {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
-		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'control_cronjobs' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'wp_footer', array( $wordpress, 'wpcf7_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
+		\WP_Mock::expectFilterAdded( 'pre_reschedule_event', array( $wordpress, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
 
 		$wordpress->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -74,9 +74,37 @@ class WordPressTest extends TestCase {
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::control_cronjobs
+	 * @covers \Niteo\WooCart\Defaults\WordPress::delay_cronjobs
 	 */
-	public function testControlCronjobsEmpty() {
+	public function testDelayCronjobsEmpty() {
+		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
+		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '02:30', new \DateTimeZone( 'Europe/Madrid' ) ) );
+
+		\WP_Mock::userFunction(
+			'wp_timezone_string',
+			array(
+				'times'  => 1,
+				'return' => 'Europe/Madrid',
+			)
+		);
+
+		$mock->start_time = '03:00';
+
+		$this->assertNull(
+			$mock->delay_cronjobs(
+				null,
+				(object) array(
+					'hook' => 'PLUGIN_HOOK',
+				)
+			)
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::delay_cronjobs
+	 */
+	public function testDelayCronjobsNotEmpty() {
 		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
 		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '03:30', new \DateTimeZone( 'Europe/Madrid' ) ) );
 
@@ -89,46 +117,20 @@ class WordPressTest extends TestCase {
 		);
 
 		$mock->start_time = '03:00';
-		$mock->end_time   = '04:00';
-
-		$this->assertEmpty( $mock->control_cronjobs() );
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::control_cronjobs
-	 */
-	public function testControlCronjobsNotEmpty() {
-		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
-		$mock->shouldReceive( 'time_now' )->andReturn( \Datetime::createFromFormat( 'H:i', '05:30', new \DateTimeZone( 'Europe/Madrid' ) ) );
-
-		\WP_Mock::userFunction(
-			'wp_timezone_string',
-			array(
-				'times'  => 1,
-				'return' => 'Europe/Madrid',
-			)
-		);
-
-		$mock->start_time = '03:00';
-		$mock->end_time   = '04:00';
-
-		\WP_Mock::expectFilterAdded( 'pre_get_ready_cron_jobs', array( $mock, 'empty_cronjobs' ) );
-
-		$mock->control_cronjobs();
-		\WP_Mock::assertHooksAdded();
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::empty_cronjobs
-	 */
-	public function testEmptyCronjobs() {
-		$wordpress = new WordPress();
+		$cron_start       = strtotime( '+1 day', \Datetime::createFromFormat( 'H:i', '03:00', new \DateTimeZone( 'Europe/Madrid' ) )->getTimestamp() );
 
 		$this->assertEquals(
-			array(),
-			$wordpress->empty_cronjobs()
+			(object) array(
+				'hook'      => 'wc_facebook_generate_product_catalog_feed',
+				'timestamp' => $cron_start,
+			),
+			$mock->delay_cronjobs(
+				null,
+				(object) array(
+					'hook'      => 'wc_facebook_generate_product_catalog_feed',
+					'timestamp' => 1000,
+				)
+			)
 		);
 	}
 
