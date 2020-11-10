@@ -99,39 +99,6 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WP_REDIS_PATH' ) ) {
 				$this->redis_credentials = WP_REDIS_PATH;
 			}
-
-			add_filter( 'script_loader_tag', array( $this, 'buffer_scripts' ), PHP_INT_MAX, 3 );
-			add_filter( 'style_loader_tag', array( $this, 'buffer_styles' ), PHP_INT_MAX, 3 );
-		}
-
-		/**
-		 * Add script tags to array.
-		 *
-		 * @param string $tag    The `<script>` tag for the enqueued script.
-		 * @param string $handle The script's registered handle.
-		 * @param string $src    The script's source URL.
-		 *
-		 * @return string
-		 */
-		public function buffer_scripts( $tag, $handle, $src ) : string {
-			$this->scripts['scripts'][] = $src;
-
-			return $tag;
-		}
-
-		/**
-		 * Add style tags to array.
-		 *
-		 * @param string $tag    The `<script>` tag for the enqueued script.
-		 * @param string $handle The script's registered handle.
-		 * @param string $src    The script's source URL.
-		 *
-		 * @return string
-		 */
-		public function buffer_styles( $tag, $handle, $src ) : string {
-			$this->scripts['styles'][] = $src;
-
-			return $tag;
 		}
 
 		/**
