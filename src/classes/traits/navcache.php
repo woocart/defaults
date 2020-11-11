@@ -26,8 +26,11 @@ namespace Niteo\WooCart\Defaults\Extend {
 			'gclid',
 			'gclsrc',
 
-			// https://www.facebook.com/business/help/330994334179410 "URL in ad can't contain Facebook Click ID" section
+			// https://www.facebook.com/business/help/330994334179410
 			'fbclid',
+
+			// FB remarketing ID
+			'rmId',
 
 			// https://en.wikipedia.org/wiki/UTM_parameters
 			'utm_campaign',
@@ -50,6 +53,10 @@ namespace Niteo\WooCart\Defaults\Extend {
 			add_action( 'split_shared_term', array( $this, 'flush_nav_cache' ) );
 
 			if ( is_user_logged_in() ) {
+				return;
+			}
+
+			if ( apply_filters( 'woocart_nav_cache_disabled', false ) ) {
 				return;
 			}
 
