@@ -34,14 +34,6 @@ namespace Niteo\WooCart\Defaults {
 		public $redis_credentials = '/var/www/cache/redis.sock';
 
 		/**
-		 * @var array
-		 */
-		public $scripts = array(
-			'scripts' => array(),
-			'styles'  => array(),
-		);
-
-		/**
 		 * CacheManager constructor.
 		 */
 		public function __construct() {
