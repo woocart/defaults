@@ -412,8 +412,8 @@ namespace Niteo\WooCart\Defaults {
 		public function scripts() {
 			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 
-			wp_enqueue_style( 'woocart-gdpr', "$plugin_dir/assets/css/front-gdpr.css", array(), Release::Version );
-			wp_enqueue_script( 'woocart-gdpr', "$plugin_dir/assets/js/front-gdpr.js", array(), Release::Version, true );
+			wp_enqueue_style( 'woocart-gdpr', "{$plugin_dir}assets/css/front-gdpr.css", array(), Release::Version );
+			wp_enqueue_script( 'woocart-gdpr', "{$plugin_dir}assets/js/front-gdpr.js", array(), Release::Version, true );
 		}
 
 	}

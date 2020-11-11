@@ -24,6 +24,7 @@ class WordPressTest extends TestCase {
 	public function testConstructor() {
 		$wordpress = new WordPress();
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
+		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'remove_heartbeat' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'wp_footer', array( $wordpress, 'wpcf7_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 		\WP_Mock::expectFilterAdded( 'pre_reschedule_event', array( $wordpress, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
@@ -50,6 +51,24 @@ class WordPressTest extends TestCase {
 
 		$wordpress->http_block_status();
 		\WP_Mock::assertHooksAdded();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::remove_heartbeat
+	 */
+	public function testRemoveHeartbeat() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'wp_deregister_script',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->remove_heartbeat() );
 	}
 
 	/**

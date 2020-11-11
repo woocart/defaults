@@ -24,6 +24,7 @@ class WooCommerceTest extends TestCase {
 	public function testConstructor() {
 		$woocommerce = new WooCommerce();
 		\WP_Mock::expectFilterAdded( 'woocommerce_general_settings', array( $woocommerce, 'general_settings' ) );
+		\WP_Mock::expectFilterAdded( 'woocommerce_admin_disabled', array( $woocommerce, 'maybe_disable_wc_admin' ) );
 
 		$woocommerce->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -59,6 +60,32 @@ class WooCommerceTest extends TestCase {
 				),
 			)
 		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
+	 * @covers \Niteo\WooCart\Defaults\WooCommerce::maybe_disable_wc_admin
+	 */
+	public function testDisableWCAdminTrue() {
+		$woocommerce = new WooCommerce();
+
+		// Set to cart plan
+		$_SERVER['STORE_PLAN'] = 'cart';
+
+		$this->assertTrue( $woocommerce->maybe_disable_wc_admin() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
+	 * @covers \Niteo\WooCart\Defaults\WooCommerce::maybe_disable_wc_admin
+	 */
+	public function testDisableWCAdminFalse() {
+		$woocommerce = new WooCommerce();
+
+		// Set to market plan
+		$_SERVER['STORE_PLAN'] = 'market';
+
+		$this->assertFalse( $woocommerce->maybe_disable_wc_admin() );
 	}
 
 }

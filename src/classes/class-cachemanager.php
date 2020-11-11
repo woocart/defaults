@@ -17,6 +17,7 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class CacheManager {
 
+		use Extend\NavCache;
 
 		/**
 		 * FCGI Cache path.
@@ -91,6 +92,9 @@ namespace Niteo\WooCart\Defaults {
 			if ( defined( 'WP_REDIS_PATH' ) ) {
 				$this->redis_credentials = WP_REDIS_PATH;
 			}
+
+			// Nav-menu cache
+			add_action( 'init', array( $this, 'nav_init' ) );
 		}
 
 		/**
