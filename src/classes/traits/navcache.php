@@ -30,7 +30,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 			'fbclid',
 
 			// FB remarketing ID
-			'rmId',
+			'_rmId',
 
 			// https://en.wikipedia.org/wiki/UTM_parameters
 			'utm_campaign',
