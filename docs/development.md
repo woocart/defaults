@@ -20,14 +20,14 @@ the GOPATH environment variable which must be in the root of the project.
 
 ```shell
 $ git clone git@github.com:woocart/woocart-defaults.git
-$ make ensure
+$ make install
 ```
 
 ## Making changes
 
 Start by creating new branch prefixed with `feature/short-name` or `docs/short-name` or `cleanup/short-name`, depending on the change you are working on.
 
-Run `make ensure` to install project dependencies.
+Run `make install` to install project dependencies.
 
 ### Test your changes
 
