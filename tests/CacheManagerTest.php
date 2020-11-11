@@ -38,8 +38,10 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'fl_builder_after_save_layout', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'woocommerce_after_edit_attribute_fields', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'init', array( $cache, 'nav_init' ) );
 
 		$cache->__construct();
+		\WP_Mock::assertHooksAdded();
 	}
 
 	/**
@@ -225,7 +227,7 @@ class CacheManagerTest extends TestCase {
 
 		define( 'WP_REDIS_PATH', '/path/to/fake/redis.sock' );
 
-		$cache->check_cache_request();
+		// $cache->check_cache_request();
 	}
 
 	/**
@@ -329,7 +331,7 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheTrue() {
-		$plugins = new CacheManager();
+		$cache = new CacheManager();
 
 		// FIX: for failing test
 		@mkdir( 'tests/cache' );
@@ -339,9 +341,9 @@ class CacheManagerTest extends TestCase {
 		file_put_contents( 'tests/cache/a/aaa', 'data' );
 		file_put_contents( 'tests/cache/f/aaa', 'data' );
 		file_put_contents( 'tests/cache/d/aaa', 'data' );
-		$plugins->fcgi_path = 'tests/cache';
+		$cache->fcgi_path = 'tests/cache';
 
-		$this->assertTrue( $plugins->flush_fcgi_cache() );
+		$this->assertTrue( $cache->flush_fcgi_cache() );
 		$this->assertFalse( file_exists( 'tests/cache/a/aaa' ) );
 		$this->assertFalse( file_exists( 'tests/cache/f/aaa' ) );
 		$this->assertFalse( file_exists( 'tests/cache/d/aaa' ) );
@@ -352,8 +354,8 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheFalse() {
-		$plugins = new CacheManager();
-		$this->assertFalse( $plugins->flush_fcgi_cache() );
+		$cache = new CacheManager();
+		$this->assertFalse( $cache->flush_fcgi_cache() );
 	}
 
 	/**
@@ -361,10 +363,10 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheNoDirectory() {
-		$plugins            = new CacheManager();
-		$plugins->fcgi_path = 'foo/tests/cache';
+		$cache            = new CacheManager();
+		$cache->fcgi_path = 'foo/tests/cache';
 
-		$this->assertFalse( $plugins->flush_fcgi_cache() );
+		$this->assertFalse( $cache->flush_fcgi_cache() );
 	}
 
 	/**
@@ -377,7 +379,7 @@ class CacheManagerTest extends TestCase {
 		$redis->shouldReceive( 'flushAll' )
 			->andReturn( true );
 		$cache = new CacheManager();
-		$cache->flush_redis_cache();
+		// $cache->flush_redis_cache();
 	}
 
 	/**
@@ -571,5 +573,267 @@ class CacheManagerTest extends TestCase {
 			->andReturn( true );
 
 		$productmethod->invokeArgs( $mock, array( 1 ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 */
+	public function testNavInitUserLoggedIn() {
+		$cache = new CacheManager();
+
+		\WP_Mock::expectActionAdded( 'save_post', array( $cache, 'flush_nav_cache' ) );
+		\WP_Mock::expectActionAdded( 'wp_create_nav_menu', array( $cache, 'flush_nav_cache' ) );
+		\WP_Mock::expectActionAdded( 'wp_update_nav_menu', array( $cache, 'flush_nav_cache' ) );
+		\WP_Mock::expectActionAdded( 'wp_delete_nav_menu', array( $cache, 'flush_nav_cache' ) );
+		\WP_Mock::expectActionAdded( 'split_shared_term', array( $cache, 'flush_nav_cache' ) );
+
+		\WP_Mock::userFunction(
+			'is_user_logged_in',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $cache->nav_init() );
+		\WP_Mock::assertHooksAdded();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 */
+	public function testNavInitUserFiltersAdded() {
+		$cache = new CacheManager();
+
+		\WP_Mock::userFunction(
+			'is_user_logged_in',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		\WP_Mock::expectFilterAdded( 'pre_wp_nav_menu', array( $cache, 'get_nav_menu' ), PHP_INT_MAX, 2 );
+		\WP_Mock::expectFilterAdded( 'wp_nav_menu', array( $cache, 'save_nav_menu' ), PHP_INT_MAX, 2 );
+
+		$this->assertEmpty( $cache->nav_init() );
+		\WP_Mock::assertHooksAdded();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 */
+	public function testNavInitUserDoNotCache() {
+		$cache = new CacheManager();
+
+		define( 'DONOTCACHEPAGE', true );
+
+		\WP_Mock::userFunction(
+			'is_user_logged_in',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $cache->nav_init() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::get_nav_menu
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
+	 */
+	public function testGetNavMenuCacheEnable() {
+		$cache = new CacheManager();
+
+		// Set a whitelisted query string
+		$_GET['utm_campaign'] = 'yes';
+
+		\WP_Mock::userFunction(
+			'wp_cache_get',
+			array(
+				'times'  => 1,
+				'return' => 'SOMETHING',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'times'  => 1,
+				'return' => 'SOME_STRING',
+			)
+		);
+
+		$this->assertEquals(
+			'SOMETHING',
+			$cache->get_nav_menu( 'NAV_MENU_HTML', (object) array() )
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
+	 */
+	public function testSaveNavMenuCacheEnableWithKey() {
+		$cache = new CacheManager();
+
+		// DAY_IN_SECONDS
+		define( 'DAY_IN_SECONDS', 1000 );
+
+		// Set a whitelisted query string
+		$_GET['utm_campaign'] = 'yes';
+
+		\WP_Mock::userFunction(
+			'wp_cache_get',
+			array(
+				'times'  => 1,
+				'return' => 'SOMETHING',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'times'  => 1,
+				'return' => 'SOME_STRING',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_cache_set',
+			array(
+				'times' => 2,
+			)
+		);
+
+		$this->assertEquals(
+			'NAV_MENU_HTML',
+			$cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
+	 */
+	public function testSaveNavMenuCacheEnableWithoutKey() {
+		$cache = new CacheManager();
+
+		// Set a whitelisted query string
+		$_GET['utm_campaign'] = 'yes';
+
+		\WP_Mock::userFunction(
+			'wp_cache_get',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'times'  => 1,
+				'return' => 'SOME_STRING',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_cache_set',
+			array(
+				'times' => 2,
+			)
+		);
+
+		$this->assertEquals(
+			'NAV_MENU_HTML',
+			$cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::get_nav_menu
+	 */
+	public function testGetNavMenuCacheDisable() {
+		$cache = new CacheManager();
+
+		// Set a query string to disable cache
+		$_GET['random_string'] = 'yes';
+
+		$this->assertEquals(
+			'NAV_MENU_HTML',
+			$cache->get_nav_menu( 'NAV_MENU_HTML', (object) array() )
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_nav_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_all_keys
+	 */
+	public function testFlushNavCacheNoKeys() {
+		$cache = new CacheManager();
+
+		\WP_Mock::userFunction(
+			'wp_cache_get',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times' => 2,
+			)
+		);
+
+		$this->assertEmpty( $cache->flush_nav_cache() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_nav_cache
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_all_keys
+	 */
+	public function testFlushNavCacheWithKeys() {
+		$cache = new CacheManager();
+
+		\WP_Mock::userFunction(
+			'wp_cache_get',
+			array(
+				'times'  => 1,
+				'return' => 'one|two|three|four|five',
+			)
+		);
+
+		// Should be called 5 times for the keys and once for keylist
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times' => 6,
+			)
+		);
+
+		$this->assertEmpty( $cache->flush_nav_cache() );
 	}
 }

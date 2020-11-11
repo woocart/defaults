@@ -68,7 +68,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 * @return string
 		 */
 		public function get_nav_menu( $nav_menu_html, $args ) {
-			$enabled = $this->_is_enabled( $args );
+			$enabled = $this->_is_enabled();
 
 			if ( $enabled ) {
 				$cache = wp_cache_get( $this->_get_cache_key( $args ), $this->_group );
@@ -88,7 +88,7 @@ namespace Niteo\WooCart\Defaults\Extend {
 		 * @return string
 		 */
 		public function save_nav_menu( $nav_menu_html, $args ) {
-			$enabled = $this->_is_enabled( $args );
+			$enabled = $this->_is_enabled();
 
 			if ( $enabled ) {
 				$key = $this->_get_cache_key( $args );
@@ -145,12 +145,11 @@ namespace Niteo\WooCart\Defaults\Extend {
 		}
 
 		/**
-		 * Check for whitelisted query strings and disable cache if present.
+		 * Check for whitelisted query strings so that we don't disable cache for them.
 		 *
-		 * @param object $args
 		 * @return bool
 		 */
-		private function _is_enabled( $args ) : bool {
+		private function _is_enabled() : bool {
 			if ( array() !== array_diff( array_keys( $_GET ), $this->_whitelisted_query_strings ) ) {
 				return false;
 			}
