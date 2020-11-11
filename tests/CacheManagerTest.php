@@ -227,7 +227,7 @@ class CacheManagerTest extends TestCase {
 
 		define( 'WP_REDIS_PATH', '/path/to/fake/redis.sock' );
 
-		// $cache->check_cache_request();
+		$cache->check_cache_request();
 	}
 
 	/**
@@ -379,7 +379,7 @@ class CacheManagerTest extends TestCase {
 		$redis->shouldReceive( 'flushAll' )
 			->andReturn( true );
 		$cache = new CacheManager();
-		// $cache->flush_redis_cache();
+		$cache->flush_redis_cache();
 	}
 
 	/**
