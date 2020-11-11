@@ -1,6 +1,6 @@
 <?php
 
-namespace Niteo\WooCart\Defaults\OpCacheStats {
+namespace Niteo\WooCart\Defaults {
 
 	use \WooCart\Log\Socket;
 

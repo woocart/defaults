@@ -1,10 +1,10 @@
 <?php
 
 
-use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
+use Niteo\WooCart\Defaults\Reporter;
 use PHPUnit\Framework\TestCase;
 
-class OPCacheStatsTest extends TestCase {
+class ReporterTest extends TestCase {
 
 	function setUp() {
 		WP_Mock::setUp();
@@ -20,8 +20,8 @@ class OPCacheStatsTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::parse_plugins
+	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
+	 * @covers \Niteo\WooCart\Defaults\Reporter::parse_plugins
 	 */
 	public function testParse() {
 		$data = array(
@@ -225,8 +225,8 @@ class OPCacheStatsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::decorate
+	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
+	 * @covers \Niteo\WooCart\Defaults\Reporter::decorate
 	 */
 	function test_decorate() {
 		$data = array(
@@ -350,8 +350,8 @@ class OPCacheStatsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\OpCacheStats\Reporter::emit
+	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
+	 * @covers \Niteo\WooCart\Defaults\Reporter::emit
 	 */
 	function test_emit() {
 		WP_Mock::userFunction(

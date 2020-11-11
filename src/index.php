@@ -24,7 +24,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\Filters;
 	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\MaintenanceMode;
-	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
+	use Niteo\WooCart\Defaults\Reporter;
 	use Niteo\WooCart\Defaults\Optimizations;
 	use Niteo\WooCart\Defaults\PluginLogger;
 	use Niteo\WooCart\Defaults\PluginManager;
