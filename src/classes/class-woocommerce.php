@@ -13,7 +13,7 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'woocommerce_general_settings', array( &$this, 'general_settings' ) );
 
 			// Disable WooCommerce admin plugin on lower plans
-			add_filter( 'woocommerce_admin_disabled', in_array($_SERVER['STORE_PLAN'], ["cart", "shop", "dev", "cartv2"]);
+			add_filter( 'woocommerce_admin_disabled', function(){ return in_array($_SERVER['STORE_PLAN'], ["cart", "shop", "dev", "cartv2"]);});
 		}
 
 		/**
