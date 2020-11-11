@@ -5,7 +5,7 @@ SRCPATH := $(shell pwd)/src
 ensure: vendor
 vendor: src/vendor
 	composer install --dev
-	composer dump-autoload -a
+	composer dump-autoload -o
 
 
 clover.xml: vendor test
@@ -18,7 +18,7 @@ test: vendor
 
 src/vendor:
 	cd src && composer install
-	cd src && composer dump-autoload -a
+	cd src && composer dump-autoload -o
 
 build: ensure
 	sed -i "s/@##VERSION##@/${VERSION}/" src/index.php
@@ -26,7 +26,7 @@ build: ensure
 	mkdir -p build
 	rm -rf src/vendor
 	cd src && composer install --no-dev
-	cd src && composer dump-autoload -a
+	cd src && composer dump-autoload -o
 	rm -rf src/vendor/symfony/yaml/Tests/
 	rm -rf src/vendor/lcobucci/jwt/test/
 	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
@@ -55,8 +55,8 @@ lint: ensure
 	bin/phpcs --standard=WordPress tests --ignore=vendor
 
 psr: src/vendor
-	composer dump-autoload -a
-	cd src && composer dump-autoload -a
+	composer dump-autoload -o
+	cd src && composer dump-autoload -o
 
 i18n:
 	wp i18n make-pot src src/i18n/woocart-defaults.pot

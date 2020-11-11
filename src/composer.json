@@ -1,5 +1,5 @@
 {
-  "name": "woocart-defaults",
+  "name": "woocart/defaults",
   "description": "Manage and deploy WordPress WooCommerce configuration changes",
   "keywords": [
     "WordPress",
