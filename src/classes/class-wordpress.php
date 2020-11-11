@@ -36,6 +36,7 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'http_block_status' ) );
+			add_action( 'init', array( $this, 'remove_heartbeat' ), PHP_INT_MAX );
 			if ( defined( 'WPCF7_PLUGIN' ) ) {
 				add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
 			}
@@ -51,6 +52,13 @@ namespace Niteo\WooCart\Defaults {
 			if ( get_option( 'woocart_http_status', false ) ) {
 				add_filter( 'pre_http_request', array( $this, 'http_requests' ), ~PHP_INT_MAX, 3 );
 			}
+		}
+
+		/**
+		 * De-register hearbeart script.
+		 */
+		public function remove_heartbeat() : void {
+			wp_deregister_script( 'heartbeat' );
 		}
 
 		/**
