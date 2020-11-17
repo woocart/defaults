@@ -5,9 +5,10 @@ jobs:
     name: On master or PR
     runs-on: ubuntu-latest
     steps:
-    - name: Switch Composer
-      run: composer self-update --1
     - uses: actions/checkout@master
+    - uses: php-actions/composer@v4
+      with:
+        composer_version: 1
     - name: Install Dependencies
       run: make install
     - name: Lint
