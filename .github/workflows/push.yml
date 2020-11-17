@@ -1,9 +1,9 @@
+on: push
 name: Tests
-on: [push]
 jobs:
   onMasterOrPR:
     name: On master or PR
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Install Dependencies
