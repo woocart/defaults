@@ -20,7 +20,7 @@ src/vendor:
 
 build: install
 	sed -i "s/@##VERSION##@/${VERSION}/" src/index.php
-	sed -i "s/@##VERSION##@/${VERSION}/" src/classes/class-release.php
+	sed -i "s/@##VERSION##@/${VERSION}/" src/classes/Release.php
 	mkdir -p build
 	rm -rf src/vendor
 	cd src && composer install --no-dev
@@ -33,7 +33,7 @@ build: install
 	rm -rf $(PLUGINSLUG)
 	mv $(PLUGINSLUG).zip build/
 	sed -i "s/${VERSION}/@##VERSION##@/" src/index.php
-	sed -i "s/${VERSION}/@##VERSION##@/" src/classes/class-release.php
+	sed -i "s/${VERSION}/@##VERSION##@/" src/classes/Release.php
 
 release:
 	git stash
@@ -57,8 +57,8 @@ psr: src/vendor
 	cd src && composer dump-autoload -o
 
 i18n:
-	wp i18n make-pot src src/i18n/woocart-defaults.pot
-	msgfmt -o src/i18n/woocart-defaults-ro_RO.mo src/i18n/woocart-defaults-ro_RO.po
+	wp i18n make-pot src src/i18n/$(PLUGINSLUG).pot
+	msgfmt -o src/i18n/$(PLUGINSLUG)-ro_RO.mo src/i18n/$(PLUGINSLUG)-ro_RO.po
 
 cover: clover.xml
 	bin/coverage-check clover.xml 80
