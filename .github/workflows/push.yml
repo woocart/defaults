@@ -6,10 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install Dependencies
-      uses: php-actions/composer@v4
+    - uses: php-actions/composer@v4
       with:
         composer_version: 1
+    - name: Switch Composer Version
+      run: switch-composer-version 1
+    - name: Install Dependencies
       run: make install
     - name: Lint
       run: make fmt
