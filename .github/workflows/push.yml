@@ -5,6 +5,8 @@ jobs:
     name: On master or PR
     runs-on: ubuntu-latest
     steps:
+    - name: Switch Composer
+      run: composer self-update --1
     - uses: actions/checkout@master
     - name: Install Dependencies
       run: make install
