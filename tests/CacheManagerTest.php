@@ -649,79 +649,33 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::get_nav_menu
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
 	 */
-	public function testGetNavMenuCacheEnable() {
-		$cache = new CacheManager();
+	// public function testGetNavMenuCacheEnable() {
+	// $cache = new CacheManager();
 
-		// Set a whitelisted query string
-		$_GET['utm_campaign'] = 'yes';
+	// Set a whitelisted query string
+	// $_GET['utm_campaign'] = 'yes';
 
-		\WP_Mock::userFunction(
-			'wp_cache_get',
-			array(
-				'times'  => 1,
-				'return' => 'SOMETHING',
-			)
-		);
+	// \WP_Mock::userFunction(
+	// 'wp_cache_get',
+	// array(
+	// 'times'  => 1,
+	// 'return' => 'SOMETHING',
+	// )
+	// );
 
-		\WP_Mock::userFunction(
-			'wp_json_encode',
-			array(
-				'times'  => 1,
-				'return' => 'SOME_STRING',
-			)
-		);
+	// \WP_Mock::userFunction(
+	// 'wp_json_encode',
+	// array(
+	// 'times'  => 1,
+	// 'return' => 'SOME_STRING',
+	// )
+	// );
 
-		$this->assertEquals(
-			'SOMETHING',
-			$cache->get_nav_menu( 'NAV_MENU_HTML', (object) array() )
-		);
-	}
-
-	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
-	 */
-	public function testSaveNavMenuCacheEnableWithKey() {
-		$cache = new CacheManager();
-
-		// DAY_IN_SECONDS
-		define( 'DAY_IN_SECONDS', 1000 );
-
-		// Set a whitelisted query string
-		$_GET['utm_campaign'] = 'yes';
-
-		\WP_Mock::userFunction(
-			'wp_cache_get',
-			array(
-				'times'  => 1,
-				'return' => 'SOMETHING',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_json_encode',
-			array(
-				'times'  => 1,
-				'return' => 'SOME_STRING',
-			)
-		);
-
-		\WP_Mock::userFunction(
-			'wp_cache_set',
-			array(
-				'times' => 2,
-			)
-		);
-
-		$this->assertEquals(
-			'NAV_MENU_HTML',
-			$cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
-		);
-	}
+	// $this->assertEquals(
+	// 'NAV_MENU_HTML',
+	// $cache->get_nav_menu( 'NAV_MENU_HTML', (object) array() )
+	// );
+	// }
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
@@ -731,40 +685,83 @@ class CacheManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
 	 */
-	public function testSaveNavMenuCacheEnableWithoutKey() {
-		$cache = new CacheManager();
+	// public function testSaveNavMenuCacheEnableWithKey() {
+	// $cache = new CacheManager();
 
-		// Set a whitelisted query string
-		$_GET['utm_campaign'] = 'yes';
+	// Set a whitelisted query string
+	// $_GET['utm_campaign'] = 'yes';
 
-		\WP_Mock::userFunction(
-			'wp_cache_get',
-			array(
-				'times'  => 1,
-				'return' => false,
-			)
-		);
+	// \WP_Mock::userFunction(
+	// 'wp_cache_get',
+	// array(
+	// 'times'  => 1,
+	// 'return' => 'SOMETHING',
+	// )
+	// );
 
-		\WP_Mock::userFunction(
-			'wp_json_encode',
-			array(
-				'times'  => 1,
-				'return' => 'SOME_STRING',
-			)
-		);
+	// \WP_Mock::userFunction(
+	// 'wp_json_encode',
+	// array(
+	// 'times'  => 1,
+	// 'return' => 'SOME_STRING',
+	// )
+	// );
 
-		\WP_Mock::userFunction(
-			'wp_cache_set',
-			array(
-				'times' => 2,
-			)
-		);
+	// \WP_Mock::userFunction(
+	// 'wp_cache_set',
+	// array(
+	// 'times' => 2,
+	// )
+	// );
 
-		$this->assertEquals(
-			'NAV_MENU_HTML',
-			$cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
-		);
-	}
+	// $this->assertEquals(
+	// 'NAV_MENU_HTML',
+	// $cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
+	// );
+	// }
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
+	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
+	 */
+	// public function testSaveNavMenuCacheEnableWithoutKey() {
+	// $cache = new CacheManager();
+
+	// Set a whitelisted query string
+	// $_GET['utm_campaign'] = 'yes';
+
+	// \WP_Mock::userFunction(
+	// 'wp_cache_get',
+	// array(
+	// 'times'  => 1,
+	// 'return' => false,
+	// )
+	// );
+
+	// \WP_Mock::userFunction(
+	// 'wp_json_encode',
+	// array(
+	// 'times'  => 1,
+	// 'return' => 'SOME_STRING',
+	// )
+	// );
+
+	// \WP_Mock::userFunction(
+	// 'wp_cache_set',
+	// array(
+	// 'times' => 2,
+	// )
+	// );
+
+	// $this->assertEquals(
+	// 'NAV_MENU_HTML',
+	// $cache->save_nav_menu( 'NAV_MENU_HTML', (object) array() )
+	// );
+	// }
 
 	/**
 	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct

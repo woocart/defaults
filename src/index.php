@@ -33,7 +33,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\WordPress;
 
 	if ( class_exists( 'WP_CLI' ) ) {
-		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
+		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLICommand' );
 	} else {
 		if ( function_exists( 'add_shortcode' ) ) {
 			new Shortcodes();
