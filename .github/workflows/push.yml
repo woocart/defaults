@@ -5,9 +5,9 @@ jobs:
     name: On master or PR
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: Install Dependencies
-      run: make ensure
+      run: make install
     - name: Lint
       run: make fmt
     - name: Test

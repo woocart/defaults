@@ -17,12 +17,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Niteo\\WooCart\\Defaults\\": "classes",
-      "Niteo\\WooCart\\Defaults\\Importers\\": "importers",
-      "Niteo\\WooCart\\Defaults\\Extend\\": "classes/traits"
+      "Niteo\\WooCart\\Defaults\\": "classes"
     }
   },
   "require-dev": {
-    "wp-cli/wp-cli": "^2.0"
+    "wp-cli/wp-cli": "dev-master"
   }
 }

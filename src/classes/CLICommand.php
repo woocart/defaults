@@ -25,7 +25,7 @@ namespace Niteo\WooCart\Defaults {
 	 *
 	 * @package Niteo\WooCart\Defaults
 	 */
-	class CLI_Command extends WP_CLI_Command {
+	class CLICommand extends WP_CLI_Command {
 
 		/**
 		 * Exports db to bundle.

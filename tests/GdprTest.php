@@ -33,18 +33,13 @@ class GDPRTest extends TestCase {
 		\WP_Mock::userFunction(
 			'wp_enqueue_style',
 			array(
-				'args' => array(
-					'woocart-gdpr',
-					'/assets/css/front-gdpr.css',
-					array(),
-					'@##VERSION##@',
-				),
+				'times' => 1,
 			)
 		);
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
 			array(
-				'args' => array( 'woocart-gdpr', '/assets/js/front-gdpr.js', array(), '@##VERSION##@', true ),
+				'times' => 1,
 			)
 		);
 		\WP_Mock::userFunction(

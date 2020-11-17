@@ -1,17 +1,17 @@
 <?php
 
 
-use Niteo\WooCart\Defaults\CLI_Command;
+use Niteo\WooCart\Defaults\CLICommand;
 use PHPUnit\Framework\TestCase;
 
 // we can do this because this function is being defined in the
 // namespace, and, so, this is not overwriting the built-in function,
 // it's merely obscuring it
 function current_time( $string ) {
-	return CLI_CommandTest::$functions->current_time( $string );
+	return CLICommandTest::$functions->current_time( $string );
 }
 
-class CLI_CommandTest extends TestCase {
+class CLICommandTest extends TestCase {
 
 
 	public static $functions;
@@ -40,7 +40,7 @@ class CLI_CommandTest extends TestCase {
 				'total_sales' => '42',
 			)
 		);
-		( new CLI_Command() )->sales( array( 'total_sales' ), array() );
+		( new CLICommand() )->sales( array( 'total_sales' ), array() );
 		$this->expectOutputString( '42' );
 	}
 

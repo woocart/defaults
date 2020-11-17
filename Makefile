@@ -1,26 +1,24 @@
-VERSION := 3.23.0
+VERSION := 3.24.0
 PLUGINSLUG := woocart-defaults
 SRCPATH := $(shell pwd)/src
 
-ensure: vendor
+install: vendor
 vendor: src/vendor
 	composer install --dev
 	composer dump-autoload -o
 
-
 clover.xml: vendor test
 
-unit:test
+unit: test
 
 test: vendor
-	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
 	bin/phpunit --coverage-html=./reports
 
 src/vendor:
-	cd src && composer install
+	cd src && composer install --ignore-platform-reqs
 	cd src && composer dump-autoload -o
 
-build: ensure
+build: install
 	sed -i "s/@##VERSION##@/${VERSION}/" src/index.php
 	sed -i "s/@##VERSION##@/${VERSION}/" src/classes/class-release.php
 	mkdir -p build
@@ -29,7 +27,7 @@ build: ensure
 	cd src && composer dump-autoload -o
 	rm -rf src/vendor/symfony/yaml/Tests/
 	rm -rf src/vendor/lcobucci/jwt/test/
-	grep -rl "Autoload" src/vendor/composer | xargs sed -i 's/Composer\\Autoload/NiteoWooCartDefaultsAutoload/g'
+
 	cp -ar $(SRCPATH) $(PLUGINSLUG)
 	zip -r $(PLUGINSLUG).zip $(PLUGINSLUG)
 	rm -rf $(PLUGINSLUG)
@@ -46,11 +44,11 @@ release:
 	git push origin v$(VERSION)
 	git pull -r
 
-fmt: ensure
+fmt: install
 	bin/phpcbf --standard=WordPress src --ignore=src/vendor
 	bin/phpcbf --standard=WordPress tests --ignore=vendor
 
-lint: ensure
+lint: install
 	bin/phpcs --standard=WordPress src --ignore=src/vendor
 	bin/phpcs --standard=WordPress tests --ignore=vendor
 

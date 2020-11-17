@@ -4,7 +4,6 @@
     "ext-gd": "*",
     "ext-json": "*"
   },
-  "prefer-stable": true,
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "*",
     "phpunit/phpunit": "6.5.9",
@@ -15,20 +14,17 @@
     "wp-coding-standards/wpcs": "*",
     "rregeer/phpunit-coverage-check": "^0.1.6",
     "phpunit/phpcov": "*",
-    "phpro/grumphp": "^0.14.2",
+    "phpro/grumphp": "^1.1.0",
     "sensiolabs/security-checker": "*",
     "maglnet/composer-require-checker": "*",
-    "wp-cli/wp-cli": "*"
+    "wp-cli/wp-cli": "dev-master"
   },
   "config": {
     "bin-dir": "bin/"
   },
   "autoload": {
     "psr-4": {
-      "Niteo\\WooCart\\Defaults\\": "classes",
-      "Niteo\\WooCart\\Defaults\\Importers\\": "importers",
-      "Niteo\\WooCart\\Defaults\\Generators\\": "generators",
-      "Niteo\\WooCart\\Defaults\\Extend\\": "classes/traits"
+      "Niteo\\WooCart\\Defaults\\": "classes"
     }
   }
 }

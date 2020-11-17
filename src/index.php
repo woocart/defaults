@@ -24,7 +24,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\Filters;
 	use Niteo\WooCart\Defaults\GDPR;
 	use Niteo\WooCart\Defaults\MaintenanceMode;
-	use Niteo\WooCart\Defaults\OpCacheStats\Reporter;
+	use Niteo\WooCart\Defaults\Reporter;
 	use Niteo\WooCart\Defaults\Optimizations;
 	use Niteo\WooCart\Defaults\PluginLogger;
 	use Niteo\WooCart\Defaults\PluginManager;
@@ -33,7 +33,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\WordPress;
 
 	if ( class_exists( 'WP_CLI' ) ) {
-		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLI_Command' );
+		\WP_CLI::add_command( 'wcd', __NAMESPACE__ . '\Defaults\CLICommand' );
 	} else {
 		if ( function_exists( 'add_shortcode' ) ) {
 			new Shortcodes();
