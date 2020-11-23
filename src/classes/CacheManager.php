@@ -76,9 +76,6 @@ namespace Niteo\WooCart\Defaults {
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
 
-			// WooCommerce attributes
-			add_action( 'woocommerce_after_edit_attribute_fields', array( &$this, 'flush_fcgi_cache' ) );
-
 			/**
 			 * If FCGI_CACHE_PATH is defined in wp-config.php, use that.
 			 */
@@ -266,11 +263,16 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function flush_fcgi_cache_selectively_on_save( $post_id ) {
 
-			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_save", "post"=>$post_id] );
+			$post_type = get_post_type( $post_id );
+			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_save", "post"=>$post_type] );
+
 			if ( wp_is_post_revision( $post_id ) ) {
 				return;
 			}
-			$this->flush_fcgi_cache();
+
+			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
+				$this->flush_fcgi_cache();
+			}
 
 		}
 
@@ -281,15 +283,8 @@ namespace Niteo\WooCart\Defaults {
 
 			$post_type = get_post_type( $post_id );
 			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_delete", "post"=>$post_type] );
-			if ( 'post' === $post_type ) {
-				$this->flush_fcgi_cache();
-			}
 
-			if ( 'page' === $post_type ) {
-				$this->flush_fcgi_cache();
-			}
-
-			if ( 'product' === $post_type ) {
+			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
 				$this->flush_fcgi_cache();
 			}
 
