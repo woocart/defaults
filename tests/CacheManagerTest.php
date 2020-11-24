@@ -37,7 +37,6 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'elementor/editor/after_save', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'fl_builder_after_save_layout', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
-		\WP_Mock::expectActionAdded( 'woocommerce_after_edit_attribute_fields', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $cache, 'nav_init' ) );
 
 		$cache->__construct();
@@ -415,6 +414,12 @@ class CacheManagerTest extends TestCase {
 
 		\WP_Mock::userFunction(
 			'wp_is_post_revision',
+			array(
+				'return' => 'post',
+			)
+		);
+		\WP_Mock::userFunction(
+			'get_post_type',
 			array(
 				'return' => false,
 			)
