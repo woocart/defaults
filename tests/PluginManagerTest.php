@@ -196,6 +196,25 @@ class PluginManagerTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
 	 */
+	public function testPluginsPageNotPluginsPage() {
+		$plugins = new PluginManager();
+
+		\WP_Mock::userFunction(
+			'get_current_screen',
+			array(
+				'return' => (object) array(
+					'id' => 'themes',
+				),
+			)
+		);
+
+		$this->assertEmpty( $plugins->plugins_page() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
+	 */
 	public function testPluginsPage() {
 		$plugins = new PluginManager();
 
@@ -304,6 +323,46 @@ class PluginManagerTest extends TestCase {
 	/**
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
 	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
+	 */
+	public function testAddRequiredTextNoPlugin() {
+		$plugins        = new PluginManager();
+		$plugins->paths = array(
+			'plugin_file',
+		);
+
+		$this->assertEmpty(
+			$plugins->add_required_text( 'another_plugin', array( 'Name' => 'Another Plugin' ) )
+		);
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
+	 */
+	public function testAddRequiredTextLowerWPVersion() {
+		$plugins        = new PluginManager();
+		$plugins->paths = array(
+			'plugin_file',
+		);
+
+		\WP_Mock::userFunction(
+			'get_bloginfo',
+			array(
+				'times'  => 1,
+				'return' => '5.4.0',
+			)
+		);
+
+		$plugins->add_required_text( 'plugin_file', array( 'Name' => 'Plugin' ) );
+		$this->expectOutputString( '<tr><td colspan="3" style="background:#fcd670"><strong>Plugin</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>' );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
+	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
 	 */
 	public function testAddRequiredText() {
 		$plugins        = new PluginManager();
@@ -311,8 +370,16 @@ class PluginManagerTest extends TestCase {
 			'plugin_file',
 		);
 
+		\WP_Mock::userFunction(
+			'get_bloginfo',
+			array(
+				'times'  => 1,
+				'return' => '5.5.0',
+			)
+		);
+
 		$plugins->add_required_text( 'plugin_file', array( 'Name' => 'Plugin' ) );
-		$this->expectOutputString( '<tr><td colspan="3" style="background:#fcd670"><strong>Plugin</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>' );
+		$this->expectOutputString( '<tr><td colspan="4" style="background:#fcd670"><strong>Plugin</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>' );
 	}
 
 	/**
