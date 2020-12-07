@@ -163,10 +163,10 @@ namespace Niteo\WooCart\Defaults {
 		public function force_activation() {
 			foreach ( $this->plugins as $slug => $plugin ) {
 				if ( ! $this->is_plugin_installed( $slug ) ) {
-					// Oops, plugin isn't there so iterate to next condition.
 					continue;
-				} elseif ( ! $this->is_plugin_active( $slug ) ) {
-					// There we go, activate the plugin.
+				}
+
+				if ( ! $this->is_plugin_active( $slug ) ) {
 					activate_plugin( $plugin['file_path'] );
 				}
 			}
@@ -180,14 +180,16 @@ namespace Niteo\WooCart\Defaults {
 			// on the plugins.php page
 			$screen = get_current_screen();
 
-			// Only on plugins page.
-			if ( 'plugins' === $screen->id ) {
-				// Filter out the deactivate link for required plugins.
-				add_filter( 'plugin_action_links', array( &$this, 'remove_deactivation_link' ), PHP_INT_MAX, 4 );
-
-				// Add a small text to let the user know that why the plugin cannot be de-activated.
-				add_action( 'after_plugin_row', array( &$this, 'add_required_text' ), PHP_INT_MAX, 3 );
+			// Only on plugins page
+			if ( 'plugins' !== $screen->id ) {
+				return;
 			}
+
+			// Filter out the deactivate link for required plugins.
+			add_filter( 'plugin_action_links', array( &$this, 'remove_deactivation_link' ), PHP_INT_MAX, 4 );
+
+			// Add a small text to let the user know that why the plugin cannot be de-activated.
+			add_action( 'after_plugin_row', array( &$this, 'add_required_text' ), PHP_INT_MAX, 3 );
 		}
 
 		/**
@@ -255,9 +257,17 @@ namespace Niteo\WooCart\Defaults {
 		 * @return void
 		 */
 		public function add_required_text( $plugin_file, $plugin_data ) {
-			if ( in_array( $plugin_file, $this->paths ) ) {
-				echo '<tr><td colspan="3" style="background:#fcd670"><strong>' . $plugin_data['Name'] . '</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>';
+			if ( ! in_array( $plugin_file, $this->paths ) ) {
+				return;
 			}
+
+			// Check again version 5.5.0
+			if ( $this->_wp_version() ) {
+				echo '<tr><td colspan="4" style="background:#fcd670"><strong>' . $plugin_data['Name'] . '</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>';
+				return;
+			}
+
+			echo '<tr><td colspan="3" style="background:#fcd670"><strong>' . $plugin_data['Name'] . '</strong> is a required plugin on WooCart and cannot be deactivated.</td></tr>';
 		}
 
 		/**
@@ -299,6 +309,20 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $slug;
+		}
+
+		/**
+		 * Check for WP version.
+		 *
+		 * @param string $version WP version to compare against
+		 * @return boolean
+		 */
+		private function _wp_version( string $version = '5.5.0' ) : bool {
+			if ( version_compare( get_bloginfo( 'version' ), $version, '>=' ) ) {
+				return true;
+			}
+
+			return false;
 		}
 
 	}
