@@ -5,7 +5,12 @@ jobs:
     name: On master or PR
     runs-on: ubuntu-latest
     steps:
+    - name: Check out source code
     - uses: actions/checkout@v2
+    - name: Set up PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
     - name: Install Dependencies
       run: make install
     - name: Lint

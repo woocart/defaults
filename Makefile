@@ -4,7 +4,7 @@ SRCPATH := $(shell pwd)/src
 
 install: vendor
 vendor: src/vendor
-	composer install --dev
+	composer install
 	composer dump-autoload -o
 
 clover.xml: vendor test
