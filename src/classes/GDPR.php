@@ -29,7 +29,7 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'wp_enqueue_scripts', array( &$this, 'scripts' ) );
 
 			// Don't extend if the option is disabled.
-			if ( 'yes' === get_option( 'wc_gdpr_extend', 'yes' ) ) {
+			if ( 'yes' === get_option( 'wc_gdpr_extend', 'no' ) ) {
 				// WooCommerce checkout form customizations for GDPR compliance.
 				add_action( 'woocommerce_checkout_after_terms_and_conditions', array( &$this, 'privacy_checkbox' ) );
 				add_action( 'woocommerce_checkout_process', array( &$this, 'show_notice' ) );
@@ -351,7 +351,7 @@ namespace Niteo\WooCart\Defaults {
 
 		<td>
 		  <label for="extend_gdpr_compliance">
-			<input name="extend_gdpr_compliance" type="checkbox" id="extend_gdpr_compliance" value="yes" <?php checked( 'yes', get_option( 'wc_gdpr_extend', 'yes' ) ); ?> />
+			<input name="extend_gdpr_compliance" type="checkbox" id="extend_gdpr_compliance" value="yes" <?php checked( 'yes', get_option( 'wc_gdpr_extend', 'no' ) ); ?> />
 					  <?php esc_html_e( 'This extends GDPR compliance to plugins such as WooCommerce and Contact Form 7.' ); ?>
 					</label>
 		</td>
