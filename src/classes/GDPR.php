@@ -52,58 +52,64 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * @return null
+		 * Shows the GDPR notification in the footer.
+		 *
+		 * @return void
 		 */
-		public function show_consent() {
+		public function show_consent() : void {
 			$consent = get_option( 'woocommerce_allow_tracking' );
 
-			if ( 'no' === $consent ) {
-				// Get the notification message from `wp_options`
-				$notification_message = esc_html( get_option( 'wc_gdpr_notification_message', 'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].' ) );
+			if ( 'no' !== $consent ) {
+				return;
+			}
 
-				// Proceed only if the notification message is not blank
-				if ( ! empty( $notification_message ) ) {
-					// Now check for placeholders in the message
-					// Privacy policy
-					if ( false !== strpos( $notification_message, '[privacy_policy]' ) ) {
-						$privacy = absint( get_option( 'wp_page_for_privacy_policy' ) );
+			// Get the notification message from `wp_options`
+			$notification_message = esc_html( get_option( 'wc_gdpr_notification_message' ) );
 
-						if ( $privacy ) {
-							$privacy_link  = esc_url( get_permalink( $privacy ) );
-							$privacy_title = sanitize_text_field( get_the_title( $privacy ) );
+			// Proceed only if the notification message is not blank
+			if ( ! $notification_message ) {
+				return;
+			}
 
-							$privacy_replace = '<a href="' . $privacy_link . '">' . $privacy_title . '</a>';
+			// Now check for placeholders in the message
+			// Privacy policy
+			if ( false !== strpos( $notification_message, '[privacy_policy]' ) ) {
+				$privacy = absint( get_option( 'wp_page_for_privacy_policy' ) );
 
-							// Replace the placeholder
-							$notification_message = str_replace( '[privacy_policy]', $privacy_replace, $notification_message );
-						}
-					}
+				if ( $privacy ) {
+					$privacy_link  = esc_url( get_permalink( $privacy ) );
+					$privacy_title = sanitize_text_field( get_the_title( $privacy ) );
 
-					// Cookies policy
-					if ( false !== strpos( $notification_message, '[cookies_policy]' ) ) {
-						$cookies = absint( get_option( 'wp_page_for_cookies_policy' ) );
+					$privacy_replace = '<a href="' . $privacy_link . '">' . $privacy_title . '</a>';
 
-						if ( $cookies ) {
-							$cookies_link  = esc_url( get_permalink( $cookies ) );
-							$cookies_title = sanitize_text_field( get_the_title( $cookies ) );
-
-							$cookies_replace = '<a href="' . $cookies_link . '">' . $cookies_title . '</a>';
-
-							// Replace the placeholder
-							$notification_message = str_replace( '[cookies_policy]', $cookies_replace, $notification_message );
-						}
-					}
-
-					// We have replaced the placeholders with the actual links.
-					// Let's show the notification now.
-					echo '<div class="wc-defaults-gdpr">';
-					echo '<p>';
-					echo $notification_message;
-					echo ' <a href="javascript:;" id="wc-defaults-ok">' . esc_html__( 'OK', 'woocart-defaults' ) . '</a>';
-					echo '</p>';
-					echo '</div><!-- .wc-defaults-gdpr -->';
+					// Replace the placeholder
+					$notification_message = str_replace( '[privacy_policy]', $privacy_replace, $notification_message );
 				}
 			}
+
+			// Cookies policy
+			if ( false !== strpos( $notification_message, '[cookies_policy]' ) ) {
+				$cookies = absint( get_option( 'wp_page_for_cookies_policy' ) );
+
+				if ( $cookies ) {
+					$cookies_link  = esc_url( get_permalink( $cookies ) );
+					$cookies_title = sanitize_text_field( get_the_title( $cookies ) );
+
+					$cookies_replace = '<a href="' . $cookies_link . '">' . $cookies_title . '</a>';
+
+					// Replace the placeholder
+					$notification_message = str_replace( '[cookies_policy]', $cookies_replace, $notification_message );
+				}
+			}
+
+			// We have replaced the placeholders with the actual links.
+			// Let's show the notification now.
+			echo '<div class="wc-defaults-gdpr">';
+			echo '<p>';
+			echo $notification_message;
+			echo ' <a href="javascript:;" id="wc-defaults-ok">' . esc_html__( 'OK', 'woocart-defaults' ) . '</a>';
+			echo '</p>';
+			echo '</div><!-- .wc-defaults-gdpr -->';
 		}
 
 		/**
@@ -281,7 +287,7 @@ namespace Niteo\WooCart\Defaults {
 								<?php esc_html_e( 'GDPR notification message' ); ?>
 							</th>
 							<td>
-								<textarea name="notification_message" class="widefat" rows="4"><?php echo esc_html( get_option( 'wc_gdpr_notification_message', 'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].' ) ); ?></textarea>
+								<textarea name="notification_message" class="widefat" rows="4"><?php echo esc_html( get_option( 'wc_gdpr_notification_message' ) ); ?></textarea>
 
 								<p>
 									<?php
