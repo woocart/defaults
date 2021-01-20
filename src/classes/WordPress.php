@@ -77,9 +77,9 @@ namespace Niteo\WooCart\Defaults {
 				array(
 					'parent' => '',
 					'id'     => 'wc_http_block',
-					'title'  => esc_html__( 'HTTP Block Mode', 'woocart-defaults' ),
+					'title'  => esc_html__( 'Blocking HTTP Calls', 'woocart-defaults' ),
 					'meta'   => array(
-						'title' => esc_html__( 'HTTP Block Mode is active', 'woocart-defaults' ),
+						'title' => esc_html__( 'External HTTP calls are getting blocked', 'woocart-defaults' ),
 					),
 					'href'   => '#',
 				)
