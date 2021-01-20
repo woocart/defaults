@@ -91,6 +91,50 @@ class GDPRTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
 	 * @covers \Niteo\WooCart\Defaults\GDPR::show_consent
 	 */
+	public function testConsentAllowTracking() {
+		$gdpr = new GDPR();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'woocommerce_allow_tracking',
+				'return' => 'yes',
+			)
+		);
+
+		$this->assertEmpty( $gdpr->show_consent() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::show_consent
+	 */
+	public function testConsentNoMessage() {
+		$gdpr = new GDPR();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'woocommerce_allow_tracking',
+				'return' => 'no',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => 'wc_gdpr_notification_message',
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $gdpr->show_consent() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
+	 * @covers \Niteo\WooCart\Defaults\GDPR::show_consent
+	 */
 	public function testConsent() {
 		$gdpr = new GDPR();
 		\WP_Mock::userFunction(
@@ -111,7 +155,6 @@ class GDPRTest extends TestCase {
 			array(
 				'args'   => array(
 					'wc_gdpr_notification_message',
-					'We use cookies to improve your experience on our site. To find out more, read our [privacy_policy] and [cookies_policy].',
 				),
 				'return' => 'Test message with [privacy_policy] and [cookies_policy]',
 			)
