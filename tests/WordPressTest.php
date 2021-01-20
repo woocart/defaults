@@ -37,6 +37,24 @@ class WordPressTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
 	 * @covers \Niteo\WooCart\Defaults\WordPress::http_block_status
 	 */
+	public function testHttpBlockStatusNotActive() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->http_block_status() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::http_block_status
+	 */
 	public function testHttpBlockStatus() {
 		$wordpress = new WordPress();
 
@@ -51,6 +69,140 @@ class WordPressTest extends TestCase {
 
 		$wordpress->http_block_status();
 		\WP_Mock::assertHooksAdded();
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
+	 */
+	public function testBlockStatusButtonNoAdmin() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->block_status_admin_button( '' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
+	 */
+	public function testBlockStatusButtonNotBar() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'is_admin_bar_showing',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->block_status_admin_button( '' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
+	 */
+	public function testBlockStatusButtonNoOption() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'is_admin_bar_showing',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->block_status_admin_button( '' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
+	 */
+	public function testBlockStatusButtonSuccess() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'is_admin_bar_showing',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'add_query_arg',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_nonce_url',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$admin_bar = new class() {
+			function add_menu( $data ) {
+				// Doing something with it.
+			}
+		};
+
+		$this->assertEmpty( $wordpress->block_status_admin_button( $admin_bar ) );
 	}
 
 	/**
@@ -210,6 +362,198 @@ class WordPressTest extends TestCase {
 		$wordpress = new WordPress();
 
 		$this->expectOutputString( '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>', $wordpress->wpcf7_cache() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::admin_scripts
+	 */
+	public function testAdminScripts() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'wp_enqueue_style',
+			array(
+				'times' => 1,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'plugin_dir_url',
+			array(
+				'times' => 1,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->admin_scripts( '' ) );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
+	 */
+	public function testCheckBlockRequestNoAdmin() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->check_block_request() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
+	 */
+	public function testCheckBlockRequestNoRequest() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->check_block_request() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
+	 */
+	public function testCheckBlockRequestNotCorrect() {
+		$wordpress = new WordPress();
+
+		$_REQUEST['wc_http_block'] = 'not_deactivate';
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_key',
+			array(
+				'times'  => 1,
+				'return' => 'not_deactivate',
+			)
+		);
+
+		$this->assertEmpty( $wordpress->check_block_request() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
+	 */
+	public function testCheckBlockRequestFailedAdminReferer() {
+		$wordpress = new WordPress();
+
+		$_REQUEST['wc_http_block'] = 'deactivate';
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_key',
+			array(
+				'times'  => 1,
+				'return' => 'deactivate',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'check_admin_referer',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->check_block_request() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
+	 */
+	public function testCheckBlockRequestSuccess() {
+		$wordpress = new WordPress();
+
+		$_REQUEST['wc_http_block'] = 'deactivate';
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_key',
+			array(
+				'times'  => 1,
+				'return' => 'deactivate',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'check_admin_referer',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_option',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_redirect',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'esc_url_raw',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'remove_query_arg',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->check_block_request() );
 	}
 
 }

@@ -455,7 +455,7 @@ namespace Niteo\WooCart\Defaults {
 			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 			wp_enqueue_style(
 				'woocart-dashboard',
-				"$plugin_dir/assets/css/dashboard.css",
+				"{$plugin_dir}assets/css/dashboard.css",
 				array(),
 				Release::Version,
 				'all'

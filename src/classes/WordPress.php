@@ -35,6 +35,7 @@ namespace Niteo\WooCart\Defaults {
 		 * Class constructor.
 		 */
 		public function __construct() {
+			add_action( 'admin_bar_menu', array( $this, 'block_status_admin_button' ), 100 );
 			add_action( 'init', array( $this, 'http_block_status' ) );
 			add_action( 'init', array( $this, 'remove_heartbeat' ), PHP_INT_MAX );
 			if ( defined( 'WPCF7_PLUGIN' ) ) {
@@ -42,6 +43,60 @@ namespace Niteo\WooCart\Defaults {
 			}
 			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 			add_filter( 'pre_reschedule_event', array( $this, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+			add_action( 'admin_init', array( &$this, 'check_block_request' ) );
+		}
+
+		/**
+		 * Adds a button to the admin bar if block mode for
+		 * HTTP calls is active.
+		 *
+		 * @return void
+		 */
+		public function block_status_admin_button( $admin_bar ) : void {
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			// Check if the admin toolbar is shown.
+			if ( ! is_admin_bar_showing() ) {
+				return;
+			}
+
+			// Status should be enabled.
+			if ( ! get_option( 'woocart_http_status' ) ) {
+				return;
+			}
+
+			// Button parameters.
+			$status_url = add_query_arg( array( 'wc_http_block' => 'deactivate' ) );
+			$nonce_url  = wp_nonce_url( $status_url, 'wc_block_nonce' );
+
+			// Add button to the bar.
+			$admin_bar->add_menu(
+				array(
+					'parent' => '',
+					'id'     => 'wc_http_block',
+					'title'  => esc_html__( 'HTTP Block Mode', 'woocart-defaults' ),
+					'meta'   => array(
+						'title' => esc_html__( 'HTTP Block Mode is active', 'woocart-defaults' ),
+					),
+					'href'   => '#',
+				)
+			);
+
+			// Add deactivate option.
+			$admin_bar->add_menu(
+				array(
+					'parent' => 'wc_http_block',
+					'id'     => 'wc_http_block_button',
+					'title'  => esc_html__( 'Deactivate', 'woocart-defaults' ),
+					'meta'   => array(
+						'title' => esc_html__( 'Turn it off', 'woocart-defaults' ),
+					),
+					'href'   => $nonce_url,
+				)
+			);
 		}
 
 		/**
@@ -49,9 +104,11 @@ namespace Niteo\WooCart\Defaults {
 		 * `wp_options` for the status.
 		 */
 		public function http_block_status() : void {
-			if ( get_option( 'woocart_http_status', false ) ) {
-				add_filter( 'pre_http_request', array( $this, 'http_requests' ), ~PHP_INT_MAX, 3 );
+			if ( ! get_option( 'woocart_http_status' ) ) {
+				return;
 			}
+
+			add_filter( 'pre_http_request', array( $this, 'http_requests' ), ~PHP_INT_MAX, 3 );
 		}
 
 		/**
@@ -142,6 +199,52 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function wpcf7_cache() : void {
 			echo '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>';
+		}
+
+		/**
+		 * Add scripts for the admin panel.
+		 *
+		 * @return void
+		 */
+		public function admin_scripts( $hook ) : void {
+			wp_enqueue_style( 'woocart-admin', plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css/admin.css', array(), Release::Version, 'all' );
+		}
+
+		/**
+		 * Checks for the request and deactivates the HTTP block calls mode.
+		 *
+		 * @return void
+		 */
+		public function check_block_request() : void {
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			if ( ! isset( $_REQUEST['wc_http_block'] ) ) {
+				return;
+			}
+
+			// Show notice after cache is flushed.
+			$action = sanitize_key( $_REQUEST['wc_http_block'] );
+
+			if ( 'deactivate' !== $action ) {
+				return;
+			}
+
+			// Verify nonce.
+			if ( ! check_admin_referer( 'wc_block_nonce' ) ) {
+				return;
+			}
+
+			// HTTP block calls is deactivate here.
+			update_option( 'woocart_http_status', false );
+
+			// Remove arg from the query.
+			wp_redirect(
+				esc_url_raw(
+					remove_query_arg( 'wc_http_block' )
+				)
+			);
 		}
 
 	}
