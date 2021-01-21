@@ -22,12 +22,25 @@ class WordPressTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
 	 */
 	public function testConstructor() {
-		$wordpress = new WordPress();
+		$wordpress = \Mockery::mock( 'Niteo\WooCart\Defaults\WordPress' )->makePartial();
+		$wordpress->shouldReceive(
+			array(
+				'is_staging'      => true,
+				'is_rewrite_urls' => true,
+			)
+		);
+
+		\WP_Mock::expectActionAdded( 'admin_bar_menu', array( $wordpress, 'block_status_admin_button' ), 100 );
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'http_block_status' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $wordpress, 'remove_heartbeat' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'wp_footer', array( $wordpress, 'wpcf7_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectFilterAdded( 'file_mod_allowed', array( $wordpress, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 		\WP_Mock::expectFilterAdded( 'pre_reschedule_event', array( $wordpress, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
+		\WP_Mock::expectActionAdded( 'admin_enqueue_scripts', array( $wordpress, 'admin_scripts' ) );
+		\WP_Mock::expectActionAdded( 'admin_init', array( $wordpress, 'check_block_request' ) );
+
+		\WP_Mock::expectActionAdded( 'wp_loaded', array( $wordpress, 'start_buffering' ), ~PHP_INT_MAX );
+		\WP_Mock::expectActionAdded( 'wp_print_footer_scripts', array( $wordpress, 'end_buffering' ), PHP_INT_MAX );
 
 		$wordpress->__construct();
 		\WP_Mock::assertHooksAdded();
@@ -554,6 +567,26 @@ class WordPressTest extends TestCase {
 		);
 
 		$this->assertEmpty( $wordpress->check_block_request() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers \Niteo\WooCart\Defaults\WordPress::staging_url_override
+	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
+	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 */
+	public function testStagingOverrideBothDomains() {
+		$wordpress = new WordPress();
+
+		$_ENV['DOMAIN']        = 'stagingdomain.com';
+		$_ENV['PARENT_DOMAIN'] = 'domain.com';
+
+		$buffer = '<div><a href="https://stagingdomain.com/relative-link">This is a test for link replacement.</a>&nbsp;&nbsp;<br><a href="https://domain.com/another-link">This is another link having parent domain value.</a>';
+
+		$this->assertSame(
+			'<div><a href="/relative-link">This is a test for link replacement.</a>&nbsp;&nbsp;<br><a href="/another-link">This is another link having parent domain value.</a>',
+			$wordpress->staging_url_override( $buffer )
+		);
 	}
 
 }

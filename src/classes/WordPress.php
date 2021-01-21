@@ -12,6 +12,8 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class WordPress {
 
+		use Extend\Dashboard;
+
 		/**
 		 * @var string
 		 */
@@ -44,7 +46,13 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 			add_filter( 'pre_reschedule_event', array( $this, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-			add_action( 'admin_init', array( &$this, 'check_block_request' ) );
+			add_action( 'admin_init', array( $this, 'check_block_request' ) );
+
+			// Runs only when WP_REWRITE_URLS is set to true and for staging stores
+			if ( $this->is_rewrite_urls() && $this->is_staging() ) {
+				add_action( 'wp_loaded', array( $this, 'start_buffering' ), ~PHP_INT_MAX );
+				add_action( 'wp_print_footer_scripts', array( $this, 'end_buffering' ), PHP_INT_MAX );
+			}
 		}
 
 		/**
@@ -245,6 +253,46 @@ namespace Niteo\WooCart\Defaults {
 					remove_query_arg( 'wc_http_block' )
 				)
 			);
+		}
+
+		/**
+		 * Starts output buffering for overriding staging URL's.
+		 *
+		 * @return void
+		 * @codeCoverageIgnore
+		 */
+		public function start_buffering() : void {
+			ob_start( array( $this, 'staging_url_override' ) );
+		}
+
+		/**
+		 * Overrides URL's for the staging store.
+		 *
+		 * @param string $buffer Page content as string.
+		 * @return string
+		 */
+		public function staging_url_override( string &$buffer ) : string {
+			// Staging URL
+			if ( isset( $_ENV['DOMAIN'] ) ) {
+				$buffer = str_replace( array( 'http://' . $_ENV['DOMAIN'], 'https://' . $_ENV['DOMAIN'] ), '', $buffer );
+			}
+
+			// Live URL
+			if ( isset( $_ENV['PARENT_DOMAIN'] ) ) {
+				$buffer = str_replace( array( 'http://' . $_ENV['PARENT_DOMAIN'], 'https://' . $_ENV['PARENT_DOMAIN'] ), '', $buffer );
+			}
+
+			return $buffer;
+		}
+
+		/**
+		 * Turn off output buffer.
+		 *
+		 * @return void
+		 * @codeCoverageIgnore
+		 */
+		public function end_buffering() : void {
+			ob_end_flush();
 		}
 
 	}
