@@ -6,7 +6,7 @@
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "*",
-    "phpunit/phpunit": "6.5.9",
+    "phpunit/phpunit": "9.4.3",
     "10up/wp_mock": "0.3.0",
     "antecedent/patchwork": "*",
     "php-coveralls/php-coveralls": "^2.1",

@@ -16,12 +16,12 @@ class CLICommandTest extends TestCase {
 
 	public static $functions;
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 		self::$functions = \Mockery::mock();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);

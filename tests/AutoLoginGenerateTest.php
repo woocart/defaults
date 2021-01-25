@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class AutoLoginCLITest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 		\WP_Mock::userFunction(
 			'is_blog_installed',
@@ -22,7 +22,7 @@ class AutoLoginCLITest extends TestCase {
 		);
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);

@@ -5,11 +5,11 @@ use PHPUnit\Framework\TestCase;
 
 class ImporterTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -101,12 +101,13 @@ class ImporterTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException Exception
 	 * @covers \Niteo\WooCart\Defaults\Importer::resolve
 	 * @covers \Niteo\WooCart\Defaults\ConfigsRegistry::get
 	 */
 	public function testResolve() {
 		$i = new Importer();
+
+		$this->expectException( \Exception::class );
 		$i->resolve( 'foo/test' );
 	}
 }

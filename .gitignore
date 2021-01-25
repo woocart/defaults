@@ -11,3 +11,4 @@ build
 reports
 clover.xml
 src/vendor
+.phpunit.result.cache
