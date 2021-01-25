@@ -61,7 +61,7 @@ i18n:
 	msgfmt -o src/i18n/$(PLUGINSLUG)-ro_RO.mo src/i18n/$(PLUGINSLUG)-ro_RO.po
 
 cover: clover.xml
-	bin/coverage-check clover.xml 78
+	bin/coverage-check clover.xml 80
 
 clean:
 	rm -rf vendor/ bin src/vendor/

@@ -51,7 +51,9 @@ namespace Niteo\WooCart\Defaults {
 			// Runs only when WP_REWRITE_URLS is set to true and for staging stores
 			if ( $this->is_rewrite_urls() && $this->is_staging() ) {
 				add_action( 'wp_loaded', array( $this, 'start_buffering' ), ~PHP_INT_MAX );
-				add_action( 'wp_print_footer_scripts', array( $this, 'end_buffering' ), PHP_INT_MAX );
+
+				// End buffer
+				$this->end_buffering();
 			}
 		}
 
@@ -292,7 +294,11 @@ namespace Niteo\WooCart\Defaults {
 		 * @codeCoverageIgnore
 		 */
 		public function end_buffering() : void {
-			ob_end_flush();
+			register_shutdown_function(
+				function() {
+					ob_end_flush();
+				}
+			);
 		}
 
 	}

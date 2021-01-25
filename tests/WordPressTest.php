@@ -6,11 +6,11 @@ use PHPUnit\Framework\TestCase;
 class WordPressTest extends TestCase {
 
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -27,6 +27,7 @@ class WordPressTest extends TestCase {
 			array(
 				'is_staging'      => true,
 				'is_rewrite_urls' => true,
+				'end_buffering'   => true,
 			)
 		);
 
@@ -40,7 +41,6 @@ class WordPressTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'admin_init', array( $wordpress, 'check_block_request' ) );
 
 		\WP_Mock::expectActionAdded( 'wp_loaded', array( $wordpress, 'start_buffering' ), ~PHP_INT_MAX );
-		\WP_Mock::expectActionAdded( 'wp_print_footer_scripts', array( $wordpress, 'end_buffering' ), PHP_INT_MAX );
 
 		$wordpress->__construct();
 		\WP_Mock::assertHooksAdded();
