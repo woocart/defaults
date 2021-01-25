@@ -9,6 +9,9 @@
 use Niteo\WooCart\Defaults\Filters;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Filters
+ */
 class FiltersTest extends TestCase {
 
 
@@ -25,7 +28,7 @@ class FiltersTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Filters::__construct
+	 * @covers ::__construct
 	 */
 	public function test__construct() {
 		\WP_Mock::expectFilterAdded( 'option_woocommerce_checkout_privacy_policy_text', 'do_shortcode' );

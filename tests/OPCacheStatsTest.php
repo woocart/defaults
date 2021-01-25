@@ -4,6 +4,9 @@
 use Niteo\WooCart\Defaults\Reporter;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Reporter
+ */
 class ReporterTest extends TestCase {
 
 	function setUp() : void {
@@ -20,8 +23,8 @@ class ReporterTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\Reporter::parse_plugins
+	 * @covers ::__construct
+	 * @covers ::parse_plugins
 	 */
 	public function testParse() {
 		$data = array(
@@ -225,8 +228,8 @@ class ReporterTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\Reporter::decorate
+	 * @covers ::__construct
+	 * @covers ::decorate
 	 */
 	function test_decorate() {
 		$data = array(
@@ -350,8 +353,8 @@ class ReporterTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Reporter::__construct
-	 * @covers \Niteo\WooCart\Defaults\Reporter::emit
+	 * @covers ::__construct
+	 * @covers ::emit
 	 */
 	function test_emit() {
 		WP_Mock::userFunction(

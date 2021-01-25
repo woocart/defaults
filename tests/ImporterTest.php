@@ -3,6 +3,9 @@
 use Niteo\WooCart\Defaults\Importer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importer
+ */
 class ImporterTest extends TestCase {
 
 	function setUp() : void {
@@ -18,7 +21,7 @@ class ImporterTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importer::read_file
+	 * @covers ::read_file
 	 */
 	public function testRead_file_non_serialized() {
 		$i    = new Importer();
@@ -33,7 +36,7 @@ class ImporterTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importer::read_file
+	 * @covers ::read_file
 	 */
 	public function testRead_file_serialized() {
 		$i    = new Importer();
@@ -53,18 +56,18 @@ class ImporterTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importer::read_file
+	 * @covers ::read_file
 	 * @covers \Niteo\WooCart\Defaults\ConfigsRegistry::get
-	 * @covers \Niteo\WooCart\Defaults\Importer::resolve
+	 * @covers ::resolve
 	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptions::import
 	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptions::toValue
 	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptionsValue::setValue
-	 * @covers \Niteo\WooCart\Defaults\Importer::parse
+	 * @covers ::parse
 	 * @covers \Niteo\WooCart\Defaults\Value::__construct
 	 * @covers \Niteo\WooCart\Defaults\Value::getStrippedKey
 	 * @covers \Niteo\WooCart\Defaults\Value::getValue
 	 * @covers \Niteo\WooCart\Defaults\Value::setKey
-	 * @covers \Niteo\WooCart\Defaults\Importer::import
+	 * @covers ::import
 	 */
 	public function testImport() {
 		global $wpdb;
@@ -101,7 +104,7 @@ class ImporterTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importer::resolve
+	 * @covers ::resolve
 	 * @covers \Niteo\WooCart\Defaults\ConfigsRegistry::get
 	 */
 	public function testResolve() {

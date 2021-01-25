@@ -4,6 +4,9 @@
 use Niteo\WooCart\Defaults\AdminDashboard;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\AdminDashboard
+ */
 class AdminDashboardTest extends TestCase {
 
 	function setUp() : void {
@@ -20,7 +23,7 @@ class AdminDashboardTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$dashboard = new AdminDashboard();
@@ -33,9 +36,9 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::init
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::is_proteus_active
 	 */
 	public function testInitProteusInactive() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AdminDashboard' )->makePartial();
@@ -88,9 +91,9 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::init
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::is_proteus_active
 	 */
 	public function testInitProteusActive() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AdminDashboard' )->makePartial();
@@ -143,8 +146,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers ::__construct
+	 * @covers ::is_proteus_active
 	 */
 	public function testIsProteusActive() {
 		$dashboard             = new AdminDashboard();
@@ -164,9 +167,9 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::track
+	 * @covers ::__construct
+	 * @covers ::is_proteus_active
+	 * @covers ::track
 	 */
 	public function testTrackProteusLogin() {
 		$dashboard             = new AdminDashboard();
@@ -193,9 +196,9 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::track
+	 * @covers ::__construct
+	 * @covers ::is_proteus_active
+	 * @covers ::track
 	 */
 	public function testTrackProteusLoginSkip() {
 		$dashboard             = new AdminDashboard();
@@ -209,8 +212,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::is_proteus_active
+	 * @covers ::__construct
+	 * @covers ::is_proteus_active
 	 */
 	public function testIsProteusInactive() {
 		$dashboard             = new AdminDashboard();
@@ -230,8 +233,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::purchase_link
+	 * @covers ::__construct
+	 * @covers ::purchase_link
 	 */
 	public function testPurchaseLink() {
 		$dashboard = new AdminDashboard();
@@ -247,8 +250,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::created_time
+	 * @covers ::__construct
+	 * @covers ::created_time
 	 */
 	public function testCreatedTime() {
 		$dashboard           = new AdminDashboard();
@@ -271,8 +274,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::expiry_time
+	 * @covers ::__construct
+	 * @covers ::expiry_time
 	 */
 	public function testExpiryTime() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AdminDashboard' )->makePartial();
@@ -285,8 +288,8 @@ class AdminDashboardTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\AdminDashboard::date_diff
+	 * @covers ::__construct
+	 * @covers ::date_diff
 	 */
 	public function testDateDiff() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AdminDashboard' )->makePartial();

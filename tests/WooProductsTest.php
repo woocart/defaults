@@ -4,6 +4,9 @@ use Niteo\WooCart\Defaults\Importers\WooProducts;
 use PHPUnit\Framework\TestCase;
 
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\WooProducts
+ */
 class WooProductsTest extends TestCase {
 
 	function setUp() : void {
@@ -21,11 +24,11 @@ class WooProductsTest extends TestCase {
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::__construct
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::get_product_count
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::import
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::parse_product
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::mark_products
+	 * @covers ::__construct
+	 * @covers ::get_product_count
+	 * @covers ::import
+	 * @covers ::parse_product
+	 * @covers ::mark_products
 	 */
 	public function testImport() {
 
@@ -51,8 +54,8 @@ class WooProductsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::__construct
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::mark_products
+	 * @covers ::__construct
+	 * @covers ::mark_products
 	 */
 	public function testMarkProducts() {
 		$import = new WooProducts( __DIR__ . '/fixtures/products.html', __DIR__ );
@@ -68,8 +71,8 @@ class WooProductsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::__construct
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooProducts::get_product_count
+	 * @covers ::__construct
+	 * @covers ::get_product_count
 	 */
 	public function test__construct() {
 		$import = new WooProducts( __DIR__ . '/fixtures/products.html', __DIR__ );

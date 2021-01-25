@@ -4,6 +4,9 @@
 use Niteo\WooCart\Defaults\ConfigsRegistry;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\ConfigsRegistry
+ */
 class ImportRegistryTest extends TestCase {
 
 	function setUp() : void {
@@ -19,7 +22,7 @@ class ImportRegistryTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\ConfigsRegistry::get
+	 * @covers ::get
 	 */
 	public function testGetImporters() {
 		foreach ( ConfigsRegistry::get() as $importer ) {

@@ -1,9 +1,11 @@
 <?php
 
-
 use Niteo\WooCart\Defaults\DemoCleaner;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\DemoCleaner
+ */
 class DemoCleanerTest extends TestCase {
 
 	function setUp() : void {
@@ -20,7 +22,8 @@ class DemoCleanerTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
+	 * @covers \Niteo\WooCart\Defaults\DemoCleaner
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$demo_cleaner = new DemoCleaner();
@@ -31,10 +34,10 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::init
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::check
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::delete
+	 * @covers ::check
 	 */
 	public function testInit() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\DemoCleaner' )
@@ -42,7 +45,7 @@ class DemoCleanerTest extends TestCase {
 		$mock->shouldReceive( 'delete' )
 		 ->andReturn( true );
 
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'get_option',
 			array(
 				'times'  => 1,
@@ -52,7 +55,7 @@ class DemoCleanerTest extends TestCase {
 				),
 			)
 		);
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'add_meta_box',
 			array(
 				'times'  => 1,
@@ -68,13 +71,13 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::check
+	 * @covers ::__construct
+	 * @covers ::check
 	 */
 	public function testCheckNotTrue() {
 		$demo_cleaner = new DemoCleaner();
 
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'get_option',
 			array(
 				'times'  => 1,
@@ -86,27 +89,27 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::scripts
+	 * @covers ::__construct
+	 * @covers ::scripts
 	 */
 	public function testScriptsCorrectHook() {
 		$demo_cleaner = new DemoCleaner();
 
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'plugin_dir_url',
 			array(
 				'times'  => 1,
 				'return' => 'https://localhost',
 			)
 		);
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'wp_enqueue_script',
 			array(
 				'times'  => 1,
 				'return' => true,
 			)
 		);
-		\WP_Mock::wpFunction(
+		\WP_Mock::userFunction(
 			'wp_localize_script',
 			array(
 				'times'  => 1,
@@ -118,8 +121,8 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::scripts
+	 * @covers ::__construct
+	 * @covers ::scripts
 	 */
 	public function testScriptsWrongHook() {
 		$demo_cleaner = new DemoCleaner();
@@ -127,9 +130,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::delete
+	 * @covers ::process
 	 */
 	public function testDeleteNoAction() {
 		$demo_cleaner = new DemoCleaner();
@@ -137,9 +140,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::delete
+	 * @covers ::process
 	 */
 	public function testDeleteEmptyAction() {
 		$demo_cleaner = new DemoCleaner();
@@ -159,9 +162,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::delete
+	 * @covers ::process
 	 */
 	public function testDeleteNoOption() {
 		$demo_cleaner = new DemoCleaner();
@@ -188,9 +191,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::delete
+	 * @covers ::process
 	 */
 	public function testDeleteProducts() {
 		$demo_cleaner = new DemoCleaner();
@@ -249,9 +252,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::delete
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::delete
+	 * @covers ::process
 	 */
 	public function testDeleteAttachments() {
 		$demo_cleaner = new DemoCleaner();
@@ -298,9 +301,9 @@ class DemoCleanerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::__construct
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::cli
-	 * @covers \Niteo\WooCart\Defaults\DemoCleaner::process
+	 * @covers ::__construct
+	 * @covers ::cli
+	 * @covers ::process
 	 */
 	public function testCli() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\DemoCleaner' )

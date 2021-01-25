@@ -4,6 +4,9 @@
 use Niteo\WooCart\Defaults\Importers\PageMeta;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\PageMeta
+ */
 class PageMetaTest extends TestCase {
 
 	function setUp() : void {
@@ -20,7 +23,7 @@ class PageMetaTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getInsertParams
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetInsertParams() {
@@ -35,8 +38,8 @@ class PageMetaTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getDefaultsImport
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getDefaultsImport
+	 * @covers ::getInsertParams
 	 * @covers Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetDefaultsImport() {
@@ -49,8 +52,8 @@ class PageMetaTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getDefaultsImport
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getDefaultsImport
+	 * @covers ::getInsertParams
 	 * @covers Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetDefaultsImportEmpty() {

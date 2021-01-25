@@ -4,6 +4,9 @@
 use Niteo\WooCart\Defaults\Shortcodes;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Shortcodes
+ */
 class ShortcodesTest extends TestCase {
 
 	function setUp() : void {
@@ -19,7 +22,7 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
+	 * @covers ::__construct
 	 */
 	public function test__construct() {
 		\WP_Mock::userFunction(
@@ -32,8 +35,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::company_city
+	 * @covers ::__construct
+	 * @covers ::company_city
 	 */
 	public function testCompany_city() {
 		\WP_Mock::userFunction(
@@ -56,8 +59,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::store_name
+	 * @covers ::__construct
+	 * @covers ::store_name
 	 */
 	public function testStore_name() {
 		\WP_Mock::userFunction(
@@ -80,8 +83,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::company_postcode
+	 * @covers ::__construct
+	 * @covers ::company_postcode
 	 */
 	public function testCompany_postcode() {
 		\WP_Mock::userFunction(
@@ -104,9 +107,9 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::policy_page
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::policy_page
+	 * @covers ::woo_permalink
 	 */
 	public function testPolicy_page() {
 		\WP_Mock::userFunction(
@@ -136,9 +139,9 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::cookie_page
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::cookie_page
+	 * @covers ::woo_permalink
 	 */
 	public function testCookie_page() {
 		\WP_Mock::userFunction(
@@ -168,9 +171,9 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::returns_page
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::returns_page
+	 * @covers ::woo_permalink
 	 */
 	public function testReturns_page() {
 		\WP_Mock::userFunction(
@@ -200,9 +203,9 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::terms_page
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::terms_page
+	 * @covers ::woo_permalink
 	 */
 	public function testTerms_page() {
 		\WP_Mock::userFunction(
@@ -232,9 +235,9 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::contact_page
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::contact_page
+	 * @covers ::woo_permalink
 	 */
 	public function testContact_page() {
 		\WP_Mock::userFunction(
@@ -264,8 +267,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::woo_permalink
 	 */
 	public function testWoo_permalink() {
 		\WP_Mock::userFunction(
@@ -287,8 +290,8 @@ class ShortcodesTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::woo_permalink
 	 */
 	public function testWoo_permalink_content() {
 		\WP_Mock::userFunction(
@@ -309,8 +312,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woo_permalink
+	 * @covers ::__construct
+	 * @covers ::woo_permalink
 	 */
 	public function testWoo_permalink_empty() {
 		\WP_Mock::userFunction(
@@ -324,8 +327,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::company_name
+	 * @covers ::__construct
+	 * @covers ::company_name
 	 */
 	public function testCompany_name() {
 		\WP_Mock::userFunction(
@@ -348,8 +351,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::store_url
+	 * @covers ::__construct
+	 * @covers ::store_url
 	 */
 	public function testStore_url() {
 		\WP_Mock::userFunction(
@@ -379,8 +382,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::tax_id
+	 * @covers ::__construct
+	 * @covers ::tax_id
 	 */
 	public function testTax_id() {
 		\WP_Mock::userFunction(
@@ -404,8 +407,8 @@ class ShortcodesTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::page
+	 * @covers ::__construct
+	 * @covers ::page
 	 */
 	public function testPage_page() {
 		\WP_Mock::userFunction(
@@ -430,8 +433,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::page
+	 * @covers ::__construct
+	 * @covers ::page
 	 */
 	public function testPage_post() {
 		\WP_Mock::userFunction(
@@ -456,8 +459,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::company_address
+	 * @covers ::__construct
+	 * @covers ::company_address
 	 */
 	public function testCompany_address() {
 		\WP_Mock::userFunction(
@@ -480,8 +483,8 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::__construct
-	 * @covers \Niteo\WooCart\Defaults\Shortcodes::woocart
+	 * @covers ::__construct
+	 * @covers ::woocart
 	 */
 	public function testWoocart() {
 		\WP_Mock::userFunction(
