@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\Dashboard;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Dashboard
+ */
 class DashboardTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class DashboardTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Dashboard::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$dashboard = new Dashboard();
@@ -33,9 +36,9 @@ class DashboardTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Dashboard::plugins_loaded
-	 * @covers \Niteo\WooCart\Defaults\Dashboard::__construct
-	 * @covers \Niteo\WooCart\Defaults\Dashboard::handle_dashboard_toggle
+	 * @covers ::plugins_loaded
+	 * @covers ::__construct
+	 * @covers ::handle_dashboard_toggle
 	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_dashboard_active
 	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_staging
 	 */

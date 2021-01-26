@@ -12,14 +12,17 @@ use Niteo\WooCart\Defaults\Importers\ShippingZone;
 use Niteo\WooCart\Defaults\Importers\WooShipping;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\WooShipping
+ */
 class WooShippingTest extends TestCase {
 
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -34,9 +37,9 @@ class WooShippingTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\Value::setKey
 	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooShipping::import
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooShipping::toValue
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooShipping::toValue
+	 * @covers ::import
+	 * @covers ::toValue
+	 * @covers ::toValue
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getID
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getLocations
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getZone
@@ -113,7 +116,7 @@ class WooShippingTest extends TestCase {
 	 * @covers \Niteo\WooCart\Defaults\Value::setKey
 	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooShipping::items
+	 * @covers ::items
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getID
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getLocations
 	 * @covers \Niteo\WooCart\Defaults\Importers\WooShippingZone::getZone

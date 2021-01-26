@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\DenyList;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\DenyList
+ */
 class DenyListTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class DenyListTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		define( '_FORCED_PLUGINS', true );
@@ -37,8 +40,8 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::get_allowlist_plugins
+	 * @covers ::__construct
+	 * @covers ::get_allowlist_plugins
 	 */
 	public function testGetAllowlistPlugins() {
 		$denylist = new DenyList();
@@ -54,8 +57,8 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::get_denylist_plugins
+	 * @covers ::__construct
+	 * @covers ::get_denylist_plugins
 	 */
 	public function testGetDenylistPlugins() {
 		$denylist = new DenyList();
@@ -74,8 +77,8 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::force_deactivate
+	 * @covers ::__construct
+	 * @covers ::force_deactivate
 	 */
 	public function testDisableActivationWithString() {
 		$deny = new DenyList();
@@ -173,9 +176,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_activation
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
+	 * @covers ::__construct
+	 * @covers ::disable_activation
+	 * @covers ::is_plugin_denied
 	 */
 	public function test_DeactivateOnShutdown() {
 		$denylist = new DenyList();
@@ -199,9 +202,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_activation
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
+	 * @covers ::__construct
+	 * @covers ::disable_activation
+	 * @covers ::is_plugin_denied
 	 */
 	public function testDisableActivationWithArray() {
 		$denylist = new DenyList();
@@ -225,8 +228,8 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::deactivate_plugins
+	 * @covers ::__construct
+	 * @covers ::deactivate_plugins
 	 */
 	public function testDeactivatePlugins() {
 		$denylist = new DenyList();
@@ -251,9 +254,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_install_link
+	 * @covers ::__construct
+	 * @covers ::is_plugin_denied
+	 * @covers ::disable_install_link
 	 */
 	public function testDisableInstallLinkBlacklisted() {
 		$denylist = new DenyList();
@@ -265,9 +268,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_install_link
+	 * @covers ::__construct
+	 * @covers ::is_plugin_denied
+	 * @covers ::disable_install_link
 	 */
 	public function testDisableInstallLinkWhitelisted() {
 		$denylist = new DenyList();
@@ -279,9 +282,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_activate_link
+	 * @covers ::__construct
+	 * @covers ::is_plugin_denied
+	 * @covers ::disable_activate_link
 	 */
 	public function testDisableActivateLinkBlacklisted() {
 		$denylist = new DenyList();
@@ -293,9 +296,9 @@ class DenyListTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\DenyList::__construct
-	 * @covers \Niteo\WooCart\Defaults\DenyList::is_plugin_denied
-	 * @covers \Niteo\WooCart\Defaults\DenyList::disable_activate_link
+	 * @covers ::__construct
+	 * @covers ::is_plugin_denied
+	 * @covers ::disable_activate_link
 	 */
 	public function testDisableActivateLinkWhitelisted() {
 		$denylist = new DenyList();

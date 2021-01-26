@@ -12,11 +12,14 @@ function time() {
 	return 100;
 }
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\AutoLogin
+ */
 class AutoLoginTest extends TestCase {
 
 	public static $functions;
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 		self::$functions = \Mockery::mock();
 
@@ -35,7 +38,7 @@ class AutoLoginTest extends TestCase {
 		);
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -45,7 +48,7 @@ class AutoLoginTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$login = new AutoLogin();
@@ -56,8 +59,8 @@ class AutoLoginTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::test_for_auto_login
+	 * @covers ::__construct
+	 * @covers ::test_for_auto_login
 	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_dashboard_active
 	 * @covers \Niteo\WooCart\Defaults\Extend\Dashboard::is_staging
 	 */
@@ -124,9 +127,9 @@ class AutoLoginTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::auto_login
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
+	 * @covers ::__construct
+	 * @covers ::auto_login
+	 * @covers ::set_cookie
 	 */
 	public function testAuto_login() {
 		$user     = \Mockery::mock();
@@ -165,8 +168,8 @@ class AutoLoginTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::validate_jwt_token
+	 * @covers ::__construct
+	 * @covers ::validate_jwt_token
 	 */
 	public function testValidate_jwt_token() {
 		$login = new AutoLogin();
@@ -194,9 +197,9 @@ class AutoLoginTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
+	 * @covers ::__construct
+	 * @covers ::set_login_cookie
+	 * @covers ::set_cookie
 	 */
 	public function testSetLoginCookie() {
 		global $wpdb;
@@ -251,9 +254,9 @@ class AutoLoginTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_login_cookie
-	 * @covers \Niteo\WooCart\Defaults\AutoLogin::set_cookie
+	 * @covers ::__construct
+	 * @covers ::set_login_cookie
+	 * @covers ::set_cookie
 	 */
 	public function testSetLoginCookieWrongUsername() {
 		$login = new AutoLogin();

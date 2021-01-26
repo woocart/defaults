@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\MaintenanceMode;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\MaintenanceMode
+ */
 class MaintenanceModeTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class MaintenanceModeTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$maintenance = new MaintenanceMode();
@@ -32,8 +35,8 @@ class MaintenanceModeTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
+	 * @covers ::__construct
+	 * @covers ::maintenance_mode
 	 */
 	public function testMaintenanceModeWCLostPassword() {
 		$_SERVER['HTTP_HOST']   = 'woocart.com/';
@@ -54,8 +57,8 @@ class MaintenanceModeTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
+	 * @covers ::__construct
+	 * @covers ::maintenance_mode
 	 */
 	public function testMaintenanceLoggedIn() {
 		$_SERVER['HTTP_HOST']   = 'woocart.com/';
@@ -92,8 +95,8 @@ class MaintenanceModeTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::__construct
-	 * @covers \Niteo\WooCart\Defaults\MaintenanceMode::maintenance_mode
+	 * @covers ::__construct
+	 * @covers ::maintenance_mode
 	 */
 	public function testMaintenanceStatusHeader() {
 		$_SERVER['HTTP_HOST']   = 'woocart.com/';

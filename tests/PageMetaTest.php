@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\Importers\PageMeta;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\PageMeta
+ */
 class PageMetaTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class PageMetaTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getInsertParams
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetInsertParams() {
@@ -35,8 +38,8 @@ class PageMetaTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getDefaultsImport
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getDefaultsImport
+	 * @covers ::getInsertParams
 	 * @covers Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetDefaultsImport() {
@@ -49,8 +52,8 @@ class PageMetaTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getDefaultsImport
-	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams
+	 * @covers ::getDefaultsImport
+	 * @covers ::getInsertParams
 	 * @covers Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
 	public function testGetDefaultsImportEmpty() {

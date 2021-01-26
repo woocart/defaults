@@ -3,14 +3,17 @@
 use Niteo\WooCart\Defaults\WooCommerce;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\WooCommerce
+ */
 class WooCommerceTest extends TestCase {
 
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,7 +22,7 @@ class WooCommerceTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$woocommerce = new WooCommerce();
@@ -31,8 +34,8 @@ class WooCommerceTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::general_settings
+	 * @covers ::__construct
+	 * @covers ::general_settings
 	 */
 	public function testGeneralSettings() {
 		$woocommerce = new WooCommerce();
@@ -63,8 +66,8 @@ class WooCommerceTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::maybe_disable_wc_admin
+	 * @covers ::__construct
+	 * @covers ::maybe_disable_wc_admin
 	 */
 	public function testDisableWCAdminTrue() {
 		$woocommerce = new WooCommerce();
@@ -76,8 +79,8 @@ class WooCommerceTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::__construct
-	 * @covers \Niteo\WooCart\Defaults\WooCommerce::maybe_disable_wc_admin
+	 * @covers ::__construct
+	 * @covers ::maybe_disable_wc_admin
 	 */
 	public function testDisableWCAdminFalse() {
 		$woocommerce = new WooCommerce();

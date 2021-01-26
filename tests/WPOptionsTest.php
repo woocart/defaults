@@ -3,14 +3,17 @@
 use Niteo\WooCart\Defaults\Importers\WPOptions;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\WPOptions
+ */
 class WPOptionsTest extends TestCase {
 
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,8 +22,8 @@ class WPOptionsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptions::import
-	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptions::toValue
+	 * @covers ::import
+	 * @covers ::toValue
 	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptionsValue::setValue
 	 * @covers \Niteo\WooCart\Defaults\Value::__construct
 	 * @covers \Niteo\WooCart\Defaults\Value::getStrippedKey
@@ -60,7 +63,7 @@ class WPOptionsTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WPOptions::items
+	 * @covers ::items
 	 * @covers \Niteo\WooCart\Defaults\Value::__construct
 	 * @covers \Niteo\WooCart\Defaults\Value::getKey
 	 * @covers \Niteo\WooCart\Defaults\Value::getStrippedKey

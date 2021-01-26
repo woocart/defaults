@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\PluginManager;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\PluginManager
+ */
 class PluginManagerTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class PluginManagerTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$plugins = new PluginManager();
@@ -43,8 +46,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
+	 * @covers ::__construct
+	 * @covers ::init
 	 */
 	public function testInitEmpty() {
 		$plugins = new PluginManager();
@@ -66,9 +69,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::register
 	 */
 	public function testInitEmptyTwo() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
@@ -86,10 +89,10 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::register
+	 * @covers ::is_plugin_active
 	 */
 	public function testInit() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
@@ -139,10 +142,10 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::init
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 * @covers ::__construct
+	 * @covers ::init
+	 * @covers ::register
+	 * @covers ::is_plugin_active
 	 */
 	public function testInitTwo() {
 		define( 'SENDGRID_API_KEY', true );
@@ -193,8 +196,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
+	 * @covers ::__construct
+	 * @covers ::plugins_page
 	 */
 	public function testPluginsPageNotPluginsPage() {
 		$plugins = new PluginManager();
@@ -212,8 +215,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::plugins_page
+	 * @covers ::__construct
+	 * @covers ::plugins_page
 	 */
 	public function testPluginsPage() {
 		$plugins = new PluginManager();
@@ -234,8 +237,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
+	 * @covers ::__construct
+	 * @covers ::register
 	 */
 	public function testRegister() {
 		$plugins = new PluginManager();
@@ -276,8 +279,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::register
+	 * @covers ::__construct
+	 * @covers ::register
 	 */
 	public function testRegisterEmpty() {
 		$plugins = new PluginManager();
@@ -285,9 +288,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::get_plugins
+	 * @covers ::__construct
+	 * @covers ::is_plugin_installed
+	 * @covers ::get_plugins
 	 */
 	public function testIsPluginInstalled() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )
@@ -299,8 +302,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 * @covers ::__construct
+	 * @covers ::is_plugin_active
 	 */
 	public function testIsPluginActive() {
 		$plugins          = new PluginManager();
@@ -321,9 +324,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
+	 * @covers ::__construct
+	 * @covers ::add_required_text
+	 * @covers ::_wp_version
 	 */
 	public function testAddRequiredTextNoPlugin() {
 		$plugins        = new PluginManager();
@@ -337,9 +340,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
+	 * @covers ::__construct
+	 * @covers ::add_required_text
+	 * @covers ::_wp_version
 	 */
 	public function testAddRequiredTextLowerWPVersion() {
 		$plugins        = new PluginManager();
@@ -360,9 +363,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::add_required_text
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::_wp_version
+	 * @covers ::__construct
+	 * @covers ::add_required_text
+	 * @covers ::_wp_version
 	 */
 	public function testAddRequiredText() {
 		$plugins        = new PluginManager();
@@ -383,8 +386,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_deactivation_link
+	 * @covers ::__construct
+	 * @covers ::remove_deactivation_link
 	 */
 	public function testRemoveDeactivationLink() {
 		$plugins        = new PluginManager();
@@ -405,8 +408,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
+	 * @covers ::__construct
+	 * @covers ::is_plugin_active
 	 */
 	public function testIsPluginActiveTwo() {
 		$plugins = new PluginManager();
@@ -415,8 +418,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::_get_plugin_basename_from_slug
+	 * @covers ::__construct
+	 * @covers ::_get_plugin_basename_from_slug
 	 */
 	public function testGetPluginBasenameFromSlug() {
 		$method = self::getMethod( '_get_plugin_basename_from_slug' );
@@ -432,8 +435,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::_get_plugin_basename_from_slug
+	 * @covers ::__construct
+	 * @covers ::_get_plugin_basename_from_slug
 	 */
 	public function testGetPluginBasenameFromSlugTwo() {
 		$method = self::getMethod( '_get_plugin_basename_from_slug' );
@@ -449,10 +452,10 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
-	 * * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 * @covers ::__construct
+	 * @covers ::force_activation
+	 * @covers ::is_plugin_active
+	 * * @covers ::is_plugin_installed
 	 */
 	public function testForceActivation() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
@@ -474,10 +477,10 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_active
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 * @covers ::__construct
+	 * @covers ::force_activation
+	 * @covers ::is_plugin_active
+	 * @covers ::is_plugin_installed
 	 */
 	public function testForceActivationTwo() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
@@ -509,9 +512,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::force_activation
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::is_plugin_installed
+	 * @covers ::__construct
+	 * @covers ::force_activation
+	 * @covers ::is_plugin_installed
 	 */
 	public function testForceActivationEmpty() {
 		$mock          = \Mockery::mock( 'Niteo\WooCart\Defaults\PluginManager' )->makePartial();
@@ -529,9 +532,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 * @covers ::__construct
+	 * @covers ::search_notification
+	 * @covers ::array_match
 	 */
 	public function testSeachNotificationBackup() {
 		$plugins = new PluginManager();
@@ -544,9 +547,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 * @covers ::__construct
+	 * @covers ::search_notification
+	 * @covers ::array_match
 	 */
 	public function testSeachNotificationSecurity() {
 		$plugins = new PluginManager();
@@ -559,9 +562,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 * @covers ::__construct
+	 * @covers ::search_notification
+	 * @covers ::array_match
 	 */
 	public function testSeachNotificationPerformance() {
 		$plugins = new PluginManager();
@@ -574,9 +577,9 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::search_notification
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::array_match
+	 * @covers ::__construct
+	 * @covers ::search_notification
+	 * @covers ::array_match
 	 */
 	public function testSeachNotificationNoMatch() {
 		$plugins = new PluginManager();
@@ -589,8 +592,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_redis_menu
+	 * @covers ::__construct
+	 * @covers ::remove_redis_menu
 	 */
 	public function testRemoveRedisMenu() {
 		$plugins = new PluginManager();
@@ -611,8 +614,8 @@ class PluginManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginManager::remove_redis_plugin_links
+	 * @covers ::__construct
+	 * @covers ::remove_redis_plugin_links
 	 */
 	public function testRemoveRedisPluginLinks() {
 		$plugins = new PluginManager();

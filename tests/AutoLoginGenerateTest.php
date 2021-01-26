@@ -3,9 +3,12 @@
 use Niteo\WooCart\Defaults\AutoLoginCLI;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\AutoLoginCLI
+ */
 class AutoLoginCLITest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 		\WP_Mock::userFunction(
 			'is_blog_installed',
@@ -22,7 +25,7 @@ class AutoLoginCLITest extends TestCase {
 		);
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -32,8 +35,8 @@ class AutoLoginCLITest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\AutoLoginCLI::__construct
-	 * @covers \Niteo\WooCart\Defaults\AutoLoginCLI::url
+	 * @covers ::__construct
+	 * @covers ::url
 	 * @runInSeparateProcess
 	 */
 	public function testConstructor() {

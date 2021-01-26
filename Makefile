@@ -12,7 +12,7 @@ clover.xml: vendor test
 unit: test
 
 test: vendor
-	bin/phpunit --coverage-html=./reports
+	XDEBUG_MODE=coverage bin/phpunit --coverage-html=./reports --coverage-clover=clover.xml
 
 src/vendor:
 	cd src && composer install --ignore-platform-reqs
@@ -61,7 +61,7 @@ i18n:
 	msgfmt -o src/i18n/$(PLUGINSLUG)-ro_RO.mo src/i18n/$(PLUGINSLUG)-ro_RO.po
 
 cover: clover.xml
-	bin/coverage-check clover.xml 80
+	bin/coverage-check clover.xml 65
 
 clean:
 	rm -rf vendor/ bin src/vendor/

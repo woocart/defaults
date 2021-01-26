@@ -3,13 +3,16 @@
 use Niteo\WooCart\Defaults\Importers\WooPage;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\WooPage
+ */
 class WooPageTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,8 +22,8 @@ class WooPageTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::getPageMeta
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::__construct
+	 * @covers ::getPageMeta
+	 * @covers ::__construct
 	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
@@ -49,8 +52,8 @@ class WooPageTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::__construct
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::getPageMeta
+	 * @covers ::__construct
+	 * @covers ::getPageMeta
 	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
 	 * @covers \Niteo\WooCart\Defaults\Importers\ToArray::toArray
 	 */
@@ -76,9 +79,9 @@ class WooPageTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::insertPage
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::getPageMeta
-	 * @covers \Niteo\WooCart\Defaults\Importers\WooPage::__construct
+	 * @covers ::insertPage
+	 * @covers ::getPageMeta
+	 * @covers ::__construct
 	 * @covers \Niteo\WooCart\Defaults\Importer::parse
 	 * @covers \Niteo\WooCart\Defaults\Importers\FromArray::fromArray
 	 * @covers \Niteo\WooCart\Defaults\Importers\PageMeta::getInsertParams

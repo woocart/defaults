@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\PluginLogger;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\PluginLogger
+ */
 class PluginLoggerTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,7 +23,7 @@ class PluginLoggerTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$logger = new PluginLogger();
@@ -32,9 +35,9 @@ class PluginLoggerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::activation
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::plugin_status_change
+	 * @covers ::__construct
+	 * @covers ::activation
+	 * @covers ::plugin_status_change
 	 */
 	public function testActivation() {
 		$logger = new PluginLogger();
@@ -56,9 +59,9 @@ class PluginLoggerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::__construct
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::deactivation
-	 * @covers \Niteo\WooCart\Defaults\PluginLogger::plugin_status_change
+	 * @covers ::__construct
+	 * @covers ::deactivation
+	 * @covers ::plugin_status_change
 	 */
 	public function testDeactivation() {
 		$logger = new PluginLogger();

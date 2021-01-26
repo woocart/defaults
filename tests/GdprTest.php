@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\GDPR;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\GDPR
+ */
 class GDPRTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -20,8 +23,8 @@ class GDPRTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::scripts
+	 * @covers ::__construct
+	 * @covers ::scripts
 	 */
 	public function testConstructor() {
 		\WP_Mock::userFunction(
@@ -72,8 +75,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::add_menu_item
+	 * @covers ::__construct
+	 * @covers ::add_menu_item
 	 */
 	public function testAddMenuItem() {
 		$gdpr = new GDPR();
@@ -132,8 +135,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::show_consent
+	 * @covers ::__construct
+	 * @covers ::show_consent
 	 */
 	public function testConsent() {
 		$gdpr = new GDPR();
@@ -206,9 +209,9 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::privacy_checkbox
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::privacy_checkbox
+	 * @covers ::check_user
 	 */
 	public function testPrivacyCheckbox() {
 		$gdpr = new GDPR();
@@ -238,9 +241,9 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::privacy_checkbox
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::privacy_checkbox
+	 * @covers ::check_user
 	 */
 	public function testPrivacyCheckboxEmpty() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
@@ -252,9 +255,9 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::show_notice
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::show_notice
+	 * @covers ::check_user
 	 */
 	public function testShowNotice() {
 		$gdpr = new GDPR();
@@ -277,9 +280,9 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::show_notice
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::show_notice
+	 * @covers ::check_user
 	 */
 	public function testShowNoticeEmpty() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
@@ -291,8 +294,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::update_order_meta
+	 * @covers ::__construct
+	 * @covers ::update_order_meta
 	 */
 	public function testUpdateOrderMetaGuest() {
 		$_POST['woocart_privacy_checkbox'] = 'yes';
@@ -317,8 +320,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::update_order_meta
+	 * @covers ::__construct
+	 * @covers ::update_order_meta
 	 */
 	public function testUpdateOrderMetaUser() {
 		$_POST['woocart_privacy_checkbox'] = 'yes';
@@ -343,8 +346,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::check_user
 	 */
 	public function testCheckUserFalse() {
 		$gdpr = new GDPR();
@@ -361,8 +364,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::check_user
+	 * @covers ::__construct
+	 * @covers ::check_user
 	 */
 	public function testCheckUserTrue() {
 		$gdpr = new GDPR();
@@ -386,10 +389,10 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::cf_privacy_checkbox
-	 * @covers \Niteo\WooCart\Defaults\GDPR::get_forms
-	 * @covers \Niteo\WooCart\Defaults\GDPR::update_template
+	 * @covers ::__construct
+	 * @covers ::cf_privacy_checkbox
+	 * @covers ::get_forms
+	 * @covers ::update_template
 	 */
 	public function testCfPrivacyCheckbox() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\GDPR' )
@@ -405,8 +408,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::get_forms
+	 * @covers ::__construct
+	 * @covers ::get_forms
 	 */
 	public function testGetForms() {
 		$gdpr = new GDPR();
@@ -422,8 +425,8 @@ class GDPRTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\GDPR::__construct
-	 * @covers \Niteo\WooCart\Defaults\GDPR::update_template
+	 * @covers ::__construct
+	 * @covers ::update_template
 	 */
 	public function testUpdateTemplate() {
 		$gdpr = new GDPR();

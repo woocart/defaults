@@ -3,13 +3,16 @@
 use Niteo\WooCart\Defaults\Importers\SellingLimit;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\Importers\SellingLimit
+ */
 class SellingLimitTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,9 +22,9 @@ class SellingLimitTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\Importers\SellingLimit::__construct
-	 * @covers \Niteo\WooCart\Defaults\Importers\SellingLimit::zoneID
-	 * @covers \Niteo\WooCart\Defaults\Importers\SellingLimit::countries
+	 * @covers ::__construct
+	 * @covers ::zoneID
+	 * @covers ::countries
 	 */
 	public function test__construct() {
 		global $wpdb;

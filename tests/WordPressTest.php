@@ -3,6 +3,9 @@
 use Niteo\WooCart\Defaults\WordPress;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\WordPress
+ */
 class WordPressTest extends TestCase {
 
 
@@ -19,7 +22,7 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$wordpress = \Mockery::mock( 'Niteo\WooCart\Defaults\WordPress' )->makePartial();
@@ -47,10 +50,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::http_block_status
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::http_block_status
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testHttpBlockStatusNotActive() {
 		$wordpress = new WordPress();
@@ -67,10 +70,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::http_block_status
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::http_block_status
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testHttpBlockStatus() {
 		$wordpress = new WordPress();
@@ -89,10 +92,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::block_status_admin_button
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testBlockStatusButtonNoAdmin() {
 		$wordpress = new WordPress();
@@ -109,10 +112,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::block_status_admin_button
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testBlockStatusButtonNotBar() {
 		$wordpress = new WordPress();
@@ -137,10 +140,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::block_status_admin_button
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testBlockStatusButtonNoOption() {
 		$wordpress = new WordPress();
@@ -173,10 +176,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::block_status_admin_button
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::block_status_admin_button
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testBlockStatusButtonSuccess() {
 		$wordpress = new WordPress();
@@ -231,10 +234,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::remove_heartbeat
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::remove_heartbeat
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testRemoveHeartbeat() {
 		$wordpress = new WordPress();
@@ -251,10 +254,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::http_requests
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::http_requests
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testHttpRequestsTrue() {
 		$wordpress = new WordPress();
@@ -263,10 +266,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::http_requests
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::http_requests
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testHttpRequestsFalse() {
 		$wordpress = new WordPress();
@@ -275,8 +278,8 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::delay_cronjobs
+	 * @covers ::__construct
+	 * @covers ::delay_cronjobs
 	 */
 	public function testDelayCronjobsEmpty() {
 		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
@@ -303,8 +306,8 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::delay_cronjobs
+	 * @covers ::__construct
+	 * @covers ::delay_cronjobs
 	 */
 	public function testDelayCronjobsNotEmpty() {
 		$mock = \Mockery::mock( '\Niteo\WooCart\Defaults\WordPress' )->makePartial();
@@ -337,10 +340,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::time_now
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::time_now
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testTimeNow() {
 		$wordpress = new WordPress();
@@ -352,10 +355,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::read_only_filesystem
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::read_only_filesystem
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testReadOnlyFilesystemTrue() {
 		$wordpress = new WordPress();
@@ -372,10 +375,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::read_only_filesystem
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::read_only_filesystem
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testReadOnlyFilesystemFalse() {
 		$wordpress = new WordPress();
@@ -392,10 +395,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::wpcf7_cache
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::wpcf7_cache
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testWpcf7Cache() {
 		$wordpress = new WordPress();
@@ -404,10 +407,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::admin_scripts
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::admin_scripts
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testAdminScripts() {
 		$wordpress = new WordPress();
@@ -430,10 +433,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::check_block_request
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testCheckBlockRequestNoAdmin() {
 		$wordpress = new WordPress();
@@ -450,10 +453,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::check_block_request
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testCheckBlockRequestNoRequest() {
 		$wordpress = new WordPress();
@@ -470,10 +473,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::check_block_request
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testCheckBlockRequestNotCorrect() {
 		$wordpress = new WordPress();
@@ -500,10 +503,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::check_block_request
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testCheckBlockRequestFailedAdminReferer() {
 		$wordpress = new WordPress();
@@ -538,10 +541,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::check_block_request
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::check_block_request
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testCheckBlockRequestSuccess() {
 		$wordpress = new WordPress();
@@ -608,10 +611,10 @@ class WordPressTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\WordPress::__construct
-	 * @covers \Niteo\WooCart\Defaults\WordPress::staging_url_override
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_rewrite_urls
-	 * @covers \Niteo\WooCart\Defaults\WordPress::is_staging
+	 * @covers ::__construct
+	 * @covers ::staging_url_override
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
 	 */
 	public function testStagingOverrideBothDomains() {
 		$wordpress = new WordPress();

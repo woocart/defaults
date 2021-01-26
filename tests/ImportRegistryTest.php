@@ -4,13 +4,16 @@
 use Niteo\WooCart\Defaults\ConfigsRegistry;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\ConfigsRegistry
+ */
 class ImportRegistryTest extends TestCase {
 
-	function setUp() {
+	function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,7 +22,7 @@ class ImportRegistryTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\ConfigsRegistry::get
+	 * @covers ::get
 	 */
 	public function testGetImporters() {
 		foreach ( ConfigsRegistry::get() as $importer ) {

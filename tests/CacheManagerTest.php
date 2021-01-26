@@ -3,14 +3,17 @@
 use Niteo\WooCart\Defaults\CacheManager;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Niteo\WooCart\Defaults\CacheManager
+ */
 class CacheManagerTest extends TestCase {
 
 
-	public function setUp() {
+	public function setUp() : void {
 		\WP_Mock::setUp();
 	}
 
-	public function tearDown() {
+	public function tearDown() : void {
 		$this->addToAssertionCount(
 			\Mockery::getContainer()->mockery_getExpectationCount()
 		);
@@ -19,7 +22,7 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
+	 * @covers ::__construct
 	 */
 	public function testConstructor() {
 		$cache = new CacheManager();
@@ -44,8 +47,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::admin_button
+	 * @covers ::__construct
+	 * @covers ::admin_button
 	 */
 	public function testAdminButton() {
 		$cache = new CacheManager();
@@ -82,8 +85,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::admin_button
+	 * @covers ::__construct
+	 * @covers ::admin_button
 	 */
 	public function testAdminButtonFalse() {
 		$cache = new CacheManager();
@@ -108,8 +111,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+	 * @covers ::__construct
+	 * @covers ::check_cache_request
 	 */
 	public function testCheckCacheRequestNoAdmin() {
 		$cache = new CacheManager();
@@ -138,8 +141,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
+	 * @covers ::__construct
+	 * @covers ::check_cache_request
 	 */
 	public function testCheckCacheRequestDone() {
 		$cache = new CacheManager();
@@ -163,13 +166,13 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
+	 * @covers ::__construct
+	 * @covers ::check_cache_request
+	 * @covers ::flush_cache
+	 * @covers ::flush_opcache
+	 * @covers ::flush_redis_cache
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_bb_cache
 	 */
 	public function testCheckCacheRequestFlushException() {
 		$cache = new CacheManager();
@@ -230,12 +233,12 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::check_cache_request
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers ::__construct
+	 * @covers ::check_cache_request
+	 * @covers ::flush_cache
+	 * @covers ::flush_opcache
+	 * @covers ::flush_redis_cache
+	 * @covers ::flush_fcgi_cache
 	 */
 	public function testCheckCacheRequestFlushComplete() {
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\CacheManager' )
@@ -300,12 +303,12 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_opcache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
+	 * @covers ::__construct
+	 * @covers ::flush_cache
+	 * @covers ::flush_opcache
+	 * @covers ::flush_redis_cache
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_bb_cache
 	 */
 	public function testFlushCache() {
 		$method = self::getMethod( 'flush_cache' );
@@ -326,8 +329,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheTrue() {
 		$cache = new CacheManager();
@@ -349,8 +352,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheFalse() {
 		$cache = new CacheManager();
@@ -358,8 +361,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
 	 */
 	public function testFlushFcgiCacheNoDirectory() {
 		$cache            = new CacheManager();
@@ -369,8 +372,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_redis_cache
+	 * @covers ::__construct
+	 * @covers ::flush_redis_cache
 	 */
 	public function testFlushRedisCache() {
 
@@ -382,8 +385,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_bb_cache
+	 * @covers ::__construct
+	 * @covers ::flush_bb_cache
 	 */
 	public function testFlushBbCache() {
 		$cache = new CacheManager();
@@ -406,9 +409,9 @@ class CacheManagerTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_save
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_fcgi_cache_selectively_on_save
 	 */
 	public function testFlushOnSaveSelectively() {
 
@@ -453,9 +456,9 @@ class CacheManagerTest extends TestCase {
 
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_save
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_fcgi_cache_selectively_on_save
 	 */
 	public function testFlushOnSaveSelectivelySkipRevision() {
 
@@ -492,9 +495,9 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_fcgi_cache_selectively_on_delete
 	 */
 	public function testFlushOnDeleteSelectivelyPost() {
 
@@ -523,9 +526,9 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_fcgi_cache_selectively_on_delete
 	 */
 	public function testFlushOnDeleteSelectivelyPage() {
 
@@ -552,9 +555,9 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_fcgi_cache_selectively_on_delete
+	 * @covers ::__construct
+	 * @covers ::flush_fcgi_cache
+	 * @covers ::flush_fcgi_cache_selectively_on_delete
 	 */
 	public function testFlushOnDeleteSelectivelyProduct() {
 
@@ -581,8 +584,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers ::__construct
+	 * @covers ::nav_init
 	 */
 	public function testNavInitUserLoggedIn() {
 		$cache = new CacheManager();
@@ -606,8 +609,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers ::__construct
+	 * @covers ::nav_init
 	 */
 	public function testNavInitUserFiltersAdded() {
 		$cache = new CacheManager();
@@ -628,8 +631,8 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
+	 * @covers ::__construct
+	 * @covers ::nav_init
 	 */
 	public function testNavInitUserDoNotCache() {
 		$cache = new CacheManager();
@@ -648,11 +651,11 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::get_nav_menu
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
+	 * @covers ::__construct
+	 * @covers ::nav_init
+	 * @covers ::_is_enabled
+	 * @covers ::get_nav_menu
+	 * @covers ::_get_cache_key
 	 */
 	// public function testGetNavMenuCacheEnable() {
 	// $cache = new CacheManager();
@@ -683,12 +686,12 @@ class CacheManagerTest extends TestCase {
 	// }
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
+	 * @covers ::__construct
+	 * @covers ::nav_init
+	 * @covers ::_is_enabled
+	 * @covers ::save_nav_menu
+	 * @covers ::_get_cache_key
+	 * @covers ::_remember_key
 	 */
 	// public function testSaveNavMenuCacheEnableWithKey() {
 	// $cache = new CacheManager();
@@ -726,12 +729,12 @@ class CacheManagerTest extends TestCase {
 	// }
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::save_nav_menu
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_cache_key
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_remember_key
+	 * @covers ::__construct
+	 * @covers ::nav_init
+	 * @covers ::_is_enabled
+	 * @covers ::save_nav_menu
+	 * @covers ::_get_cache_key
+	 * @covers ::_remember_key
 	 */
 	// public function testSaveNavMenuCacheEnableWithoutKey() {
 	// $cache = new CacheManager();
@@ -769,10 +772,10 @@ class CacheManagerTest extends TestCase {
 	// }
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::nav_init
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_is_enabled
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::get_nav_menu
+	 * @covers ::__construct
+	 * @covers ::nav_init
+	 * @covers ::_is_enabled
+	 * @covers ::get_nav_menu
 	 */
 	public function testGetNavMenuCacheDisable() {
 		$cache = new CacheManager();
@@ -787,9 +790,9 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_nav_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_all_keys
+	 * @covers ::__construct
+	 * @covers ::flush_nav_cache
+	 * @covers ::_get_all_keys
 	 */
 	public function testFlushNavCacheNoKeys() {
 		$cache = new CacheManager();
@@ -813,9 +816,9 @@ class CacheManagerTest extends TestCase {
 	}
 
 	/**
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::__construct
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::flush_nav_cache
-	 * @covers \Niteo\WooCart\Defaults\CacheManager::_get_all_keys
+	 * @covers ::__construct
+	 * @covers ::flush_nav_cache
+	 * @covers ::_get_all_keys
 	 */
 	public function testFlushNavCacheWithKeys() {
 		$cache = new CacheManager();
