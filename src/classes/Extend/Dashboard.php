@@ -59,6 +59,18 @@ namespace Niteo\WooCart\Defaults\Extend {
 			return $_SERVER['STORE_STAGING'] === 'no';
 		}
 
+		/**
+		 * Rewrite URL's if the env variable is set to true.
+		 *
+		 * @return boolean
+		 */
+		public function is_rewrite_urls() : bool {
+			if ( ! isset( $_ENV['WP_REWRITE_URLS'] ) ) {
+				return false;
+			}
+
+			return 'true' === $_ENV['WP_REWRITE_URLS'];
+		}
 
 	}
 

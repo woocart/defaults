@@ -71,4 +71,26 @@ class DashboardTest extends TestCase {
 		$dashboard->plugins_loaded();
 		\WP_Mock::assertHooksAdded();
 	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Dashboard::__construct
+	 * @covers \Niteo\WooCart\Defaults\Dashboard::is_rewrite_urls
+	 */
+	public function testIsRewriteUrlsFalse() {
+		$dashboard = new Dashboard();
+
+		$this->assertFalse( $dashboard->is_rewrite_urls() );
+	}
+
+	/**
+	 * @covers \Niteo\WooCart\Defaults\Dashboard::__construct
+	 * @covers \Niteo\WooCart\Defaults\Dashboard::is_rewrite_urls
+	 */
+	public function testIsRewriteUrlsTrue() {
+		$dashboard               = new Dashboard();
+		$_ENV['WP_REWRITE_URLS'] = 'true';
+
+		$this->assertTrue( $dashboard->is_rewrite_urls() );
+	}
+
 }
