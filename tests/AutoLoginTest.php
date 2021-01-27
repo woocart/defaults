@@ -93,6 +93,12 @@ class AutoLoginTest extends TestCase {
 				'times'  => 2,
 			)
 		);
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times' => 2,
+			)
+		);
 
 		$mock = \Mockery::mock( 'Niteo\WooCart\Defaults\AutoLogin' )->makePartial();
 		$mock->shouldReceive( 'validate_jwt_token' )

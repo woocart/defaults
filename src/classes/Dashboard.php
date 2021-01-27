@@ -13,7 +13,6 @@ namespace Niteo\WooCart\Defaults {
 	class Dashboard {
 
 
-		use Extend\Proteus;
 		use Extend\Dashboard;
 
 		public function __construct() {
@@ -121,9 +120,7 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 			$title = '<span style="background: #45bb8a; border-radius: 5px;  color: white;  padding: 0.3em;">LIVE</span>';
-			if ( $this->is_proteus_active() ) {
-				$title = '<span style="background: #364252;  border-radius: 5px;  color: white;  padding: 0.3em;">SANDBOX</span>';
-			}
+
 			if ( $this->is_staging() ) {
 				$title = '<span style="  background: #c83da9;  border-radius: 5px;  color: white;  padding: 0.3em;">STAGING</span>';
 			}

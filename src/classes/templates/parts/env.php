@@ -1,12 +1,5 @@
 <div class="woocart-env col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<?php if ( $this->is_proteus_active() ) {
-		?>
-		<div class="col-xs-12 woocart-sandbox">
-			<span class="woocart-sandbox-sandbox">SANDBOX</span>
-			<span class="woocart-sandbox-desc">This is your WoonderShop sandbox store where you can test and play around. It expires in <b><?php echo $this->date_diff(); ?></b> days.</span>
-		</div>
-		<?php
-	} elseif ( $this->is_staging() ) {
+	<?php if ( $this->is_staging() ) {
 		?>
 		<div class="col-xs-12 woocart-sandbox">
 			<span class="woocart-sandbox-staging">STAGING</span>

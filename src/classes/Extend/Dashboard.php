@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dashboard functionality for the proteus theme setup.
+ * Functionality for custom dashboard setup.
  */
 
 namespace Niteo\WooCart\Defaults\Extend {
