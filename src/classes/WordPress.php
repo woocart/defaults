@@ -40,9 +40,7 @@ namespace Niteo\WooCart\Defaults {
 			add_action( 'admin_bar_menu', array( $this, 'block_status_admin_button' ), 100 );
 			add_action( 'init', array( $this, 'http_block_status' ) );
 			add_action( 'init', array( $this, 'remove_heartbeat' ), PHP_INT_MAX );
-			if ( defined( 'WPCF7_PLUGIN' ) ) {
-				add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
-			}
+			add_action( 'wp_footer', array( $this, 'wpcf7_cache' ), PHP_INT_MAX );
 			add_filter( 'file_mod_allowed', array( $this, 'read_only_filesystem' ), PHP_INT_MAX, 2 );
 			add_filter( 'pre_reschedule_event', array( $this, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
@@ -208,6 +206,10 @@ namespace Niteo\WooCart\Defaults {
 		 * Disables loading of refill script for Contact Form 7.
 		 */
 		public function wpcf7_cache() : void {
+			if ( ! defined( 'WPCF7_PLUGIN' ) ) {
+				return;
+			}
+
 			echo '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>';
 		}
 
