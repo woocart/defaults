@@ -400,9 +400,22 @@ class WordPressTest extends TestCase {
 	 * @covers ::is_rewrite_urls
 	 * @covers ::is_staging
 	 */
+	public function testWpcf7CacheNoPlugin() {
+		$wordpress = new WordPress();
+
+		$this->assertEmpty( $wordpress->wpcf7_cache() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::wpcf7_cache
+	 * @covers ::is_rewrite_urls
+	 * @covers ::is_staging
+	 */
 	public function testWpcf7Cache() {
 		$wordpress = new WordPress();
 
+		define( 'WPCF7_PLUGIN', 'YES_MOCKED' );
 		$this->expectOutputString( '<script>if (typeof wpcf7 !== "undefined") { wpcf7.cached = 0; }</script>', $wordpress->wpcf7_cache() );
 	}
 
