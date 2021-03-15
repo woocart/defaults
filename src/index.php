@@ -29,6 +29,7 @@ namespace Niteo\WooCart {
 	use Niteo\WooCart\Defaults\PluginLogger;
 	use Niteo\WooCart\Defaults\PluginManager;
 	use Niteo\WooCart\Defaults\Shortcodes;
+	use Niteo\WooCart\Defaults\UserCache;
 	use Niteo\WooCart\Defaults\WooCommerce;
 	use Niteo\WooCart\Defaults\WordPress;
 
@@ -61,6 +62,9 @@ namespace Niteo\WooCart {
 			new PluginLogger();
 			new PluginManager();
 			new Reporter();
+			if ( defined( 'USER_CACHE_EXP' ) ) {
+				new UserCache();
+			}
 			new WooCommerce();
 			new WordPress();
 		}
