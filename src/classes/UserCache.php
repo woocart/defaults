@@ -114,21 +114,11 @@ class UserCache {
 			return;
 		}
 
-		// add_to_cart / add-to-cart in URL should be skipped.
-		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add_to_cart' ) ) {
-			return;
-		}
+		// Check for add_to_cart / add
+		if ( ! $this->check_query_strings() ) {
+			// Flush cache.
+			$this->flush_cache( $this->_key );
 
-		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add-to-cart' ) ) {
-			return;
-		}
-
-		// add_to_wishlist / add-to-wishlist (YITH plugin) in URL should be skipped.
-		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add_to_wishlist' ) ) {
-			return;
-		}
-
-		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add-to-wishlist' ) ) {
 			return;
 		}
 
@@ -233,6 +223,33 @@ class UserCache {
 		 * to use ob_end_clean();
 		 */
 		ob_end_flush();
+	}
+
+	/**
+	 * Check query strings for add_to_cart & add_to_wishlist
+	 *
+	 * @return bool
+	 */
+	public function check_query_strings() : bool {
+		// add_to_cart / add-to-cart in URL should be skipped.
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add_to_cart' ) ) {
+			return false;
+		}
+
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add-to-cart' ) ) {
+			return false;
+		}
+
+		// add_to_wishlist / add-to-wishlist (YITH plugin) in URL should be skipped.
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add_to_wishlist' ) ) {
+			return false;
+		}
+
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'add-to-wishlist' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

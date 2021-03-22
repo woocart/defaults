@@ -216,6 +216,7 @@ class UserCacheTest extends TestCase {
 	/**
 	 * @covers ::__construct
 	 * @covers ::is_cacheable
+	 * @covers ::check_query_strings
 	 */
 	public function testIsCacheableAddToCartOne() {
 		$usercache = new UserCache();
@@ -232,12 +233,21 @@ class UserCacheTest extends TestCase {
 
 		$_SERVER['REQUEST_URI'] = '/blog-page?add_to_cart=100';
 
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
 		$this->assertEmpty( $usercache->is_cacheable() );
 	}
 
 	/**
 	 * @covers ::__construct
 	 * @covers ::is_cacheable
+	 * @covers ::check_query_strings
 	 */
 	public function testIsCacheableAddToCartTwo() {
 		$usercache = new UserCache();
@@ -254,12 +264,21 @@ class UserCacheTest extends TestCase {
 
 		$_SERVER['REQUEST_URI'] = '/blog-page?add-to-cart=100';
 
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
 		$this->assertEmpty( $usercache->is_cacheable() );
 	}
 
 	/**
 	 * @covers ::__construct
 	 * @covers ::is_cacheable
+	 * @covers ::check_query_strings
 	 */
 	public function testIsCacheableAddToWishlistOne() {
 		$usercache = new UserCache();
@@ -276,12 +295,21 @@ class UserCacheTest extends TestCase {
 
 		$_SERVER['REQUEST_URI'] = '/blog-page?add_to_wishlist=100';
 
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
 		$this->assertEmpty( $usercache->is_cacheable() );
 	}
 
 	/**
 	 * @covers ::__construct
 	 * @covers ::is_cacheable
+	 * @covers ::check_query_strings
 	 */
 	public function testIsCacheableAddToWishlistTwo() {
 		$usercache = new UserCache();
@@ -298,12 +326,21 @@ class UserCacheTest extends TestCase {
 
 		$_SERVER['REQUEST_URI'] = '/blog-page?add-to-wishlist=100';
 
+		\WP_Mock::userFunction(
+			'wp_cache_delete',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
 		$this->assertEmpty( $usercache->is_cacheable() );
 	}
 
 	/**
 	 * @covers ::__construct
 	 * @covers ::is_cacheable
+	 * @covers ::check_query_strings
 	 */
 	public function testIsCacheableSuccess() {
 		$usercache = new UserCache();
