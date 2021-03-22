@@ -337,13 +337,13 @@ class DenyListTest extends TestCase {
 			'wp_kses',
 			array(
 				'times'  => 1,
-				'return' => 'Neve theme has been denylisted on WooCart. Kindly switch to a different theme or <a href="https://help.woocart.com/" target="_blank">contact support</a>',
+				'return' => 'Neve theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.',
 			)
 		);
 
 		$denylist->add_denylist_theme_notice();
 		$this->expectOutputString(
-			'<div class="error"><p>Neve theme has been denylisted on WooCart. Kindly switch to a different theme or <a href="https://help.woocart.com/" target="_blank">contact support</a></p></div>'
+			'<div class="error"><p>Neve theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.</p></div>'
 		);
 	}
 
