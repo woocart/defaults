@@ -12,6 +12,8 @@ namespace Niteo\WooCart\Defaults {
 
 	class DenyList {
 
+		use Extend\ThemesDenylist;
+
 		/**
 		 * @var array
 		 */
@@ -19,8 +21,19 @@ namespace Niteo\WooCart\Defaults {
 
 		/**
 		 * @var array
+		 *
+		 * Unlike slug for plugins, we need theme name over here.
 		 */
-		protected $denylist = array(
+		protected $themes_denylist = array(
+			'Woodmart',
+			'The7',
+			'Salient',
+		);
+
+		/**
+		 * @var array
+		 */
+		protected $plugins_denylist = array(
 			'404-error-logger',
 			'404-redirected',
 			'404-redirection',
@@ -227,6 +240,8 @@ namespace Niteo\WooCart\Defaults {
 
 			add_filter( 'plugin_install_action_links', array( &$this, 'disable_install_link' ), 10, 2 );
 			add_filter( 'plugin_action_links', array( &$this, 'disable_activate_link' ), 10, 2 );
+
+			add_action( 'admin_init', array( $this, 'add_denylist_theme_notice' ) );
 			add_action( 'init', array( &$this, 'get_allowlist_plugins' ), 10 );
 			add_action( 'init', array( &$this, 'get_denylist_plugins' ), 10 );
 			add_action( 'activate_plugin', array( &$this, 'disable_activation' ), PHP_INT_MAX, 2 );
@@ -249,13 +264,13 @@ namespace Niteo\WooCart\Defaults {
 
 			// Merge it with the list which already exists
 			if ( count( $denylist ) > 0 ) {
-				$new_denylist = array_merge( $this->denylist, $denylist );
+				$new_denylist = array_merge( $this->plugins_denylist, $denylist );
 
 				// Remove dupes
 				$new_denylist = array_unique( $new_denylist );
 
-				// Set $this->denylist to the new list
-				$this->denylist = $new_denylist;
+				// Set $this->plugins_denylist to the new list
+				$this->plugins_denylist = $new_denylist;
 			}
 		}
 
@@ -284,7 +299,7 @@ namespace Niteo\WooCart\Defaults {
 			$all_plugins         = get_plugins();
 			foreach ( $all_plugins as $plugin => $info ) {
 				$slug = explode( '/', $plugin )[0];
-				if ( in_array( $slug, $this->denylist ) ) {
+				if ( in_array( $slug, $this->plugins_denylist ) ) {
 					deactivate_plugins( $slug, true );
 					$deactivated_plugins[ $slug ] = $info['Name'];
 				}
@@ -316,7 +331,7 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			if ( ! in_array( $_plugin, $this->allowlist ) ) {
-				foreach ( $this->denylist as $bad_plugin ) {
+				foreach ( $this->plugins_denylist as $bad_plugin ) {
 					if ( 0 === strcasecmp( $_plugin, $bad_plugin ) ) {
 						return true;
 					}

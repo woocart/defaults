@@ -1,4 +1,4 @@
-# Copyright (C) 2019 WooCart
+# Copyright (C) 2021 WooCart
 # This file is distributed under the same license as the WooCart Defaults plugin.
 msgid ""
 msgstr ""
@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-10-30T17:25:02+05:30\n"
+"POT-Creation-Date: 2021-03-22T13:57:54+05:30\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.2.0\n"
+"X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woocart-defaults\n"
 
 #. Plugin Name of the plugin
@@ -23,7 +23,8 @@ msgid "Manage and deploy WordPress + WooCommerce configuration changes."
 msgstr ""
 
 #. Author of the plugin
-#: classes/class-shortcodes.php:212
+#: classes/Dashboard.php:134
+#: classes/Shortcodes.php:212
 msgid "WooCart"
 msgstr ""
 
@@ -31,184 +32,193 @@ msgstr ""
 msgid "www.woocart.com"
 msgstr ""
 
-#: classes/traits/woocommerce.php:22
-#: classes/traits/wpcf7.php:50
-msgid "I've read and accept the [policy-page]<a href=\"%s\">Privacy Policy</a>[/policy-page]"
-msgstr ""
-
-#: classes/traits/woocommerce.php:49
-msgid "Please read and accept the Privacy Policy to proceed with your order."
-msgstr ""
-
-#: classes/class-woocommerce.php:28
-msgid "Business Name"
-msgstr ""
-
-#: classes/class-woocommerce.php:29
-msgid "Name of the business used for operating the store."
-msgstr ""
-
-#: classes/class-cachemanager.php:132
-#: classes/class-cachemanager.php:134
+#: classes/CacheManager.php:119
+#: classes/CacheManager.php:121
 msgid "Flush Cache"
 msgstr ""
 
-#: classes/class-cachemanager.php:150
+#: classes/CacheManager.php:137
 msgid "Your request does not seem to be a valid one."
 msgstr ""
 
-#: classes/class-cachemanager.php:200
+#: classes/CacheManager.php:190
 msgid "Cache has been flushed successfully."
 msgstr ""
 
-#: classes/class-cachemanager.php:202
+#: classes/CacheManager.php:192
 msgid "Dismiss this notice."
 msgstr ""
 
-#: classes/class-democleaner.php:55
+#: classes/Dashboard.php:109
+#: classes/Dashboard.php:111
+msgid "WooCart App"
+msgstr ""
+
+#: classes/Dashboard.php:245
+msgid "Hide WooCart Dashboard"
+msgstr ""
+
+#: classes/DemoCleaner.php:55
 msgid "WooCart Turnkey Store"
 msgstr ""
 
-#: classes/class-democleaner.php:108
+#: classes/DemoCleaner.php:108
 msgid "Demo content does not seem to exist for the store."
 msgstr ""
 
-#: classes/class-democleaner.php:202
+#: classes/DemoCleaner.php:204
 msgid "Your store came installed with demo products. When you're ready you can safely remove them with one click by clicking the button below."
 msgstr ""
 
-#: classes/class-democleaner.php:205
+#: classes/DemoCleaner.php:207
 msgid "Remove Demo Products"
 msgstr ""
 
-#: classes/class-gdpr.php:102
+#: classes/Extend/Notifications.php:52
+msgid "You are searching for backup plugins. WooCart strongly advises against installing this type of plugins because it may significantly impact staging creation. Use the Backups tab in the WooCart dashboard instead. Contact support for more information."
+msgstr ""
+
+#: classes/Extend/Notifications.php:56
+msgid "You are searching for security plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing security configuration. Contact support for more information."
+msgstr ""
+
+#: classes/Extend/Notifications.php:60
+msgid "You are searching for performance plugins. WooCart strongly advises against installing this type of plugins because it can affect the existing configuration and cause performance issues. Contact support for more information."
+msgstr ""
+
+#: classes/Extend/ThemesDenylist.php:20
+msgid "%1$s theme has been denylisted on WooCart. Kindly switch to a different theme or %2$scontact support%3$s."
+msgstr ""
+
+#: classes/Extend/WooCommerce.php:22
+#: classes/Extend/WPCF7.php:50
+msgid "I've read and accept the [policy-page]<a href=\"%s\">Privacy Policy</a>[/policy-page]"
+msgstr ""
+
+#: classes/Extend/WooCommerce.php:49
+msgid "Please read and accept the Privacy Policy to proceed with your order."
+msgstr ""
+
+#: classes/GDPR.php:110
 msgid "OK"
 msgstr ""
 
-#: classes/class-gdpr.php:114
+#: classes/GDPR.php:120
 msgid "Cookies Policy & Notification Settings"
 msgstr ""
 
-#: classes/class-gdpr.php:115
+#: classes/GDPR.php:121
 msgid "Cookies Policy & Notification"
 msgstr ""
 
-#: classes/class-gdpr.php:132
+#: classes/GDPR.php:138
 msgid "Sorry, you are not allowed to manage Cookies Policy page on this site."
 msgstr ""
 
-#: classes/class-gdpr.php:149
+#: classes/GDPR.php:155
 msgid "Cookies Policy page and notification message has been updated successfully."
 msgstr ""
 
-#: classes/class-gdpr.php:165
+#: classes/GDPR.php:171
 msgid "Cookies Policy page updated successfully. Remember to <a href=\"%s\">update your menus</a>!"
 msgstr ""
 
-#: classes/class-gdpr.php:180
+#: classes/GDPR.php:186
 msgid "Cookies Policy"
 msgstr ""
 
-#: classes/class-gdpr.php:183
+#: classes/GDPR.php:189
 msgid "Enter content for your Cookies policy in this section."
 msgstr ""
 
-#: classes/class-gdpr.php:192
+#: classes/GDPR.php:198
 msgid "Unable to create a Cookies Policy page."
 msgstr ""
 
-#: classes/class-gdpr.php:215
+#: classes/GDPR.php:221
 msgid "The currently selected Cookies Policy page does not exist. Please create or select a new page."
 msgstr ""
 
-#: classes/class-gdpr.php:224
+#: classes/GDPR.php:230
 msgid "The currently selected Cookies Policy page is in the trash. Please create or select a new Cookies Policy page or <a href=\"%s\">restore the current page</a>."
 msgstr ""
 
-#: classes/class-gdpr.php:264
+#: classes/GDPR.php:270
 msgid "<a href=\"%1$s\">Edit</a> or <a href=\"%2$s\">view</a> your Cookies Policy page content."
 msgstr ""
 
-#: classes/class-gdpr.php:266
+#: classes/GDPR.php:272
 msgid "<a href=\"%1$s\">Edit</a> or <a href=\"%2$s\">preview</a> your Cookies Policy page content."
 msgstr ""
 
-#: classes/class-gdpr.php:290
+#: classes/GDPR.php:296
 msgid "To insert links for privacy policy and cookie policy pages, make use of the placeholders - <strong>[privacy_policy]</strong> and <strong>[cookies_policy]</strong>. If you do not wish to show the GDPR notice on your store, you can do so by deleting notification text from the above field."
 msgstr ""
 
-#: classes/class-gdpr.php:336
+#: classes/GDPR.php:342
 msgid "&mdash; Select &mdash;"
 msgstr ""
 
-#: classes/class-gdpr.php:370
+#: classes/GDPR.php:376
 msgid "Save Settings"
 msgstr ""
 
-#: classes/class-gdpr.php:398
+#: classes/GDPR.php:404
 msgid "Create New Page"
 msgstr ""
 
-#: classes/class-admindashboard.php:66
+#: classes/templates/welcome-woocart.php:19
 msgid "Welcome to your new store!"
 msgstr ""
 
-#: classes/class-admindashboard.php:67
+#: classes/templates/welcome-woocart.php:20
 msgid "You are only a few steps away from selling."
 msgstr ""
 
-#: classes/class-admindashboard.php:73
-msgid "Connect a Payment Gateway"
-msgstr ""
-
-#: classes/class-admindashboard.php:74
-msgid "To start receiving payments, you'll need to set up a payment gateway."
-msgstr ""
-
-#: classes/class-admindashboard.php:75
-msgid "Here are the instructions and the recommended plugins for the popular gateways:"
-msgstr ""
-
-#: classes/class-admindashboard.php:90
-msgid "Connect a Shipping Courier"
-msgstr ""
-
-#: classes/class-admindashboard.php:91
-msgid "If you prepare shipping slips automatically, you'll need to use a shipping courier plugin."
-msgstr ""
-
-#: classes/class-admindashboard.php:92
-msgid "Here are the recommended plugins for the most popular couriers:"
-msgstr ""
-
-#: classes/class-admindashboard.php:104
-msgid "Add Your Products"
-msgstr ""
-
-#: classes/class-admindashboard.php:109
-msgid "Add your products manually or import a CSV with the <a href=\"%s\">WooCommerce import</a>."
-msgstr ""
-
-#: classes/class-admindashboard.php:130
+#: classes/templates/welcome-woocart.php:26
 msgid "Add Your Own Logo and Slider Banners"
 msgstr ""
 
-#: classes/class-admindashboard.php:134
-msgid "You'll want to add your own logo and banners to the store. You can use something like the free tool <a href=\"https://www.canva.com/create/banners/\" target=\"_blank\" rel=\"noopener noreferrer\">Canva</a> to create these graphics."
+#: classes/templates/welcome-woocart.php:34
+msgid "Add Your Products"
 msgstr ""
 
-#: classes/class-admindashboard.php:146
-msgid "Start Customizing"
+#: classes/templates/welcome-woocart.php:42
+msgid "Connect a Payment Gateway"
 msgstr ""
 
-#: classes/class-admindashboard.php:154
+#: classes/templates/welcome-woocart.php:52
 msgid "Test The Checkout"
 msgstr ""
 
-#: classes/class-admindashboard.php:155
-msgid "Go through the buying process and review that everything is working as it should."
+#: classes/templates/welcome-woocart.php:60
+msgid "Set the Domain in WooCart"
 msgstr ""
 
-#: classes/class-admindashboard.php:157
-msgid "Visit Your Store"
+#: classes/templates/welcome-woocart.php:67
+msgid "Use New Dashboard"
+msgstr ""
+
+#: classes/WooCommerce.php:41
+msgid "Business Name"
+msgstr ""
+
+#: classes/WooCommerce.php:42
+msgid "Name of the business used for operating the store."
+msgstr ""
+
+#: classes/WordPress.php:88
+msgid "Blocking HTTP Calls"
+msgstr ""
+
+#: classes/WordPress.php:90
+msgid "External HTTP calls are getting blocked"
+msgstr ""
+
+#: classes/WordPress.php:101
+msgid "Deactivate"
+msgstr ""
+
+#: classes/WordPress.php:103
+msgid "Turn it off"
 msgstr ""
