@@ -22,14 +22,20 @@ trait ThemesDenylist {
 		}
 
 		$message = sprintf(
-			esc_html__( '%1$s theme has been shown to have poor performance. We recommend switching to a different theme.', 'woocart-defaults' ),
-			"<strong>{$current_theme->get( 'Name' )}</strong>"
+			esc_html__( '%1$s theme %2$shas been shown to have poor performance%3$s. We recommend switching to a different theme.', 'woocart-defaults' ),
+			"<strong>{$current_theme->get( 'Name' )}</strong>",
+			'<a href="https://woocart.com/blog/fastest-woocommerce-theme" target="_blank">',
+			'</a>'
 		);
 
 		echo '<div class="error">';
 		echo '<p>' . \wp_kses(
 			$message,
 			array(
+				'a'      => array(
+					'href'   => array(),
+					'target' => array(),
+				),
 				'strong' => array(),
 			)
 		) . '</p>';
