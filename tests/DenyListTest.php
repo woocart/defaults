@@ -35,6 +35,7 @@ class DenyListTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'init', array( $denylist, 'get_allowlist_plugins' ), 10 );
 		\WP_Mock::expectActionAdded( 'init', array( $denylist, 'get_denylist_plugins' ), 10 );
 		\WP_Mock::expectActionAdded( 'activate_plugin', array( $denylist, 'disable_activation' ), PHP_INT_MAX, 2 );
+		\WP_Mock::expectActionAdded( 'admin_init', array( $denylist, 'add_denylist_theme_notice' ) );
 
 		$denylist->__construct();
 	}
@@ -306,6 +307,43 @@ class DenyListTest extends TestCase {
 		$this->assertEquals(
 			$denylist->disable_activate_link( array(), 'whitelisted-plugin' ),
 			array()
+		);
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::add_denylist_theme_notice
+	 */
+	public function testAddDenylistThemeNotice() {
+		$denylist = new DenyList();
+
+		$theme_object = new class() {
+			public $name = 'Neve';
+
+			public function get( $identifier ) {
+				return $this->name;
+			}
+		};
+
+		\WP_Mock::userFunction(
+			'wp_get_theme',
+			array(
+				'times'  => 1,
+				'return' => $theme_object,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_kses',
+			array(
+				'times'  => 1,
+				'return' => 'Neve theme has been denylisted on WooCart. Kindly switch to a different theme or <a href="https://help.woocart.com/" target="_blank">contact support</a>',
+			)
+		);
+
+		$denylist->add_denylist_theme_notice();
+		$this->expectOutputString(
+			'<div class="error"><p>Neve theme has been denylisted on WooCart. Kindly switch to a different theme or <a href="https://help.woocart.com/" target="_blank">contact support</a></p></div>'
 		);
 	}
 
