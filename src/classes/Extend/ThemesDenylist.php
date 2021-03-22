@@ -17,7 +17,7 @@ trait ThemesDenylist {
 		$current_theme = \wp_get_theme();
 
 		$message = sprintf(
-			esc_html__( '%1$s theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.', 'woocart-defaults' ),
+			esc_html__( '%1$s theme has been shown to have poor performance. We recommend switching to a different theme.', 'woocart-defaults' ),
 			"<strong>{$current_theme->get( 'Name' )}</strong>"
 		);
 
