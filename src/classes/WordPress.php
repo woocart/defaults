@@ -45,6 +45,8 @@ namespace Niteo\WooCart\Defaults {
 			add_filter( 'pre_reschedule_event', array( $this, 'delay_cronjobs' ), PHP_INT_MAX, 2 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 			add_action( 'admin_init', array( $this, 'check_block_request' ) );
+			add_action( 'admin_init', array( $this, 'restrict_pagination' ), PHP_INT_MAX );
+			add_action( 'admin_init', array( $this, 'restrict_pagination_ui' ) );
 
 			// Runs only when WP_REWRITE_URLS is set to true and for staging stores
 			if ( $this->is_rewrite_urls() && $this->is_staging() ) {
@@ -301,6 +303,98 @@ namespace Niteo\WooCart\Defaults {
 					ob_end_flush();
 				}
 			);
+		}
+
+		/**
+		 * Restrict admin pagination for orders, products, pages, posts, users, etc.
+		 *
+		 * @return void
+		 */
+		public function restrict_pagination() {
+			global $pagenow;
+
+			$user             = \wp_get_current_user();
+			$pagination_limit = 20;
+
+			if ( ! $user ) {
+				return;
+			}
+
+			// Posts (includes posts, pages, products, and orders)
+			$post_options = array(
+				'post',
+				'page',
+				'product',
+				'shop_order',
+			);
+
+			if ( 'edit.php' === $pagenow && in_array( $_GET['post_type'], $post_options ) ) {
+				$option     = \sanitize_text_field( $_GET['post_type'] );
+				$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
+
+				if ( $pagination_limit >= $pagination ) {
+					return;
+				}
+
+				\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
+			}
+
+			// Comments
+			if ( 'edit-comments.php' === $pagenow ) {
+				$pagination = \get_user_meta( $user->ID, 'edit_comments_per_page', true );
+
+				if ( $pagination_limit >= $pagination ) {
+					return;
+				}
+
+				\update_user_meta( $user->ID, 'edit_comments_per_page', $pagination_limit );
+			}
+
+			// Taxonomies (includes categories and tags)
+			$taxonomy_options = array(
+				'category',
+				'post_tag',
+			);
+
+			if ( 'edit-tags.php' === $pagenow && in_array( $_GET['taxonomy'], $taxonomy_options ) ) {
+				$option     = \sanitize_text_field( $_GET['taxonomy'] );
+				$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
+
+				if ( $pagination_limit >= $pagination ) {
+					return;
+				}
+
+				\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
+			}
+
+			// Users
+			if ( 'users.php' === $pagenow ) {
+				$pagination = \get_user_meta( $user->ID, 'users_per_page', true );
+
+				if ( $pagination_limit >= $pagination ) {
+					return;
+				}
+
+				\update_user_meta( $user->ID, 'users_per_page', $pagination_limit );
+			}
+		}
+
+		/**
+		 * Disable the pagination area in the admin panel.
+		 *
+		 * @return void
+		 */
+		public function restrict_pagination_ui() {
+			$js = '(function($) {
+				$(document).ready(function() {
+					if ($(".screen-per-page").length) {
+						$(".screen-per-page").prop("disabled", true);
+					}
+				});
+			})(jQuery);';
+
+			// Hooked it to `jquery` handle as it is always loaded in WP admin.
+			\wp_add_inline_script( 'jquery', $js );
 		}
 
 	}
