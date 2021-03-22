@@ -17,7 +17,7 @@ trait ThemesDenylist {
 		$current_theme = \wp_get_theme();
 
 		$message = sprintf(
-			esc_html__( '%1$s theme has been denylisted on WooCart. Kindly switch to a different theme or %2$scontact support%3$s.', 'kafkai' ),
+			esc_html__( '%1$s theme has been denylisted on WooCart. Kindly switch to a different theme or %2$scontact support%3$s.', 'woocart-defaults' ),
 			"<strong>{$current_theme->get( 'Name' )}</strong>",
 			'<a href="https://help.woocart.com/" target="_blank">',
 			'</a>'
