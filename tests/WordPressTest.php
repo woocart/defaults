@@ -643,4 +643,384 @@ class WordPressTest extends TestCase {
 		);
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationNoUser() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => false,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationShopOrderFalse() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'shop_order';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_text_field',
+			array(
+				'times'  => 1,
+				'return' => 'shop_order',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationShopOrderTrue() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'shop_order';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_text_field',
+			array(
+				'times'  => 1,
+				'return' => 'shop_order',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationCommentsFalse() {
+		global $pagenow;
+
+		$pagenow           = 'edit-comments.php';
+		$_GET['post_type'] = 'comments';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationCommentsTrue() {
+		global $pagenow;
+
+		$pagenow           = 'edit-comments.php';
+		$_GET['post_type'] = 'comments';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationCategoriesFalse() {
+		global $pagenow;
+
+		$pagenow          = 'edit-tags.php';
+		$_GET['taxonomy'] = 'category';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_text_field',
+			array(
+				'times'  => 1,
+				'return' => 'category',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationCategoriesTrue() {
+		global $pagenow;
+
+		$pagenow          = 'edit-tags.php';
+		$_GET['taxonomy'] = 'category';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'sanitize_text_field',
+			array(
+				'times'  => 1,
+				'return' => 'category',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationUsersFalse() {
+		global $pagenow;
+
+		$pagenow           = 'users.php';
+		$_GET['post_type'] = 'users';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationUsersTrue() {
+		global $pagenow;
+
+		$pagenow           = 'users.php';
+		$_GET['post_type'] = 'users';
+
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination_ui
+	 */
+	public function testRestrictPaginationUi() {
+		$wordpress = new WordPress();
+
+		\WP_Mock::userFunction(
+			'wp_add_inline_script',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination_ui() );
+	}
+
 }
