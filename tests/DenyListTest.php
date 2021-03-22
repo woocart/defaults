@@ -314,11 +314,37 @@ class DenyListTest extends TestCase {
 	 * @covers ::__construct
 	 * @covers ::add_denylist_theme_notice
 	 */
+	public function testAddDenylistThemeNoticeFalse() {
+		$denylist = new DenyList();
+
+		$theme_object = new class() {
+			public $name = 'Astra';
+
+			public function get( $identifier ) {
+				return $this->name;
+			}
+		};
+
+		\WP_Mock::userFunction(
+			'wp_get_theme',
+			array(
+				'times'  => 1,
+				'return' => $theme_object,
+			)
+		);
+
+		$this->assertEmpty( $denylist->add_denylist_theme_notice() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::add_denylist_theme_notice
+	 */
 	public function testAddDenylistThemeNotice() {
 		$denylist = new DenyList();
 
 		$theme_object = new class() {
-			public $name = 'Neve';
+			public $name = 'Woodmart';
 
 			public function get( $identifier ) {
 				return $this->name;
@@ -337,13 +363,13 @@ class DenyListTest extends TestCase {
 			'wp_kses',
 			array(
 				'times'  => 1,
-				'return' => 'Neve theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.',
+				'return' => 'Woodmart theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.',
 			)
 		);
 
 		$denylist->add_denylist_theme_notice();
 		$this->expectOutputString(
-			'<div class="error"><p>Neve theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.</p></div>'
+			'<div class="error"><p>Woodmart theme has been denylisted on WooCart because of poor performance. We recommend switching to a different theme.</p></div>'
 		);
 	}
 
