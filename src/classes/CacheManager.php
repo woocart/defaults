@@ -229,6 +229,9 @@ namespace Niteo\WooCart\Defaults {
 				return false;
 			}
 
+			// Clear file status cache.
+			clearstatcache();
+
 			// Cache location.
 			$scan = new \RecursiveDirectoryIterator( $this->fcgi_path, \RecursiveDirectoryIterator::SKIP_DOTS );
 
@@ -270,7 +273,7 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
+			if ( in_array( $post_type, array( 'post', 'page', 'product', 'product_variation', 'nav_menu_item' ) ) ) {
 				$this->flush_fcgi_cache();
 			}
 
@@ -280,11 +283,10 @@ namespace Niteo\WooCart\Defaults {
 		 * Flush FCGI cache for posts pages and orders.
 		 */
 		public function flush_fcgi_cache_selectively_on_delete( $post_id ) {
-
 			$post_type = get_post_type( $post_id );
 			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_delete", "post"=>$post_type] );
 
-			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
+			if ( in_array( $post_type, array( 'post', 'page', 'product', 'product_variation', 'nav_menu_item' ) ) ) {
 				$this->flush_fcgi_cache();
 			}
 
