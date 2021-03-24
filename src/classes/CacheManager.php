@@ -56,10 +56,13 @@ namespace Niteo\WooCart\Defaults {
 			// Runs after Customizer settings have been saved.
 			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
 
-			// Runs after post,page,product have benn updated
-			add_action( 'save_post_page', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
-			add_action( 'save_post_post', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			// save_post hooks runs for both post and page
+			add_action( 'save_post', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+
+			// Hooks for product, product_variation, and nav_menu_item
 			add_action( 'save_post_product', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_product_variation', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_nav_menu_item', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
 
 			add_action( 'delete_post', array( &$this, 'flush_fcgi_cache_selectively_on_delete' ) );
 
@@ -291,6 +294,7 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 		}
+
 		/**
 		 * Flush cache for Beaver builder.
 		 */

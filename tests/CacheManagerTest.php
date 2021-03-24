@@ -36,6 +36,11 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'upgrader_process_complete', array( $cache, 'flush_opcache' ) );
 		\WP_Mock::expectActionAdded( 'check_theme_switched', array( $cache, 'flush_opcache' ) );
 		\WP_Mock::expectActionAdded( 'customize_save_after', array( $cache, 'flush_fcgi_cache' ) );
+		\WP_Mock::expectActionAdded( 'save_post', array( $cache, 'flush_fcgi_cache_selectively_on_save' ) );
+		\WP_Mock::expectActionAdded( 'save_post_product', array( $cache, 'flush_fcgi_cache_selectively_on_save' ) );
+		\WP_Mock::expectActionAdded( 'save_post_product_variation', array( $cache, 'flush_fcgi_cache_selectively_on_save' ) );
+		\WP_Mock::expectActionAdded( 'save_post_nav_menu_item', array( $cache, 'flush_fcgi_cache_selectively_on_save' ) );
+		\WP_Mock::expectActionAdded( 'delete_post', array( $cache, 'flush_fcgi_cache_selectively_on_delete' ) );
 		\WP_Mock::expectActionAdded( 'woocommerce_reduce_order_stock', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'elementor/editor/after_save', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'fl_builder_after_save_layout', array( $cache, 'flush_fcgi_cache' ) );
