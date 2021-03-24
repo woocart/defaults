@@ -56,10 +56,13 @@ namespace Niteo\WooCart\Defaults {
 			// Runs after Customizer settings have been saved.
 			add_action( 'customize_save_after', array( &$this, 'flush_fcgi_cache' ) );
 
-			// Runs after post,page,product have benn updated
-			add_action( 'save_post_page', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
-			add_action( 'save_post_post', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			// save_post hooks runs for both post and page
+			add_action( 'save_post', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+
+			// Hooks for product, product_variation, and nav_menu_item
 			add_action( 'save_post_product', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_product_variation', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
+			add_action( 'save_post_nav_menu_item', array( &$this, 'flush_fcgi_cache_selectively_on_save' ) );
 
 			add_action( 'delete_post', array( &$this, 'flush_fcgi_cache_selectively_on_delete' ) );
 
@@ -229,6 +232,9 @@ namespace Niteo\WooCart\Defaults {
 				return false;
 			}
 
+			// Clear file status cache.
+			clearstatcache();
+
 			// Cache location.
 			$scan = new \RecursiveDirectoryIterator( $this->fcgi_path, \RecursiveDirectoryIterator::SKIP_DOTS );
 
@@ -270,7 +276,7 @@ namespace Niteo\WooCart\Defaults {
 				return;
 			}
 
-			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
+			if ( in_array( $post_type, array( 'post', 'page', 'product', 'product_variation', 'nav_menu_item' ) ) ) {
 				$this->flush_fcgi_cache();
 			}
 
@@ -280,15 +286,15 @@ namespace Niteo\WooCart\Defaults {
 		 * Flush FCGI cache for posts pages and orders.
 		 */
 		public function flush_fcgi_cache_selectively_on_delete( $post_id ) {
-
 			$post_type = get_post_type( $post_id );
 			// \WooCart\Log\Socket::log( ["kind"=>"flush_fcgi_cache_selectively_on_delete", "post"=>$post_type] );
 
-			if ( in_array( $post_type, array( 'post', 'page', 'product' ) ) ) {
+			if ( in_array( $post_type, array( 'post', 'page', 'product', 'product_variation', 'nav_menu_item' ) ) ) {
 				$this->flush_fcgi_cache();
 			}
 
 		}
+
 		/**
 		 * Flush cache for Beaver builder.
 		 */
