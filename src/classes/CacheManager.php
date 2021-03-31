@@ -75,6 +75,9 @@ namespace Niteo\WooCart\Defaults {
 			// On Beaver Builder save flush caches
 			add_action( 'fl_builder_after_save_layout', array( &$this, 'flush_fcgi_cache' ) );
 
+			// After category,tag... update
+			add_action( 'clean_term_cache', array( &$this, 'flush_fcgi_cache' ) );
+
 			// Hook to the theme & plugin editor AJAX function.
 			// Priority set to -1 so that it runs before anything else.
 			add_action( 'wp_ajax_edit_theme_plugin_file', array( &$this, 'flush_cache' ), PHP_INT_MAX );
