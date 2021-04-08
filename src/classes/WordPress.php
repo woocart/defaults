@@ -328,15 +328,25 @@ namespace Niteo\WooCart\Defaults {
 				'shop_order',
 			);
 
-			if ( 'edit.php' === $pagenow && in_array( $_GET['post_type'], $post_options ) ) {
-				$option     = \sanitize_text_field( $_GET['post_type'] );
-				$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
+			if ( 'edit.php' === $pagenow ) {
+				if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], $post_options ) ) {
+					$option     = \sanitize_text_field( $_GET['post_type'] );
+					$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
 
-				if ( $pagination_limit >= $pagination ) {
-					return;
+					if ( $pagination_limit >= $pagination ) {
+						return;
+					}
+
+					\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
+				} else {
+					$pagination = \get_user_meta( $user->ID, 'edit_post_per_page', true );
+
+					if ( $pagination_limit >= $pagination ) {
+						return;
+					}
+
+					\update_user_meta( $user->ID, 'edit_post_per_page', $pagination_limit );
 				}
-
-				\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
 			}
 
 			// Comments
