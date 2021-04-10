@@ -665,6 +665,80 @@ class WordPressTest extends TestCase {
 	 * @covers ::__construct
 	 * @covers ::restrict_pagination
 	 */
+	public function testRestrictPaginationPostsFalse() {
+		global $pagenow;
+
+		$pagenow   = 'edit.php';
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationPostsTrue() {
+		global $pagenow;
+
+		$pagenow   = 'edit.php';
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
 	public function testRestrictPaginationShopOrderFalse() {
 		global $pagenow;
 
@@ -972,6 +1046,80 @@ class WordPressTest extends TestCase {
 		$pagenow           = 'users.php';
 		$_GET['post_type'] = 'users';
 
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 100,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'update_user_meta',
+			array(
+				'times'  => 1,
+				'return' => true,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationPluginsFalse() {
+		global $pagenow;
+
+		$pagenow   = 'plugins.php';
+		$wordpress = new WordPress();
+
+		$user_class = (object) array(
+			'ID' => 1,
+		);
+
+		\WP_Mock::userFunction(
+			'wp_get_current_user',
+			array(
+				'times'  => 1,
+				'return' => $user_class,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'get_user_meta',
+			array(
+				'times'  => 1,
+				'return' => 10,
+			)
+		);
+
+		$this->assertEmpty( $wordpress->restrict_pagination() );
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::restrict_pagination
+	 */
+	public function testRestrictPaginationPluginsTrue() {
+		global $pagenow;
+
+		$pagenow   = 'plugins.php';
 		$wordpress = new WordPress();
 
 		$user_class = (object) array(
