@@ -377,6 +377,17 @@ namespace Niteo\WooCart\Defaults {
 				\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
 			}
 
+			// Plugins
+			if ( 'plugins.php' === $pagenow ) {
+				$pagination = \get_user_meta( $user->ID, 'plugins_per_page', true );
+
+				if ( $pagination_limit >= $pagination ) {
+					return;
+				}
+
+				\update_user_meta( $user->ID, 'plugins_per_page', $pagination_limit );
+			}
+
 			// Users
 			if ( 'users.php' === $pagenow ) {
 				$pagination = \get_user_meta( $user->ID, 'users_per_page', true );
