@@ -9,21 +9,10 @@ namespace Niteo\WooCart\Defaults {
 	 */
 	class WooCommerce {
 
-		/**
-		 * @var array
-		 */
-		private const SMALLER_PLANS = array(
-			'cart',
-			'shop',
-			'dev',
-			'cartv2',
-		);
+
 
 		public function __construct() {
 			add_filter( 'woocommerce_general_settings', array( &$this, 'general_settings' ) );
-
-			// Disable WooCommerce admin plugin on lower plans
-			add_filter( 'woocommerce_admin_disabled', array( $this, 'maybe_disable_wc_admin' ) );
 		}
 
 		/**
@@ -53,15 +42,6 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $updated_settings;
-		}
-
-		/**
-		 * Checks for store plan and disables WC admin only for smaller plans.
-		 *
-		 * @return @bool
-		 */
-		public function maybe_disable_wc_admin() : bool {
-			return in_array( $_SERVER['STORE_PLAN'], self::SMALLER_PLANS );
 		}
 
 	}
