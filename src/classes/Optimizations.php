@@ -10,7 +10,6 @@ namespace Niteo\WooCart\Defaults;
  */
 class Optimizations {
 
-
 	/**
 	 * Filters constructor.
 	 */

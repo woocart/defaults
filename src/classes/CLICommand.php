@@ -10,6 +10,7 @@
 
 namespace Niteo\WooCart\Defaults {
 
+	use Niteo\WooCart\Defaults\Database;
 	use Niteo\WooCart\Defaults\Generators\Product;
 	use Niteo\WooCart\Defaults\Importers\SellingLimit;
 	use Niteo\WooCart\Defaults\Importers\WooPage;
@@ -442,6 +443,48 @@ namespace Niteo\WooCart\Defaults {
 			} catch ( \Exception $e ) {
 				WP_CLI::log( 'There was an error processing your request.' );
 				WP_CLI::error( $e );
+			}
+		}
+
+		/**
+		 * Checks and applies the optimizations for the database.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <action>
+		 * : Action to be performed.
+		 * ---
+		 * options:
+		 *   - optimize
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd db optimize
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function db( $args ) {
+			try {
+				list($action) = $args;
+
+				if ( 'optimize' === $action ) {
+					$db = new Database();
+
+					/**
+					 * 1. Run analyze query on 3 tables (posts, postmeta, and options)
+					 * 2. Switch table engine to InnoDB
+					 * 3. Add index on columns
+					 */
+					$db->analyze_tables();
+					$db->switch_to_innodb();
+					$db->add_indexes();
+				}
+			} catch ( \Exception $e ) {
+				WP_CLI::line( 'There was an error processing your request.' );
+				WP_CLI::error( $e->getMessage() );
 			}
 		}
 	}
