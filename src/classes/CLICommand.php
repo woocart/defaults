@@ -453,6 +453,10 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * <action>
 		 * : Action to be performed.
+		 *
+		 * [--network]
+		 * : Multi-site support.
+		 *
 		 * ---
 		 * options:
 		 *   - optimize
@@ -466,7 +470,7 @@ namespace Niteo\WooCart\Defaults {
 		 * @param $assoc_args array of named command line keys.
 		 * @throws WP_CLI\ExitException on wrong command.
 		 */
-		public function db( $args ) {
+		public function db( $args, $assoc_args ) {
 			try {
 				list($action) = $args;
 
@@ -474,13 +478,47 @@ namespace Niteo\WooCart\Defaults {
 					$db = new Database();
 
 					/**
+					 * Optimizations.
+					 *
 					 * 1. Run analyze query on 3 tables (posts, postmeta, and options)
 					 * 2. Switch table engine to InnoDB
 					 * 3. Add index on columns
 					 */
-					$db->analyze_tables();
-					$db->switch_to_innodb();
-					$db->add_indexes();
+					if ( isset( $assoc_args['network'] ) ) {
+						if ( is_multisite() ) {
+							$sites = get_sites(
+								array(
+									'fields' => 'ids',
+								)
+							);
+
+							foreach ( $sites as $site ) {
+								switch_to_blog( $site );
+
+								// Fetch details for the current site.
+								$site_info = get_blog_details( $site );
+
+								WP_CLI::log( '' );
+								WP_CLI::log( '--> Running optimisations for ' . $site_info->blogname . ' (ID: ' . $site . ')' );
+								WP_CLI::log( '' );
+
+								$db->analyze_tables();      // 1
+								$db->switch_to_innodb();    // 2
+								$db->add_indexes();             // 3
+
+								restore_current_blog();
+							}
+
+							return;
+						} else {
+							WP_CLI::error( 'Multi-site is not enabled. Please try again without the --network option.' );
+							return;
+						}
+					}
+
+					$db->analyze_tables();          // 1
+					$db->switch_to_innodb();        // 2
+					$db->add_indexes();                 // 3
 				}
 			} catch ( \Exception $e ) {
 				WP_CLI::line( 'There was an error processing your request.' );
