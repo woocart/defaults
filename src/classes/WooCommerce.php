@@ -13,6 +13,7 @@ namespace Niteo\WooCart\Defaults {
 
 		public function __construct() {
 			add_filter( 'woocommerce_general_settings', array( &$this, 'general_settings' ) );
+			add_filter( 'woocommerce_subscriptions_is_duplicate_site', array( &$this, 'woocommerce_subscriptions_is_duplicate' ) );
 		}
 
 		/**
@@ -42,6 +43,16 @@ namespace Niteo\WooCart\Defaults {
 			}
 
 			return $updated_settings;
+		}
+
+		/**
+		 * Return true if we are on anything but production site.
+		 *
+		 * @return bool
+		 */
+		public function woocommerce_subscriptions_is_duplicate() {
+
+			return wp_get_environment_type() !== 'production';
 		}
 
 	}
