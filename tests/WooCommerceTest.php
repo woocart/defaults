@@ -27,6 +27,7 @@ class WooCommerceTest extends TestCase {
 	public function testConstructor() {
 		$woocommerce = new WooCommerce();
 		\WP_Mock::expectFilterAdded( 'woocommerce_general_settings', array( $woocommerce, 'general_settings' ) );
+		\WP_Mock::expectFilterAdded( 'woocommerce_subscriptions_is_duplicate_site', array( $woocommerce, 'woocommerce_subscriptions_is_duplicate' ) );
 		$woocommerce->__construct();
 		\WP_Mock::assertHooksAdded();
 	}
@@ -61,6 +62,42 @@ class WooCommerceTest extends TestCase {
 				),
 			)
 		);
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::woocommerce_subscriptions_is_duplicate
+	 */
+	public function test_is_duplicate_site_local() {
+		$woocommerce = new WooCommerce();
+		\WP_Mock::userFunction(
+			'wp_get_environment_type',
+			array(
+				'return' => 'local',
+			)
+		);
+		$this->assertTrue(
+			$woocommerce->woocommerce_subscriptions_is_duplicate()
+		);
+
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::woocommerce_subscriptions_is_duplicate
+	 */
+	public function test_is_duplicate_site_production() {
+		$woocommerce = new WooCommerce();
+		\WP_Mock::userFunction(
+			'wp_get_environment_type',
+			array(
+				'return' => 'production',
+			)
+		);
+		$this->assertFalse(
+			$woocommerce->woocommerce_subscriptions_is_duplicate()
+		);
+
 	}
 
 }
