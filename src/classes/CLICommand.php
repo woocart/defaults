@@ -525,5 +525,45 @@ namespace Niteo\WooCart\Defaults {
 				WP_CLI::error( $e->getMessage() );
 			}
 		}
+
+		/**
+		 * Toggle for the restrict pagination feature.
+		 *
+		 * ## OPTIONS
+		 *
+		 * <status>
+		 * : Pagination restriction status.
+		 * ---
+		 * options:
+		 *   - activate
+		 *   - deactivate
+		 *
+		 * ## EXAMPLES
+		 *
+		 *     wp wcd restrict_pagination activate
+		 *
+		 * @codeCoverageIgnore
+		 * @param $args array list of command line arguments.
+		 * @param $assoc_args array of named command line keys.
+		 * @throws WP_CLI\ExitException on wrong command.
+		 */
+		public function restrict_pagination( $args, $assoc_args ) {
+			try {
+				list($status) = $args;
+
+				if ( 'activate' === $status ) {
+					update_option( 'woocart_disable_restrict_pagination', false );
+				}
+
+				if ( 'deactivate' === $status ) {
+					update_option( 'woocart_disable_restrict_pagination', true );
+				}
+
+				WP_CLI::log( sprintf( 'Pagination restriction has been %sd.', $status ) );
+			} catch ( \Exception $e ) {
+				WP_CLI::log( 'There was an error processing your request.' );
+				WP_CLI::error( $e );
+			}
+		}
 	}
 }

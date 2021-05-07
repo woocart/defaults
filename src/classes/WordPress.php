@@ -313,6 +313,11 @@ namespace Niteo\WooCart\Defaults {
 		public function restrict_pagination() {
 			global $pagenow;
 
+			// Check if this feature is not disabled.
+			if ( get_option( 'woocart_disable_restrict_pagination' ) ) {
+				return;
+			}
+
 			$user             = \wp_get_current_user();
 			$pagination_limit = 20;
 
@@ -333,6 +338,10 @@ namespace Niteo\WooCart\Defaults {
 					$option     = \sanitize_text_field( $_GET['post_type'] );
 					$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
 
+					if ( ! $pagination ) {
+						\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
+					}
+
 					if ( $pagination_limit >= $pagination ) {
 						return;
 					}
@@ -340,6 +349,10 @@ namespace Niteo\WooCart\Defaults {
 					\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
 				} else {
 					$pagination = \get_user_meta( $user->ID, 'edit_post_per_page', true );
+
+					if ( ! $pagination ) {
+						\update_user_meta( $user->ID, 'edit_post_per_page', $pagination_limit );
+					}
 
 					if ( $pagination_limit >= $pagination ) {
 						return;
@@ -352,6 +365,10 @@ namespace Niteo\WooCart\Defaults {
 			// Comments
 			if ( 'edit-comments.php' === $pagenow ) {
 				$pagination = \get_user_meta( $user->ID, 'edit_comments_per_page', true );
+
+				if ( ! $pagination ) {
+					\update_user_meta( $user->ID, 'edit_comments_per_page', $pagination_limit );
+				}
 
 				if ( $pagination_limit >= $pagination ) {
 					return;
@@ -370,6 +387,10 @@ namespace Niteo\WooCart\Defaults {
 				$option     = \sanitize_text_field( $_GET['taxonomy'] );
 				$pagination = \get_user_meta( $user->ID, "edit_{$option}_per_page", true );
 
+				if ( ! $pagination ) {
+					\update_user_meta( $user->ID, "edit_{$option}_per_page", $pagination_limit );
+				}
+
 				if ( $pagination_limit >= $pagination ) {
 					return;
 				}
@@ -381,6 +402,10 @@ namespace Niteo\WooCart\Defaults {
 			if ( 'plugins.php' === $pagenow ) {
 				$pagination = \get_user_meta( $user->ID, 'plugins_per_page', true );
 
+				if ( ! $pagination ) {
+					\update_user_meta( $user->ID, 'plugins_per_page', $pagination_limit );
+				}
+
 				if ( $pagination_limit >= $pagination ) {
 					return;
 				}
@@ -391,6 +416,10 @@ namespace Niteo\WooCart\Defaults {
 			// Users
 			if ( 'users.php' === $pagenow ) {
 				$pagination = \get_user_meta( $user->ID, 'users_per_page', true );
+
+				if ( ! $pagination ) {
+					\update_user_meta( $user->ID, 'users_per_page', $pagination_limit );
+				}
 
 				if ( $pagination_limit >= $pagination ) {
 					return;
@@ -406,6 +435,11 @@ namespace Niteo\WooCart\Defaults {
 		 * @return void
 		 */
 		public function restrict_pagination_ui() {
+			// Check if this feature is not disabled.
+			if ( get_option( 'woocart_disable_restrict_pagination' ) ) {
+				return;
+			}
+
 			$js = '(function($) {
 				$(document).ready(function() {
 					if ($(".screen-per-page").length) {
