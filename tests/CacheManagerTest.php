@@ -47,6 +47,7 @@ class CacheManagerTest extends TestCase {
 		\WP_Mock::expectActionAdded( 'wp_ajax_edit_theme_plugin_file', array( $cache, 'flush_cache' ), PHP_INT_MAX );
 		\WP_Mock::expectActionAdded( 'clean_term_cache', array( $cache, 'flush_fcgi_cache' ) );
 		\WP_Mock::expectActionAdded( 'init', array( $cache, 'nav_init' ) );
+		\WP_Mock::expectActionAdded( 'rest_api_init', array( $cache, 'api_init' ) );
 
 		$cache->__construct();
 		\WP_Mock::assertHooksAdded();

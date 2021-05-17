@@ -18,6 +18,7 @@ namespace Niteo\WooCart\Defaults {
 	class CacheManager {
 
 		use Extend\NavCache;
+		use Extend\APICache;
 
 		/**
 		 * FCGI Cache path.
@@ -98,6 +99,9 @@ namespace Niteo\WooCart\Defaults {
 
 			// Nav-menu cache
 			add_action( 'init', array( $this, 'nav_init' ) );
+
+			// API cache
+			add_action( 'rest_api_init', array( $this, 'api_init' ) );
 		}
 
 		/**
