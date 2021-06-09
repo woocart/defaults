@@ -27,28 +27,11 @@ class GDPRTest extends TestCase {
 	 * @covers ::scripts
 	 */
 	public function testConstructor() {
-		\WP_Mock::userFunction(
-			'plugin_dir_url',
-			array(
-				'times' => 1,
-			)
-		);
-		\WP_Mock::userFunction(
-			'wp_enqueue_style',
-			array(
-				'times' => 1,
-			)
-		);
-		\WP_Mock::userFunction(
-			'wp_enqueue_script',
-			array(
-				'times' => 1,
-			)
-		);
+
 		\WP_Mock::userFunction(
 			'get_option',
 			array(
-				'times'  => 2,
+				'times'  => 3,
 				'return' => 'yes',
 			)
 		);

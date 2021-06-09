@@ -416,6 +416,10 @@ namespace Niteo\WooCart\Defaults {
 		 * @return null
 		 */
 		public function scripts() {
+			$consent = get_option( 'woocommerce_allow_tracking', 'no' );
+			if ( 'no' !== $consent ) {
+				return;
+			}
 			$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 
 			wp_enqueue_style( 'woocart-gdpr', "{$plugin_dir}assets/css/front-gdpr.css", array(), Release::Version );
