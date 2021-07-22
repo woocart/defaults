@@ -32,7 +32,7 @@ namespace Niteo\WooCart\Defaults {
 		 *
 		 * @var array
 		 */
-		public $redis_credentials = '/var/www/cache/redis.sock';
+		public $redis_credentials = 'redis';
 
 		/**
 		 * CacheManager constructor.
