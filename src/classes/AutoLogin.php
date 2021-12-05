@@ -2,9 +2,12 @@
 
 namespace Niteo\WooCart\Defaults {
 
-	use Lcobucci\JWT\Parser;
+	use Lcobucci\JWT\Configuration;
+	use Lcobucci\JWT\Signer\Key;
 	use Lcobucci\JWT\Signer\Hmac\Sha256;
-	use Lcobucci\JWT\ValidationData;
+	use Lcobucci\JWT\Signer\Key\InMemory;
+	use Lcobucci\JWT\Validation\Constraint\PermittedFor;
+	use Lcobucci\JWT\Validation\Constraint\IdentifiedBy;
 
 	/**
 	 * Class AutoLogin
@@ -54,16 +57,25 @@ namespace Niteo\WooCart\Defaults {
 		 * @return bool
 		 */
 		public function validate_jwt_token( $auth, $secret ): bool {
-			$data = new ValidationData();
-			$data->setAudience( get_site_url() );
-			$data->setId( $_SERVER['STORE_ID'] );
-			$signer = new Sha256();
+			// $data = new ValidationData();
+			// $data->setAudience( get_site_url() );
+			// $data->setId( $_SERVER['STORE_ID'] );
+			// $signer = new Sha256();
+
+			$jwt = Configuration::forSymmetricSigner(
+				// You may use any HMAC variations (256, 384, and 512)
+				new Sha256(),
+				// replace the value below with a key of your own!
+				InMemory::plainText( $secret )
+			);
+			$jwt->setValidationConstraints( new PermittedFor( get_site_url() ) );  // aud
+			$jwt->setValidationConstraints( new IdentifiedBy( $_SERVER['STORE_ID'] ) ); // jti
 			try {
-				$token = ( new Parser() )->parse( (string) $auth ); // Parses from a string
+				$token = $jwt->parser()->parse( $auth );
 			} catch ( \Exception $e ) {
 				return false;
 			}
-			return $token->validate( $data ) && $token->verify( $signer, $secret );
+			return $jwt->validator()->validate( $token, ...$jwt->validationConstraints() );
 		}
 
 		/**

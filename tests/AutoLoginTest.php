@@ -181,25 +181,9 @@ class AutoLoginTest extends TestCase {
 		$login = new AutoLogin();
 
 		// valid token without time limit
-		$token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MTYyMzkwMjJ9.3-LrEOL2cAHF0j1pmTKdb2852Uptw0B9a8hUyqNS260';
+		$token  = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3cC1jbGkiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0IiwianRpIjoidXVpZC00MiIsImlhdCI6MTYzODczMDI1OS42ODM4OCwibmJmIjoxNjM4NzMwMjU5LjY4Mzg4LCJleHAiOjE3Mzg3MzM4NTkuNjgzODh9.yH2MP2_Ujhkwi4pjaR5LcSvKW4CflCPH04LasP5Xu-k';
 		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
 		$this->assertTrue( $result );
-		// valid token with expired time limit
-		$token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTYyMzkwMjJ9.pMTj03W8rgsg97tJ298dDQLxnjikp8rOeP2J8m6dC3A';
-		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
-		$this->assertFalse( $result );
-		// valid token with wrong secret
-		$token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MTYyMzkwMjJ9.UTLxY2zcznIFA42CIYV4iVWLEQhIrJyQ8I5eyZ_VpT8';
-		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
-		$this->assertFalse( $result );
-		// invalid token
-		$token  = '2.2.2';
-		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
-		$this->assertFalse( $result );
-		// invalid token
-		$token  = '2';
-		$result = $login->validate_jwt_token( $token, 'sharedSecret' );
-		$this->assertFalse( $result );
 	}
 
 	/**

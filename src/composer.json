@@ -8,11 +8,11 @@
   "type": "wordpress-plugin",
   "require": {
     "php": ">=7.3.0",
-    "symfony/yaml": "^3.3",
+    "symfony/yaml": "*",
     "ext-json": "*",
     "ext-gd": "*",
     "ext-redis": "*",
-    "lcobucci/jwt": "^3.3",
+    "lcobucci/jwt": "*",
     "ext-zend-opcache": "*"
   },
   "autoload": {

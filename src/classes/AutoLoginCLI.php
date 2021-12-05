@@ -2,11 +2,12 @@
 
 namespace Niteo\WooCart\Defaults {
 
-	use Lcobucci\JWT\Parser;
-	use Lcobucci\JWT\ValidationData;
-	use Lcobucci\JWT\Signer\Hmac\Sha256;
-	use Lcobucci\JWT\Builder;
+	use Lcobucci\JWT\Configuration;
 	use Lcobucci\JWT\Signer\Key;
+	use Lcobucci\JWT\Signer\Hmac\Sha256;
+	use Lcobucci\JWT\Signer\Key\InMemory;
+	use DateTimeImmutable;
+	use Lcobucci\JWT\Token;
 
 	/**
 	 * Class AutoLogin
@@ -32,15 +33,30 @@ namespace Niteo\WooCart\Defaults {
 		 * @return bool
 		 */
 		public function url(): string {
-			$time   = time();
-			$signer = new Sha256();
-			$token  = ( new Builder() )->issuedBy( 'wp-cli' ) // Configures the issuer (iss claim)
-									->permittedFor( get_site_url() ) // Configures the audience (aud claim)
-									->identifiedBy( $_SERVER['STORE_ID'], false ) // Configures the id (jti claim), replicating as a header item
-									->issuedAt( $time ) // Configures the time that the token was issue (iat claim)
-									->canOnlyBeUsedAfter( $time ) // Configures the time that the token can be used (nbf claim)
-									->expiresAt( $time + 3600 ) // Configures the expiration time of the token (exp claim)
-									->getToken( $signer, new Key( $this->secret ) ); // Retrieves the generated token
+
+			$now    = new DateTimeImmutable();
+			$config = Configuration::forSymmetricSigner(
+				// You may use any HMAC variations (256, 384, and 512)
+				new Sha256(),
+				// replace the value below with a key of your own!
+				InMemory::plainText( $this->secret )
+			);
+			$token = $config->builder()->
+			// Configures the issuer (iss claim)
+			issuedBy( 'wp-cli' )->
+			// Configures the audience (aud claim)
+			permittedFor( get_site_url() )->
+			// Configures the id (jti claim)
+			identifiedBy( $_SERVER['STORE_ID'], false )->
+			// Configures the time that the token was issue (iat claim)
+			issuedAt( $now )->
+			// Configures the time that the token can be used (nbf claim)
+			canOnlyBeUsedAfter( $now )->
+			// Configures the expiration time of the token (exp claim)
+			expiresAt( $now->modify( '+1 hour' ) )->
+			// Builds a new token
+			getToken( $config->signer(), $config->signingKey() )->toString();
+
 			return sprintf( '%s/wp-login.php?auth=%s', get_site_url(), $token );
 		}
 
