@@ -23,7 +23,6 @@ namespace Niteo\WooCart\Defaults {
 		 */
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'init' ) );
-			add_action( 'wp_login', array( $this, 'track' ) );
 		}
 
 		/**

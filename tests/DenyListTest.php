@@ -315,6 +315,11 @@ class DenyListTest extends TestCase {
 	 * @covers ::add_denylist_theme_notice
 	 */
 	public function testAddDenylistThemeNoticeFalse() {
+
+		global $pagenow;
+
+		$pagenow = 'themes.php';
+
 		$denylist = new DenyList();
 
 		$theme_object = new class() {
@@ -341,6 +346,10 @@ class DenyListTest extends TestCase {
 	 * @covers ::add_denylist_theme_notice
 	 */
 	public function testAddDenylistThemeNotice() {
+		global $pagenow;
+
+		$pagenow = 'themes.php';
+
 		$denylist = new DenyList();
 
 		$theme_object = new class() {

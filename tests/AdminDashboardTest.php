@@ -29,7 +29,6 @@ class AdminDashboardTest extends TestCase {
 		$dashboard = new AdminDashboard();
 
 		\WP_Mock::expectActionAdded( 'admin_init', array( $dashboard, 'init' ) );
-		\WP_Mock::expectActionAdded( 'wp_login', array( $dashboard, 'track' ) );
 
 		$dashboard->__construct();
 		\WP_Mock::assertHooksAdded();

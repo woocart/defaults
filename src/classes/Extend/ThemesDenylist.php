@@ -14,6 +14,13 @@ trait ThemesDenylist {
 	 * @return void
 	 */
 	public function add_denylist_theme_notice() : void {
+
+		global $pagenow;
+
+		if ( $pagenow !== 'themes.php' ) {
+			return;
+		}
+
 		$current_theme = \wp_get_theme();
 
 		// Check for theme.
