@@ -527,27 +527,6 @@ namespace Niteo\WooCart\Defaults {
 		}
 
 		/**
-		 * Convert all tables to InnoDB.
-		 *
-		 * ## EXAMPLES
-		 *
-		 *     wp wcd to_innodb
-		 *
-		 * @codeCoverageIgnore
-		 * @throws WP_CLI\ExitException on wrong command.
-		 */
-		public function to_innodb(  $args, $assoc_args ) {
-			try {
-				$db = new Database();
-
-				$db->switch_to_innodb();
-			} catch ( \Exception $e ) {
-				WP_CLI::line( 'There was an error processing your request.' );
-				WP_CLI::error( $e->getMessage() );
-			}
-		}
-
-		/**
 		 * Toggle for the restrict pagination feature.
 		 *
 		 * ## OPTIONS
